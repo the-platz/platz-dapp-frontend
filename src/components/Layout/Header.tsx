@@ -10,11 +10,36 @@ import {
 } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import { HamburgerIcon, CloseIcon, LockIcon } from '@chakra-ui/icons';
+import { ICurrentUser } from '../..';
+import { WalletConnection } from 'near-api-js';
+import { IContract } from '../../App';
 
 const Links = [{name: 'About', link: '/about'}];
 
-const Header = () => {
+interface IHeaderProps {
+  currentUser: ICurrentUser | null,
+  walletConnection: WalletConnection,
+  contract: IContract
+}
+
+const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const signIn = () => {
+    walletConnection.requestSignIn(
+      {
+        contractId: contract.contractId,
+        methodNames: [contract.create_account_campaign.name, contract.donate.name]
+      }, //contract requesting access
+      'Platz App', //optional name
+      'localhost:3000', //optional URL to redirect to if the sign in was successful
+    );
+  };
+
+  const signOut = () => {
+    walletConnection.signOut();
+    window.location.replace(window.location.origin + window.location.pathname);
+  };
 
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -40,14 +65,27 @@ const Header = () => {
           </HStack>
         </HStack>
         <Flex alignItems={'center'}>
-          <Button
-            variant={'solid'}
-            colorScheme={'teal'}
-            size={'sm'}
-            mr={4}
-            leftIcon={<LockIcon />}>
-            Login
-          </Button>
+          {!currentUser ?
+            <Button
+              variant={'solid'}
+              colorScheme={'teal'}
+              size={'sm'}
+              mr={4}
+              onClick={signIn}
+              leftIcon={<LockIcon />}>
+              Login
+            </Button>
+            : 
+            <Button
+              variant={'solid'}
+              colorScheme={'teal'}
+              size={'sm'}
+              mr={4}
+              onClick={signOut}
+              leftIcon={<LockIcon />}>
+              Logout
+            </Button>
+          }
         </Flex>
       </Flex>
 
