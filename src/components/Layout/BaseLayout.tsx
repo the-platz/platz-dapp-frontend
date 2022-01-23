@@ -3,10 +3,20 @@ import PageTransition from "../PageTransition";
 import { Flex, Box, FlexProps } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-const BaseLayout = (props: FlexProps) => {
+import { ICurrentUser } from "../..";
+import { WalletConnection } from "near-api-js";
+import { IContract } from "../../App";
+
+interface IBaseLayoutProps extends FlexProps {
+  currentUser: ICurrentUser | null,
+  walletConnection: WalletConnection,
+  contract: IContract
+}
+
+const BaseLayout: React.FC<IBaseLayoutProps> = ({walletConnection, currentUser, contract, ...props}) => {
   return (
     <>
-      <Header />
+      <Header walletConnection={walletConnection} currentUser={currentUser} contract={contract}/>
       <PageTransition>
         <Flex
           direction="column"
