@@ -7,9 +7,12 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  InputGroup,
+  InputLeftElement,
+  Input,
 } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
-import { HamburgerIcon, CloseIcon, LockIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, CloseIcon, LockIcon, SearchIcon } from '@chakra-ui/icons';
 import { ICurrentUser } from '../..';
 import { WalletConnection } from 'near-api-js';
 import { IContract } from '../../App';
@@ -63,6 +66,15 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
               <Link key={link.link} to={link.link}>{link.name}</Link>
             ))}
           </HStack>
+        </HStack>
+        <HStack spacing={8} alignItems={'center'}>
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents='none'
+              children={<SearchIcon color='gray.300' />}
+            />
+            <Input type='tel' placeholder='Find KOLs' />
+          </InputGroup>
         </HStack>
         <Flex alignItems={'center'}>
           {!currentUser ?
