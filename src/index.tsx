@@ -37,7 +37,7 @@ const initNear = async () => {
       balance: (await walletConnection.account().state()).amount
     }
   }
-  
+
   const contract = await new nearAPI.Contract(
     walletConnection.account(),
     ContractName,
