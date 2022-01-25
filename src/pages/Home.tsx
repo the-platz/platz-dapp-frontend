@@ -32,8 +32,8 @@ const HomePage = () => {
       <VStack mx="auto" width="100%" position="relative" _before={{ content: `""`, position: 'absolute', zIndex: 99, top: '-24px', left: '72px', width: '516px', height: '516px', border: '1px solid', borderRadius: '12px', borderColor: COLOR_PRIMARY }}>
         <Box borderRadius="12px" overflow="hidden" zIndex="100" position="relative">
           <Image src="/sontung.jpg" objectFit="cover" boxSize="516" />
-          <Flex position="absolute" sx={{ bottom: 0, width: '75%', height: '102px',border: '1px solid', borderRadius: '12px', borderColor: COLOR_PRIMARY }} bg="white" justifyContent="space-between" alignItems="center" p={6}>
-            <Text fontSize="2xl" fontWeight="semibold">3 BNB 🔥</Text>
+          <Flex position="absolute" sx={{ bottom: 0, width: '100%', height: '102px',border: '1px solid', borderBottomLeftRadius: '12px', borderBottomRightRadius: '12px', borderColor: COLOR_PRIMARY }} bg="white" justifyContent="space-between" alignItems="center" p={6}>
+            <Text fontSize="2xl" fontWeight="semibold">🔥 3 BNB</Text>
             <Button size="lg" bg={"black"} color="white" borderRadius={'12px'}>Mua ngay</Button>
           </Flex>
         </Box>
