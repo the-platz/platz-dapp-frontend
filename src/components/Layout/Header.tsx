@@ -87,7 +87,7 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
               leftIcon={<LockIcon />}>
               Login
             </Button>
-            : 
+            :
             <Button
               variant={'solid'}
               colorScheme={'teal'}

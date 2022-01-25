@@ -1,5 +1,5 @@
 import * as React from "react"
-import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 
 import {
   ChakraProvider,
@@ -11,6 +11,7 @@ import About from "./pages/About";
 import { Contract, WalletConnection } from "near-api-js";
 import { ICurrentUser } from ".";
 import { NearConfig } from "near-api-js/lib/near";
+import KOLProfile from "./pages/KOLProfile";
 
 export interface IContract extends Contract {
   create_account_campaign: any,
@@ -32,6 +33,9 @@ export const App: React.FC<IAppProps> = ({contract, currentUser, nearConfig, wal
         <Route path="/" element={<BaseLayout contract={contract} walletConnection={walletConnection} currentUser={currentUser} />}>
           <Route index element={<HomePage />} />
           <Route path="about" element={<About/>} />
+          <Route path="kols" element={<Outlet/>}>
+            <Route path=":id" element={<KOLProfile/>} />
+          </Route>
         </Route>
       </Routes>
     </Router>
