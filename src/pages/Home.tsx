@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Flex, HStack, Image, Link, Text, VStack, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
+import Donation from "./Donate";
 
 const COLOR_PRIMARY = '#9F7E69'
 const COLOR_NEUTRAL_LIGHT = '#414141'
@@ -46,6 +47,8 @@ const HomePage = () => {
         </RadioGroup>
       </VStack>
     </HStack>
+
+    <Donation />
   </Box>
 };
 

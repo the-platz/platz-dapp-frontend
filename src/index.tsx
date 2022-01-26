@@ -8,7 +8,7 @@ import { App, IContract } from "./App"
 import reportWebVitals from "./reportWebVitals"
 import * as serviceWorker from "./serviceWorker"
 
-const ContractName = 'platz-iko-contracts';
+const ContractName = 'iko.theplatz.testnet';
 const AppKeyPrefix = 'platz';
 const AuthDataKey = AppKeyPrefix + '_wallet_auth_key';
 
@@ -38,19 +38,20 @@ const initNear = async () => {
     }
   }
 
-  const contract = await new nearAPI.Contract(
+  (window as any).contract  = await new nearAPI.Contract(
     walletConnection.account(),
     ContractName,
     {
-      viewMethods: [''],
+      viewMethods: ['get_campaign_factory_info'],
       changeMethods: ['create_account_campaign', 'donate']
     }
   )
 
+
   const authData = JSON.parse(window.localStorage.getItem(AuthDataKey) || '{}')
   return {
     currentUser,
-    contract: (contract as IContract),
+    contract: ((window as any).contract as IContract),
     authData,
     nearConfig,
     walletConnection
