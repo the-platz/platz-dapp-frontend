@@ -10,12 +10,16 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
-} from '@chakra-ui/react';
-import { Link } from "react-router-dom";
-import { HamburgerIcon, CloseIcon, LockIcon, SearchIcon } from '@chakra-ui/icons';
-import { ICurrentUser } from '../..';
-import { WalletConnection } from 'near-api-js';
-import { IContract } from '../../App';
+} from '@chakra-ui/react'
+import { Link } from "react-router-dom"
+import { HamburgerIcon, CloseIcon, LockIcon, SearchIcon } from '@chakra-ui/icons'
+import { ICurrentUser } from '../..'
+import { WalletConnection } from 'near-api-js'
+import { IContract } from '../../App'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import useDebounce from '../../hooks/useDebounce'
+import { useGlobalContext } from '../../globalContext'
+import useOnClickOutside from '../../hooks/useOnClickOutside'
 
 const Links = [{name: 'About', link: '/about'}];
 
@@ -26,7 +30,19 @@ interface IHeaderProps {
 }
 
 const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { campaignFactory } = useGlobalContext()
+
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
+  const [visibleSearchResult, setVisibleSearchResult] = useState<boolean>(false)
+  const [searchText, setSearchText] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(false)
+  const debounceSearchText = useDebounce<string>(searchText)
+  const [searchCampaigns, setSearchCampaigns] = useState<string[]>([])
+
+  useOnClickOutside(searchWrapperRef, () => {
+    setVisibleSearchResult(false)
+  })
 
   const signIn = () => {
     walletConnection.requestSignIn(
@@ -43,6 +59,30 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
     walletConnection.signOut();
     window.location.replace(window.location.origin + window.location.pathname);
   };
+
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!isLoading) setIsLoading(true)
+      setVisibleSearchResult(!!e.target.value)
+      setSearchText(e.target.value)
+    },
+    [isLoading]
+  )
+
+  useEffect(() => {
+   if (Boolean(visibleSearchResult && debounceSearchText && isLoading)) {
+    campaignFactory?.account_campaigns?.forEach(campaign => {
+      if (campaign.toLowerCase().includes(debounceSearchText.toLowerCase())) {
+        if (!!searchCampaigns) {
+          setIsLoading(false)
+          return setSearchCampaigns([...searchCampaigns, campaign])
+        }
+        setIsLoading(false)
+        return setSearchCampaigns([campaign])
+      }
+    })
+   }
+  }, [visibleSearchResult, debounceSearchText, campaignFactory, searchCampaigns, isLoading])
 
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -67,14 +107,39 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
             ))}
           </HStack>
         </HStack>
-        <HStack spacing={8} alignItems={'center'}>
+        <HStack spacing={8} alignItems={'center'} sx={{ position: 'relative' }} ref={searchWrapperRef}>
           <InputGroup>
             <InputLeftElement
               pointerEvents='none'
               children={<SearchIcon color='gray.300' />}
             />
-            <Input type='tel' placeholder='Find KOLs' />
+            <Input type='text' placeholder='Find KOLs' onChange={handleSearchChange}/>
           </InputGroup>
+          {visibleSearchResult && (
+            <Box sx={{ position: 'absolute', top: '52px', left: '-2rem', bg: 'gray.100', borderRadius: 'md', zIndex: 999 }}>
+              {isLoading ? (
+                <Box textAlign="center" py={4}>
+                  Loading...
+                </Box>
+                ) : (
+                  <Flex flexDirection="column">
+                      {searchCampaigns?.length > 0 ?
+                        searchCampaigns.map((campaign, index) => (
+                          <Flex key={`${index}-${campaign}`} flexDirection="column" px={3} py={2}>
+                            {campaign}
+                          </Flex>
+                          ))
+                        : (
+                          <Box textAlign="center" py={4}>
+                            Không có kết quả bạn muốn tìm thấy
+                          </Box>
+                        )
+                      }
+                  </Flex>
+                )
+              }
+            </Box>
+          )}
         </HStack>
         <Flex alignItems={'center'}>
           {!currentUser ?
