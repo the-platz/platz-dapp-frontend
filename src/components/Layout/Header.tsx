@@ -10,9 +10,16 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
 } from '@chakra-ui/react'
 import { Link } from "react-router-dom"
 import { HamburgerIcon, CloseIcon, LockIcon, SearchIcon } from '@chakra-ui/icons'
+import { BiUserCircle } from "react-icons/bi";
 import { ICurrentUser } from '../..'
 import { WalletConnection } from 'near-api-js'
 import { IContract } from '../../App'
@@ -144,24 +151,35 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
         <Flex alignItems={'center'}>
           {!currentUser ?
             <Button
-              variant={'solid'}
-              colorScheme={'teal'}
-              size={'sm'}
+              variant='ghost'
+              colorScheme='blackAlpha'
               mr={4}
-              onClick={signIn}
-              leftIcon={<LockIcon />}>
-              Login
+              textColor={'black'}
+              onClick={signIn}>
+              Sign in
             </Button>
             :
-            <Button
-              variant={'solid'}
-              colorScheme={'teal'}
-              size={'sm'}
-              mr={4}
-              onClick={signOut}
-              leftIcon={<LockIcon />}>
-              Logout
-            </Button>
+            <Menu>
+              <MenuButton 
+                as={IconButton}
+                isRound={true}
+                variant='ghost'
+                colorScheme='blackAlpha'
+                aria-label='Call Sage'
+                textColor={'black'}
+                fontSize='35px'
+                icon={<BiUserCircle />}>
+                Profile
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                  My account
+                </MenuItem>
+                <MenuItem onClick={signOut}>
+                  Sign out
+                </MenuItem>
+              </MenuList>
+            </Menu>
           }
         </Flex>
       </Flex>
