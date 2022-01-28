@@ -8,7 +8,7 @@ import { App, IContract } from "./App"
 import reportWebVitals from "./reportWebVitals"
 import * as serviceWorker from "./serviceWorker"
 
-const ContractName = 'platz-iko-contracts';
+const ContractName = 'iko.theplatz.testnet';
 const AppKeyPrefix = 'platz';
 const AuthDataKey = AppKeyPrefix + '_wallet_auth_key';
 
@@ -28,32 +28,33 @@ const initNear = async () => {
   const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore();
   const near = await nearAPI.connect(Object.assign({ deps: { keyStore } }, nearConfig));
 
-  const walletConnection = new nearAPI.WalletConnection(near, AppKeyPrefix);
+  (window as any).walletConnection = new nearAPI.WalletConnection(near, AppKeyPrefix);
 
   let currentUser: ICurrentUser | null = null;
-  if (walletConnection.getAccountId()) {
+  if ((window as any).walletConnection.getAccountId()) {
     currentUser = {
-      accountId: walletConnection.getAccountId(),
-      balance: (await walletConnection.account().state()).amount
+      accountId: (window as any).walletConnection.getAccountId(),
+      balance: (await (window as any).walletConnection.account().state()).amount
     }
   }
 
-  const contract = await new nearAPI.Contract(
-    walletConnection.account(),
+  (window as any).contract  = await new nearAPI.Contract(
+    (window as any).walletConnection.account(),
     ContractName,
     {
-      viewMethods: [''],
+      viewMethods: ['get_campaign_factory_info', 'get_campaign_info'],
       changeMethods: ['create_account_campaign', 'donate']
     }
   )
 
+
   const authData = JSON.parse(window.localStorage.getItem(AuthDataKey) || '{}')
   return {
     currentUser,
-    contract: (contract as IContract),
+    contract: ((window as any).contract as IContract),
     authData,
     nearConfig,
-    walletConnection
+    walletConnection: (window as any).walletConnection
   }
 }
 

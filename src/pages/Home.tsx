@@ -1,11 +1,14 @@
 import React from "react";
 import { Box, Button, Flex, HStack, Image, Link, Text, VStack, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
+import Donation from "./Donate";
+import { ICurrentUser } from "..";
 
-const COLOR_PRIMARY = '#9F7E69'
+// const COLOR_PRIMARY = '#9F7E69'
+const COLOR_PRIMARY = 'teal'
 const COLOR_NEUTRAL_LIGHT = '#414141'
 
-const HomePage = () => {
+const HomePage = ({ currentUser }: { currentUser: ICurrentUser | null}) => {
   return <Box px={4} py={12} maxWidth="1280" mx="auto" height="calc(100vh - 64px)">
     <HStack>
       <VStack maxWidth="564px" align="flex-start">
@@ -29,12 +32,12 @@ const HomePage = () => {
         <Link style={{ marginTop: '72px' }}><Text fontSize="sm" color={COLOR_PRIMARY} fontWeight="semibold">Tìm hiểu thêm về The Platz</Text></Link>
       </VStack>
 
-      <VStack mx="auto" width="100%" position="relative" _before={{ content: `""`, position: 'absolute', zIndex: 99, top: '-24px', left: '72px', width: '516px', height: '516px', border: '1px solid', borderRadius: '12px', borderColor: COLOR_PRIMARY }}>
-        <Box borderRadius="12px" overflow="hidden" zIndex="100" position="relative">
-          <Image src="/sontung.jpg" objectFit="cover" boxSize="516" />
-          <Flex position="absolute" sx={{ bottom: 0, width: '100%', height: '102px',border: '1px solid', borderBottomLeftRadius: '12px', borderBottomRightRadius: '12px', borderColor: COLOR_PRIMARY }} bg="white" justifyContent="space-between" alignItems="center" p={6}>
+      <VStack mx="auto" width="100%" position="relative" >
+        <Box borderRadius="12px" overflow="hidden" zIndex="100" position="relative" _before={{ content: `""`, position: 'absolute', zIndex: 99, top: '0', left: '0', width: '516px', height: '424px', border: '1px solid', borderRadius: '12px', borderColor: COLOR_PRIMARY, backgroundImage: '/songtungart2.png', filter: 'blur(40px) brightness(0.4)', overflow: 'hidden' }}>
+          <Image src="/songtungart2.png" objectFit="contain" boxSize="516" position="relative"  zIndex="101" />
+          <Flex position="absolute" sx={{ bottom: 0, width: '100%', height: '102px', borderBottomLeftRadius: '12px', borderBottomRightRadius: '12px', bg: 'gray.100' }} bg="white" justifyContent="space-between" alignItems="center" p={6} zIndex="101">
             <Text fontSize="2xl" fontWeight="semibold">🔥 3 BNB</Text>
-            <Button size="lg" bg={"black"} color="white" borderRadius={'12px'}>Mua ngay</Button>
+            <Button size="lg" colorScheme="teal" borderRadius={'12px'}>Mua ngay</Button>
           </Flex>
         </Box>
         <RadioGroup colorScheme={COLOR_PRIMARY} defaultValue="1" size="md">
@@ -46,6 +49,8 @@ const HomePage = () => {
         </RadioGroup>
       </VStack>
     </HStack>
+
+    <Donation />
   </Box>
 };
 
