@@ -1,22 +1,24 @@
 import { createContext, useContext } from "react"
 import { ICurrentUser } from "."
 
-export type Campaign = {
+export type CampaignFactoryInfo = {
   account_campaigns: string[]
   contract_owner: string
+  punkt_contract_account_id: string
 }
 
 export type GlobalContent = {
-  campaignFactory?: Campaign
+  campaignFactory?: CampaignFactoryInfo
+  setCampaignFactory:(c: CampaignFactoryInfo) => void
   currentUser: ICurrentUser | null
   setCurrentUser: (user: ICurrentUser | null) => void
-  setCampaignFactory:(c: Campaign) => void
 }
+
 export const MyGlobalContext = createContext<GlobalContent>({
   campaignFactory: undefined, // set a default value
-  setCampaignFactory: (c: Campaign) => {},
+  setCampaignFactory: (c: CampaignFactoryInfo) => {},
   currentUser: null,
-  setCurrentUser: (user: ICurrentUser | null) => {}
+  setCurrentUser: (user: ICurrentUser | null) => {},
 })
 
 export const useGlobalContext = () => useContext(MyGlobalContext)

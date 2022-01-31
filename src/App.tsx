@@ -12,7 +12,7 @@ import { Contract, WalletConnection } from "near-api-js"
 import { ICurrentUser } from "."
 import { NearConfig } from "near-api-js/lib/near"
 import KOLProfile from "./pages/KOLProfile"
-import { Campaign, MyGlobalContext } from "./globalContext"
+import { CampaignFactoryInfo, MyGlobalContext } from "./globalContext"
 import MyAccount from "./pages/MyAccount";
 
 export interface IContract extends Contract {
@@ -29,13 +29,13 @@ interface IAppProps {
 }
 
 export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, walletConnection, authData}) => {
-  const [campaignFactory, setCampaignFactory] = useState<Campaign | undefined>(undefined)
+  const [campaignFactory, setCampaignFactory] = useState<CampaignFactoryInfo | undefined>(undefined)
   const [currentUser, setCurrentUser] = useState<ICurrentUser | null>(user)
 
   useEffect(() => {
     (window as any).contract
     .get_campaign_factory_info()
-    .then((res: Campaign) => {
+    .then((res: CampaignFactoryInfo) => {
       console.log('res', res)
       setCampaignFactory(res)
     })
@@ -43,7 +43,12 @@ export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, wal
 
   return (
     <ChakraProvider theme={theme}>
-      <MyGlobalContext.Provider value= {{ campaignFactory, setCampaignFactory, currentUser, setCurrentUser }}>
+      <MyGlobalContext.Provider 
+        value={{ 
+          campaignFactory, 
+          setCampaignFactory, 
+          currentUser, 
+          setCurrentUser }}>
       <Router>
         <Routes>
           <Route path="/" element={<BaseLayout contract={contract} walletConnection={walletConnection} currentUser={currentUser} />}>

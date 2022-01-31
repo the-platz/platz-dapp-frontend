@@ -50,7 +50,7 @@ const HomePage = ({ currentUser }: { currentUser: ICurrentUser | null}) => {
       </VStack>
     </HStack>
 
-    {/* <Donation /> */}
+    <Donation />
   </Box>
 };
 
