@@ -14,6 +14,7 @@ import { NearConfig } from "near-api-js/lib/near"
 import KOLProfile from "./pages/KOLProfile"
 import { CampaignFactoryInfo, MyGlobalContext } from "./globalContext"
 import MyAccount from "./pages/MyAccount";
+import CreateCampaign from "./pages/CreateCampaign";
 
 export interface IContract extends Contract {
   create_account_campaign: any,
@@ -58,6 +59,7 @@ export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, wal
               <Route path=":id" element={<KOLProfile/>} />
             </Route>
             <Route path="myaccount" element={<MyAccount/>} />
+            <Route path="createcampaign" element={<CreateCampaign/>} />
           </Route>
         </Routes>
       </Router>

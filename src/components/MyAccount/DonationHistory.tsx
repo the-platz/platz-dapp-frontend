@@ -24,7 +24,6 @@ type DonationTransaction = {
 }
 
 const DonationHistory = () => {
-    const { campaignFactory } = useGlobalContext()
     const [donationTxs, setDonationTxs] = useState<DonationTransaction[] | undefined>(undefined)
 
     useEffect(() => {

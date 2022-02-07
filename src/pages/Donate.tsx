@@ -82,11 +82,11 @@ const Donation = () => {
 
   useEffect(() => {
     const getCampaigns = () => {
-      campaignFactory?.account_campaigns?.forEach(async (c: string) => {
-        const account = (window as any).walletConnection.account()
+      campaignFactory?.account_campaigns?.forEach(async (campaign_account_id: string) => {
+        const user_account_id = (window as any).walletConnection.account()
         const contract: Contract & { get_campaign_info?: () => CampaignInfo; donate?: donateFn } = new nearAPI.Contract(
-          account, // the account object that is connecting
-          c,
+          user_account_id, // the account object that is connecting
+          campaign_account_id,
           {
             // name of contract you're connecting to
             viewMethods: ["get_campaign_info"], // view methods do not change state but usually return a value
@@ -98,9 +98,9 @@ const Donation = () => {
             const response = await contract.get_campaign_info()
             setCampaigns(campaigns => {
               if (!!campaigns && campaigns?.length > 0) {
-                return  [...campaigns, {name: c, ...response, donate: contract?.donate }]
+                return  [...campaigns, {name: campaign_account_id, ...response, donate: contract?.donate }]
               }
-              return [{name: c, ...response, donate: contract?.donate }]
+              return [{name: campaign_account_id, ...response, donate: contract?.donate }]
             })
           }
           catch (e: any) {
