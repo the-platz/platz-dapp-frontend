@@ -71,11 +71,12 @@ const CreateCampaign = () => {
                 
                 // TODO: env var
                 const CREATE_CAMPAIGN_GAS_FEE = '300000000000000'
+                const CREATE_CAMPAIGN_DEPOSIT = 2
 
                 await campaignContractFactory.create_campaign(
                     { args: encoded_base64_campaign_args}, 
                     CREATE_CAMPAIGN_GAS_FEE,
-                    toYochtoNear(2))
+                    toYochtoNear(CREATE_CAMPAIGN_DEPOSIT))
             }
         }
     }
