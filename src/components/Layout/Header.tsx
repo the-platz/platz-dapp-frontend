@@ -17,7 +17,7 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { HamburgerIcon, CloseIcon, LockIcon, SearchIcon } from '@chakra-ui/icons'
 import { BiUserCircle } from "react-icons/bi";
 import { ICurrentUser } from '../..'
@@ -39,6 +39,7 @@ interface IHeaderProps {
 const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { campaignFactory } = useGlobalContext()
+  const navigate = useNavigate();
 
   const searchWrapperRef = useRef<HTMLDivElement>(null)
   const [visibleSearchResult, setVisibleSearchResult] = useState<boolean>(false)
@@ -172,7 +173,7 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
                 Profile
               </MenuButton>
               <MenuList>
-                <MenuItem>
+                <MenuItem onClick={() => { navigate("/myaccount", { replace: true }); }}>
                   My account
                 </MenuItem>
                 <MenuItem onClick={signOut}>
