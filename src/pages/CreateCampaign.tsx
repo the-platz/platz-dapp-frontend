@@ -1,47 +1,84 @@
-import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { Badge, Button, Link, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from '@chakra-ui/react';
-import { Text, useToast } from "@chakra-ui/react"
-import axios from 'axios';
-import {
-    Table,
-    Thead,
-    Tbody,
-    Tfoot,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-  } from '@chakra-ui/react'
-
+import * as nearAPI from "near-api-js"
+import { Text ,Button, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from '@chakra-ui/react';
+import { useToast } from "@chakra-ui/react"
 import { Fragment, useEffect, useState } from "react";
 import React from 'react';
-import { useGlobalContext } from '../globalContext';
-// import { useGlobalContext } from "../../globalContext";
-
-// type DonationTransaction = {
-//     transaction_hash: string,
-//     receiver_account_id: string,
-//     block_timestamp: string,
-//     donation_amount: string,
-//     is_failed: boolean
-// }
+import { CampaignContractFactory, useGlobalContext } from '../globalContext';
+import { Account } from 'near-api-js';
 
 const CreateCampaign = () => {
-    const { campaignFactory, currentUser } = useGlobalContext()
-    // const [donationTxs, setDonationTxs] = useState<DonationTransaction[] | undefined>(undefined)
-    const [targetAmount, setTargetAmount] = React.useState()
-    const [minimumDonationAmount, setMinimumDonationAmount] = React.useState()
-    // useEffect(() => {
-    //     // TODO: move the code to backend service
-    //     if (!donationTxs) {
-    //         const account = (window as any).walletConnection.account()
-    //         axios.get(`http://localhost:5001/transactions/donation?account_id=${account.accountId}&includeFailedTxs=${true}&limit=${100}&offset=${0}`)
-    //         .then(res => {
-    //             setDonationTxs(res.data.data);
-    //         })
-    //         .catch(error => console.log(error));
-    //     }
-    // })
+    const toast = useToast()
+    const { currentUser } = useGlobalContext()
+    const [userAccountId, setUserAccountId] = useState<Account>()
+    const [campaignContractFactory, setCampaignContractFactory] = useState<CampaignContractFactory>()
+    const [targetAmount, setTargetAmount] = React.useState<number>(20)
+    const [minimumDonationAmount, setMinimumDonationAmount] = React.useState<number>(1)
+    
+    useEffect(() => {
+        if (!userAccountId) {
+            const user_account_id: Account = (window as any).walletConnection.account()
+            setUserAccountId(user_account_id)
+
+            // TODO: take from env var
+            const campaignContractFactoryAccountId = 'iko.theplatz.testnet'
+
+            if (!campaignContractFactory) {
+                const contract: CampaignContractFactory = new nearAPI.Contract(
+                    user_account_id, // the account object that is connecting
+                    campaignContractFactoryAccountId,
+                  {
+                    viewMethods: [],
+                    changeMethods: ["create_campaign"], // change methods modify state
+                  }
+                )
+
+                setCampaignContractFactory(contract)
+            }
+        }
+    })
+
+    const createCampaign = async () => {
+        if (!campaignContractFactory || !campaignContractFactory?.create_campaign) {
+            toast({
+                title: 'Contract error',
+                description: "Contract factory is not initialized!",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
+        } else {
+            if (!userAccountId || !minimumDonationAmount || !targetAmount) {
+                toast({
+                    title: 'Campaign data error',
+                    description: "Campaign data is not filled properly!",
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                })
+
+                console.log(userAccountId?.accountId)
+                console.log(minimumDonationAmount)
+                console.log(targetAmount)
+            } else {
+                const campaign_args = {
+                    // TODO: env var
+                    punkt_contract_account_id: "punkt.theplatz.testnet",
+                    campaign_beneficiary: userAccountId.accountId, 
+                    target_amount: toYochtoNear(targetAmount), 
+                    minimum_donation_amount: toYochtoNear(minimumDonationAmount)
+                }
+                const encoded_base64_campaign_args = btoa(JSON.stringify(campaign_args))
+                
+                // TODO: env var
+                const CREATE_CAMPAIGN_GAS_FEE = '300000000000000'
+
+                await campaignContractFactory.create_campaign(
+                    { args: encoded_base64_campaign_args}, 
+                    CREATE_CAMPAIGN_GAS_FEE,
+                    toYochtoNear(2))
+            }
+        }
+    }
 
     // const shortenTxHash = (tx_hash: string) => {
     //     return `${tx_hash.substring(0, 7)}...${tx_hash.substring(40)}` 
@@ -52,11 +89,9 @@ const CreateCampaign = () => {
     //     return new Date(epoch_number / 1000000).toLocaleString()
     // }
 
-    // const fromYochtoNear = (yochtoNear: string) => {
-    //     if (yochtoNear.length <= 22) return "0.00"
-    //     let rounded_near = yochtoNear.substring(0, yochtoNear.length - 22)
-    //     return `${rounded_near.substring(0, rounded_near.length - 2)}.${rounded_near.substring(rounded_near.length - 2)}`
-    // }
+    const toYochtoNear = (near: number) : string => {
+        return (BigInt(near) * BigInt(1000000000000000000000000)).toString()
+    }
 
     // const punktsFromYochtoNear = (yochtoNear: string) => {
     //     if (yochtoNear.length <= 24) return "0"
@@ -72,8 +107,7 @@ const CreateCampaign = () => {
             <Text>Target amount: </Text>
             <NumberInput maxW='100px' mr='2rem' 
                 value={targetAmount} 
-                onChange={(value: any) => setTargetAmount(value)}
-                defaultValue={20}
+                onChange={(_, value: number) => setTargetAmount(value)}
                 min={20}
                 max={1000}>
                 <NumberInputField />
@@ -85,8 +119,7 @@ const CreateCampaign = () => {
             <Text>Minimum donation amount: </Text>
             <NumberInput maxW='100px' mr='2rem' 
                 value={minimumDonationAmount} 
-                onChange={(value: any) => setMinimumDonationAmount(value)}
-                defaultValue={1}
+                onChange={(_, value: number) => setMinimumDonationAmount(value)}
                 min={1}
                 max={1000}>
                 <NumberInputField />
@@ -95,45 +128,8 @@ const CreateCampaign = () => {
                 <NumberDecrementStepper />
                 </NumberInputStepper>
             </NumberInput>
-            <Button>Create campaign</Button>
+            <Button onClick={createCampaign}>Create campaign</Button>
         </Fragment>
-        // <Table size='sm'>
-        //     <Thead>
-        //         <Tr>
-        //         <Th>Status</Th>
-        //         <Th>Transaction hash</Th>
-        //         <Th>On</Th>
-        //         <Th>Campaign</Th>
-        //         <Th>Donation amount</Th>
-        //         <Th>Rewarded Punkt</Th>
-        //         </Tr>
-        //     </Thead>
-        //     <Tbody>
-        //     { donationTxs?.map((donationTx) => (
-        //         <Tr key={donationTx.transaction_hash}>
-        //             <Td>
-        //                 {donationTx.is_failed ?
-        //                 <Badge variant='solid' colorScheme='red'>Failed</Badge> :
-        //                 <Badge variant='solid' colorScheme='green'>Success</Badge>
-        //                 }
-        //             </Td>
-        //             <Td>
-        //                 <Link href={`https://explorer.testnet.near.org/transactions/${donationTx.transaction_hash}`} isExternal>
-        //                     {shortenTxHash(donationTx.transaction_hash)}<ExternalLinkIcon mx='2px' />
-        //                 </Link>
-        //             </Td>
-        //             <Td>{epochToDate(donationTx.block_timestamp)}</Td>
-        //             <Td>
-        //                 <Link href={`https://explorer.testnet.near.org/accounts/${donationTx.receiver_account_id}`} isExternal>
-        //                 {donationTx.receiver_account_id}<ExternalLinkIcon mx='2px' />
-        //                 </Link>
-        //             </Td>
-        //             <Td>{fromYochtoNear(donationTx.donation_amount)}</Td>
-        //             <Td>{punktsFromYochtoNear(donationTx.donation_amount)}</Td>
-        //         </Tr>
-        //         ))}
-        //     </Tbody>
-        // </Table>
     )
 }
 
