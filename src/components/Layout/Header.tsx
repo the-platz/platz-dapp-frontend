@@ -176,6 +176,9 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
                 <MenuItem onClick={() => { navigate("/createcampaign", { replace: true }); }}>
                     Create campaign
                 </MenuItem>
+                <MenuItem onClick={() => { navigate("/mycampaigns", { replace: true }); }}>
+                    My campaigns
+                </MenuItem>
                 <MenuItem onClick={() => { navigate("/myaccount", { replace: true }); }}>
                   My account
                 </MenuItem>
