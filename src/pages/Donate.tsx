@@ -96,11 +96,12 @@ const Donation = () => {
         if (contract?.get_campaign_info) {
           try {
             const response = await contract.get_campaign_info()
-            setCampaigns(campaigns => {
-              if (!!campaigns && campaigns?.length > 0) {
-                return  [...campaigns, {name: campaign_account_id, ...response, donate: contract?.donate }]
+            setCampaigns(existing_campaigns => {
+              let new_campaign = {name: campaign_account_id, ...response, donate: contract?.donate }
+              if (!!existing_campaigns && existing_campaigns?.length > 0) {
+                return  [...existing_campaigns, new_campaign]
               }
-              return [{name: campaign_account_id, ...response, donate: contract?.donate }]
+              return [new_campaign]
             })
           }
           catch (e: any) {
