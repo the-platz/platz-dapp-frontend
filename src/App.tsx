@@ -11,9 +11,10 @@ import About from "./pages/About"
 import { Contract, WalletConnection } from "near-api-js"
 import { ICurrentUser } from "."
 import { NearConfig } from "near-api-js/lib/near"
-import KOLProfile from "./pages/KOLProfile"
+import Campaign from "./pages/Campaign"
 import { CampaignFactoryInfo, MyGlobalContext } from "./globalContext"
 import MyAccount from "./pages/MyAccount";
+import KOLProfile from "./pages/KOLProfile";
 
 export interface IContract extends Contract {
   create_account_campaign: any,
@@ -43,17 +44,20 @@ export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, wal
 
   return (
     <ChakraProvider theme={theme}>
-      <MyGlobalContext.Provider 
-        value={{ 
-          campaignFactory, 
-          setCampaignFactory, 
-          currentUser, 
+      <MyGlobalContext.Provider
+        value={{
+          campaignFactory,
+          setCampaignFactory,
+          currentUser,
           setCurrentUser }}>
       <Router>
         <Routes>
           <Route path="/" element={<BaseLayout contract={contract} walletConnection={walletConnection} currentUser={currentUser} />}>
             <Route index element={<HomePage currentUser={currentUser} />} />
             <Route path="about" element={<About/>} />
+            <Route path="campaigns" element={<Outlet/>}>
+              <Route path=":id" element={<Campaign/>} />
+            </Route>
             <Route path="kols" element={<Outlet/>}>
               <Route path=":id" element={<KOLProfile/>} />
             </Route>

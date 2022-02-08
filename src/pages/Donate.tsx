@@ -26,6 +26,7 @@ const Donation = () => {
   const { campaignFactory } = useGlobalContext()
   const toast = useToast()
   const [campaigns, setCampaigns] = useState<CampaignProps[] | undefined>(undefined)
+  const [first, setFirst] = useState(true)
 
   const { utils } = nearAPI
 
@@ -81,6 +82,7 @@ const Donation = () => {
   // }
 
   useEffect(() => {
+    if (!first) return
     const getCampaigns = () => {
       campaignFactory?.account_campaigns?.forEach(async (c: string) => {
         const account = (window as any).walletConnection.account()
@@ -114,9 +116,10 @@ const Donation = () => {
           }
         }
       })
+      setFirst(true)
     }
     getCampaigns()
-  }, [toast, utils, campaignFactory])
+  }, [toast, utils, campaignFactory, first])
 
   return (
    <Flex flexDirection="column" my={16}>
