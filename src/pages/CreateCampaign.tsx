@@ -3,8 +3,9 @@ import { Text ,Button, NumberDecrementStepper, NumberIncrementStepper, NumberInp
 import { useToast } from "@chakra-ui/react"
 import { Fragment, useEffect, useState } from "react";
 import React from 'react';
-import { CampaignContractFactory, useGlobalContext } from '../globalContext';
+import { useGlobalContext } from '../globalContext';
 import { Account } from 'near-api-js';
+import { CampaignContractFactory } from "../models/contracts/campaign_factory_contract";
 
 const CreateCampaign = () => {
     const toast = useToast()
@@ -35,7 +36,7 @@ const CreateCampaign = () => {
                 setCampaignContractFactory(contract)
             }
         }
-    })
+    }, [userAccountId, campaignContractFactory])
 
     const createCampaign = async () => {
         if (!campaignContractFactory || !campaignContractFactory?.create_campaign) {

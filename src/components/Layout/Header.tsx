@@ -12,13 +12,11 @@ import {
   Input,
   Menu,
   MenuButton,
-  MenuDivider,
-  MenuGroup,
   MenuItem,
   MenuList,
 } from '@chakra-ui/react'
 import { Link, useNavigate } from "react-router-dom"
-import { HamburgerIcon, CloseIcon, LockIcon, SearchIcon } from '@chakra-ui/icons'
+import { HamburgerIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { BiUserCircle } from "react-icons/bi";
 import { ICurrentUser } from '../..'
 import { WalletConnection } from 'near-api-js'

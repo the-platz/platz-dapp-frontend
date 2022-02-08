@@ -1,25 +1,15 @@
-import { Contract } from "near-api-js"
 import { createContext, useContext } from "react"
 import { ICurrentUser } from "."
+import { CampaignFactoryInfo } from "./models/contracts/campaign_factory_contract"
 
-export type CampaignFactoryInfo = {
-  account_campaigns: string[]
-  contract_owner: string
-  punkt_contract_account_id: string
-}
-
-export type CampaignContractFactory = Contract & {
-  create_campaign?: (args: any, gas: string, deposit: string) => void
-}
-
-export type GlobalContent = {
+export type GlobalContext = {
   campaignFactory?: CampaignFactoryInfo
   setCampaignFactory:(c: CampaignFactoryInfo) => void
   currentUser: ICurrentUser | null
   setCurrentUser: (user: ICurrentUser | null) => void
 }
 
-export const MyGlobalContext = createContext<GlobalContent>({
+export const MyGlobalContext = createContext<GlobalContext>({
   campaignFactory: undefined, // set a default value
   setCampaignFactory: (c: CampaignFactoryInfo) => {},
   currentUser: null,

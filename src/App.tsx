@@ -12,10 +12,11 @@ import { Contract, WalletConnection } from "near-api-js"
 import { ICurrentUser } from "."
 import { NearConfig } from "near-api-js/lib/near"
 import KOLProfile from "./pages/KOLProfile"
-import { CampaignFactoryInfo, MyGlobalContext } from "./globalContext"
+import { MyGlobalContext } from "./globalContext"
 import MyAccount from "./pages/MyAccount";
 import CreateCampaign from "./pages/CreateCampaign";
 import MyCampaigns from "./pages/MyCampaigns";
+import { CampaignFactoryInfo } from "./models/contracts/campaign_factory_contract";
 
 export interface IContract extends Contract {
   create_account_campaign: any,

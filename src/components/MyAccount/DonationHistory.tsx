@@ -5,15 +5,12 @@ import {
     Table,
     Thead,
     Tbody,
-    Tfoot,
     Tr,
     Th,
     Td,
-    TableCaption,
   } from '@chakra-ui/react'
 
 import { useEffect, useState } from "react";
-import { useGlobalContext } from "../../globalContext";
 
 type DonationTransaction = {
     transaction_hash: string,

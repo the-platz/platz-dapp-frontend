@@ -46,7 +46,7 @@ const MyAccount = () => {
     if (!totalPunkt && campaignFactory?.punkt_contract_account_id) {
       getTotalRewarededPunkts(campaignFactory?.punkt_contract_account_id); 
     }
-  }, [campaignFactory])
+  }, [totalPunkt, campaignFactory])
 
   return (
     <React.Fragment>
