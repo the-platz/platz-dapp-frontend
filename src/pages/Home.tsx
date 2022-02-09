@@ -1,14 +1,12 @@
-import React from "react";
 import { Box, Button, Flex, HStack, Image, Link, Text, VStack, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import Donation from "./Donate";
-import { ICurrentUser } from "..";
 
 // const COLOR_PRIMARY = '#9F7E69'
 const COLOR_PRIMARY = 'teal'
 const COLOR_NEUTRAL_LIGHT = '#414141'
 
-const HomePage = ({ currentUser }: { currentUser: ICurrentUser | null}) => {
+const HomePage: React.FC<any> = () => {
   return <Box px={4} py={12} maxWidth="1280" mx="auto" height="calc(100vh - 64px)">
     <HStack>
       <VStack maxWidth="564px" align="flex-start">

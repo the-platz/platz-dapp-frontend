@@ -1,4 +1,4 @@
-import { Contract } from "near-api-js"
+import { Contract, WalletConnection } from "near-api-js"
 import { ContractMethods } from "near-api-js/lib/contract"
 import { IContractCall } from "./interfaces"
 
@@ -24,3 +24,12 @@ export type CampaignContract = Contract & {
 }
 
 export { CampaignContractOptions }
+
+export const getCampaignContract = (walletConnection: WalletConnection, campaignAccountId: string): CampaignContract => {
+    const contract: CampaignContract = new Contract(
+        walletConnection.account(),
+        campaignAccountId,
+        CampaignContractOptions)
+    
+    return contract
+}
