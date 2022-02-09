@@ -25,6 +25,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
 import { useGlobalContext } from '../../globalContext'
 import useOnClickOutside from '../../hooks/useOnClickOutside'
+import { walletConnect } from '../../reducers/walletConnect';
 
 const Links = [{name: 'About', link: '/about'}];
 
@@ -49,17 +50,6 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
   useOnClickOutside(searchWrapperRef, () => {
     setVisibleSearchResult(false)
   })
-
-  const signIn = () => {
-    walletConnection.requestSignIn(
-      {
-        contractId: contract.contractId,
-        methodNames: [contract.create_account_campaign.name, contract.donate.name]
-      }, //contract requesting access
-      'Platz App', //optional name
-      'localhost:3000', //optional URL to redirect to if the sign in was successful
-    );
-  };
 
   const signOut = () => {
     walletConnection.signOut();
@@ -154,7 +144,7 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
               colorScheme='blackAlpha'
               mr={4}
               textColor={'black'}
-              onClick={signIn}>
+              onClick={walletConnect}>
               Sign in
             </Button>
             :

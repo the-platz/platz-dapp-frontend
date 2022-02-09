@@ -1,6 +1,8 @@
 import { FC, useEffect, useState } from "react"
 import {BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
-
+import { Provider as ReduxProvider } from 'react-redux'
+import AuthController from "./containers/AuthController";
+import { store } from './reducers';
 import {
   ChakraProvider,
   theme,
@@ -45,8 +47,8 @@ export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, wal
   }, [])
 
   return (
-    <ChakraProvider theme={theme}>
-      <MyGlobalContext.Provider 
+    <ReduxProvider store={store}>
+      {/* <MyGlobalContext.Provider 
         value={{ 
           campaignFactory, 
           setCampaignFactory, 
@@ -66,7 +68,8 @@ export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, wal
           </Route>
         </Routes>
       </Router>
-      </MyGlobalContext.Provider>
-    </ChakraProvider>
+      </MyGlobalContext.Provider> */}
+      <AuthController></AuthController>
+    </ReduxProvider>
   )
 }
