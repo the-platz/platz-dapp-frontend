@@ -17,6 +17,7 @@ import MyAccount from "./pages/MyAccount";
 import CreateCampaign from "./pages/CreateCampaign";
 import MyCampaigns from "./pages/MyCampaigns";
 import { CampaignFactoryInfo } from "./models/contracts/campaign_factory_contract";
+import Campaign from "./pages/Campaign";
 
 export interface IContract extends Contract {
   create_account_campaign: any,
@@ -46,17 +47,20 @@ export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, wal
 
   return (
     <ChakraProvider theme={theme}>
-      <MyGlobalContext.Provider 
-        value={{ 
-          campaignFactory, 
-          setCampaignFactory, 
-          currentUser, 
+      <MyGlobalContext.Provider
+        value={{
+          campaignFactory,
+          setCampaignFactory,
+          currentUser,
           setCurrentUser }}>
       <Router>
         <Routes>
           <Route path="/" element={<BaseLayout contract={contract} walletConnection={walletConnection} currentUser={currentUser} />}>
             <Route index element={<HomePage currentUser={currentUser} />} />
             <Route path="about" element={<About/>} />
+            <Route path="campaigns" element={<Outlet/>}>
+              <Route path=":id" element={<Campaign />} />
+            </Route>
             <Route path="kols" element={<Outlet/>}>
               <Route path=":id" element={<KOLProfile/>} />
             </Route>

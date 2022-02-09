@@ -1,5 +1,5 @@
 import { Text, useToast } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { useGlobalContext } from "../globalContext";
 import { Contract } from "near-api-js";
@@ -11,10 +11,10 @@ const MyAccount = () => {
   const [totalPunkt, setTotalPunkts] = useState<string | undefined>(undefined)
   const toast = useToast()
 
-  const getTotalRewarededPunkts = async (punkt_contract_account_id: string) => {
+  const getTotalRewarededPunkts = useCallback(async (punkt_contract_account_id: string) => {
     const account = (window as any).walletConnection.account()
     console.log('account', account);
-    
+
     const punkt_contract: Contract & { ft_balance_of?: (args: any) => string;} = new nearAPI.Contract(
       account, // the account object that is connecting
       punkt_contract_account_id, // punk contract account id
@@ -39,14 +39,14 @@ const MyAccount = () => {
         })
       }
     }
-  }
+  }, [toast])
 
   useEffect(() => {
     // call punkt contract to get this account punkts
     if (!totalPunkt && campaignFactory?.punkt_contract_account_id) {
-      getTotalRewarededPunkts(campaignFactory?.punkt_contract_account_id); 
+      getTotalRewarededPunkts(campaignFactory?.punkt_contract_account_id);
     }
-  }, [totalPunkt, campaignFactory])
+  }, [totalPunkt, campaignFactory, getTotalRewarededPunkts])
 
   return (
     <React.Fragment>
