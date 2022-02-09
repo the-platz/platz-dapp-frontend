@@ -1,42 +1,33 @@
-import * as nearAPI from "near-api-js"
 import { Text ,Button, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from '@chakra-ui/react';
 import { useToast } from "@chakra-ui/react"
 import { Fragment, useEffect, useState } from "react";
 import React from 'react';
 import { useGlobalContext } from '../globalContext';
 import { Account } from 'near-api-js';
-import { CampaignContractFactory } from "../models/contracts/campaign_factory_contract";
+import { CampaignFactoryContract, getCampaignFactoryContract } from "../models/contracts/campaign_factory_contract";
+import { selectWalletConnection } from "../reducers/walletSlice";
+import { useAppSelector } from "../app/hooks";
+import * as env from "../env"
 
 const CreateCampaign = () => {
     const toast = useToast()
+    const walletConnection = useAppSelector(selectWalletConnection)
     const { currentUser } = useGlobalContext()
-    const [userAccountId, setUserAccountId] = useState<Account>()
-    const [campaignContractFactory, setCampaignContractFactory] = useState<CampaignContractFactory>()
+    const [userAccountId, setUserAccountId] = useState<string>()
+    const [campaignContractFactory, setCampaignContractFactory] = useState<CampaignFactoryContract>()
     const [targetAmount, setTargetAmount] = React.useState<number>(20)
     const [minimumDonationAmount, setMinimumDonationAmount] = React.useState<number>(1)
     
     useEffect(() => {
-        if (!userAccountId) {
-            const user_account_id: Account = (window as any).walletConnection.account()
-            setUserAccountId(user_account_id)
-
-            // TODO: take from env var
-            const campaignContractFactoryAccountId = 'iko.theplatz.testnet'
-
-            if (!campaignContractFactory) {
-                const contract: CampaignContractFactory = new nearAPI.Contract(
-                    user_account_id, // the account object that is connecting
-                    campaignContractFactoryAccountId,
-                  {
-                    viewMethods: [],
-                    changeMethods: ["create_campaign"], // change methods modify state
-                  }
-                )
-
-                setCampaignContractFactory(contract)
-            }
+        if (!userAccountId && walletConnection) {
+            setUserAccountId(walletConnection.account().accountId)
         }
-    }, [userAccountId, campaignContractFactory])
+
+        if (!campaignContractFactory && walletConnection) {
+            const contract = getCampaignFactoryContract(walletConnection)
+            setCampaignContractFactory(contract)
+        }
+    }, [walletConnection])
 
     const createCampaign = async () => {
         if (!campaignContractFactory || !campaignContractFactory?.create_campaign) {
@@ -56,49 +47,26 @@ const CreateCampaign = () => {
                     duration: 5000,
                     isClosable: true,
                 })
-
-                console.log(userAccountId?.accountId)
-                console.log(minimumDonationAmount)
-                console.log(targetAmount)
             } else {
                 const campaign_args = {
-                    // TODO: env var
-                    punkt_contract_account_id: "punkt.theplatz.testnet",
-                    campaign_beneficiary: userAccountId.accountId, 
+                    punkt_contract_account_id: env.PUNKT_CONTRACT,
+                    campaign_beneficiary: userAccountId, 
                     target_amount: toYochtoNear(targetAmount), 
                     minimum_donation_amount: toYochtoNear(minimumDonationAmount)
                 }
                 const encoded_base64_campaign_args = btoa(JSON.stringify(campaign_args))
                 
-                // TODO: env var
-                const CREATE_CAMPAIGN_GAS_FEE = '300000000000000'
-                const CREATE_CAMPAIGN_DEPOSIT = 3
-
                 await campaignContractFactory.create_campaign(
                     { args: encoded_base64_campaign_args}, 
-                    CREATE_CAMPAIGN_GAS_FEE,
-                    toYochtoNear(CREATE_CAMPAIGN_DEPOSIT))
+                    env.CREATE_CAMPAIGN_GAS_FEE,
+                    env.CREATE_CAMPAIGN_DEPOSIT)
             }
         }
     }
 
-    // const shortenTxHash = (tx_hash: string) => {
-    //     return `${tx_hash.substring(0, 7)}...${tx_hash.substring(40)}` 
-    // }
-
-    // const epochToDate = (epoch: string) => {
-    //     let epoch_number = Number(epoch)
-    //     return new Date(epoch_number / 1000000).toLocaleString()
-    // }
-
     const toYochtoNear = (near: number) : string => {
         return (BigInt(near) * BigInt(1000000000000000000000000)).toString()
     }
-
-    // const punktsFromYochtoNear = (yochtoNear: string) => {
-    //     if (yochtoNear.length <= 24) return "0"
-    //     return yochtoNear.substring(0, yochtoNear.length - 24)
-    // }
 
     return (
         <Fragment>

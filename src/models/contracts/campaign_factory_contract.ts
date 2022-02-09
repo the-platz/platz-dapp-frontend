@@ -1,5 +1,6 @@
-import { Contract } from "near-api-js"
+import { Contract, WalletConnection } from "near-api-js"
 import { ContractMethods } from "near-api-js/lib/contract"
+import * as env from "../../env"
 
 export type CampaignFactoryInfo = {
     account_campaigns: string[]
@@ -12,8 +13,15 @@ const CampaignContractOptions: ContractMethods = {
     changeMethods: ['create_campaign']
 }
 
-export type CampaignContractFactory = Contract & {
+export type CampaignFactoryContract = Contract & {
     create_campaign?: (args: any, gas: string, deposit: string) => void
 }
 
-export { }
+export const getCampaignFactoryContract = (walletConnection: WalletConnection): CampaignFactoryContract => {
+    const contract: CampaignFactoryContract = new Contract(
+        walletConnection.account(),
+        env.CAMPAIGN_CONTRACT_FACTORY,
+        CampaignContractOptions)
+    
+    return contract
+}
