@@ -2,19 +2,18 @@ import { Text ,Button, NumberDecrementStepper, NumberIncrementStepper, NumberInp
 import { useToast } from "@chakra-ui/react"
 import { Fragment, useEffect, useState } from "react";
 import React from 'react';
-import { useGlobalContext } from '../globalContext';
-import { Account } from 'near-api-js';
 import { CampaignFactoryContract, getCampaignFactoryContract } from "../models/contracts/campaign_factory_contract";
-import { selectWalletConnection } from "../reducers/walletSlice";
+import { selectWalletConnection } from "../app/slices/walletSlice";
 import { useAppSelector } from "../app/hooks";
 import * as env from "../env"
 
 const CreateCampaign = () => {
     const toast = useToast()
     const walletConnection = useAppSelector(selectWalletConnection)
-    const { currentUser } = useGlobalContext()
+
     const [userAccountId, setUserAccountId] = useState<string>()
     const [campaignContractFactory, setCampaignContractFactory] = useState<CampaignFactoryContract>()
+
     const [targetAmount, setTargetAmount] = React.useState<number>(20)
     const [minimumDonationAmount, setMinimumDonationAmount] = React.useState<number>(1)
     
@@ -27,7 +26,7 @@ const CreateCampaign = () => {
             const contract = getCampaignFactoryContract(walletConnection)
             setCampaignContractFactory(contract)
         }
-    }, [walletConnection])
+    }, [walletConnection, userAccountId, campaignContractFactory])
 
     const createCampaign = async () => {
         if (!campaignContractFactory || !campaignContractFactory?.create_campaign) {
@@ -73,7 +72,7 @@ const CreateCampaign = () => {
             <Text>Create New Campaign</Text>
             <Text>It's required to deposit 5 NEAR to create campaign</Text>
             <Text>Beneficiary:</Text>
-            <Text bold>{currentUser?.accountId }</Text>
+            <Text>{ userAccountId }</Text>
             <Text>Target amount: </Text>
             <NumberInput maxW='100px' mr='2rem' 
                 value={targetAmount} 

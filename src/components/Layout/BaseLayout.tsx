@@ -1,12 +1,9 @@
-import React from "react";
 import PageTransition from "../PageTransition";
-import { Flex, Box, FlexProps } from "@chakra-ui/react";
+import { Flex, Box } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import { ICurrentUser } from "../..";
-import { WalletConnection } from "near-api-js";
 
-const BaseLayout: React.FC<any> = () => {
+const BaseLayout = () => {
   return (
     <>
       <Header/>

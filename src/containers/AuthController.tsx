@@ -4,7 +4,7 @@ import * as env from "../env"
 import * as nearAPI from "near-api-js";
 import * as consts from "../utils/consts"
 
-import { signIn } from "../reducers/walletSlice"
+import { signIn } from "../app/slices/walletSlice"
 import { ConnectConfig } from "near-api-js";
 
 const { connect, keyStores, WalletConnection } = nearAPI;

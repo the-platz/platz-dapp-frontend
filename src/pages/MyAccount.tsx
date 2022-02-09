@@ -1,13 +1,13 @@
-import { Text, useToast } from "@chakra-ui/react"
+import { Text } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react";
 
 import DonationHistory from "../components/MyAccount/DonationHistory";
-import { selectWalletConnection } from "../reducers/walletSlice";
+import { selectWalletConnection } from "../app/slices/walletSlice";
 import { useAppSelector } from "../app/hooks";
 import { getPunktContract } from "../models/contracts/punkt_contract";
 
 const MyAccount = () => {
-  const toast = useToast()
+  // const toast = useToast()
   const walletConnection = useAppSelector(selectWalletConnection)
   const [totalPunkt, setTotalPunkts] = useState<string | undefined>(undefined)
   
@@ -22,7 +22,7 @@ const MyAccount = () => {
         }
       })()
     }
-  }, [totalPunkt])
+  }, [walletConnection, totalPunkt])
 
   return (
     <React.Fragment>

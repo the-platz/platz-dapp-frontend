@@ -1,7 +1,6 @@
 import { Contract, WalletConnection } from "near-api-js"
 import { ContractMethods } from "near-api-js/lib/contract"
 import { IContractCall } from "./interfaces"
-import * as env from "../../env"
 
 type CampaignInfo = {
     campaign_beneficiary: string

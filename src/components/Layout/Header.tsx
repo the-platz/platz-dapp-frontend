@@ -14,33 +14,29 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useToast,
 } from '@chakra-ui/react'
 import { Link, useNavigate } from "react-router-dom"
 import { HamburgerIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { BiUserCircle } from "react-icons/bi";
-import { WalletConnection } from 'near-api-js'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
-import { useGlobalContext } from '../../globalContext'
 import useOnClickOutside from '../../hooks/useOnClickOutside'
-import { walletConnect } from '../../reducers/walletConnect';
-import { selectWalletConnection } from '../../reducers/walletSlice';
-import { useSelector } from 'react-redux';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-
+import { walletConnect } from '../../app/dispatchers/walletConnect';
+import { selectWalletConnection } from '../../app/slices/walletSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import * as env from "../../env"
+import { signOut as walletSliceSignOut } from '../../app/slices/walletSlice';
 const Links = [{ name: 'About', link: '/about' }];
 
-interface IHeaderProps {
-}
-
-const Header: React.FC<IHeaderProps> = () => {
+const Header = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate();
   const walletConnection = useAppSelector(selectWalletConnection)
   const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
+  const toast = useToast()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { campaignFactory } = useGlobalContext()
-  const navigate = useNavigate();
-
   const searchWrapperRef = useRef<HTMLDivElement>(null)
   const [visibleSearchResult, setVisibleSearchResult] = useState<boolean>(false)
   const [searchText, setSearchText] = useState<string>('')
@@ -52,8 +48,38 @@ const Header: React.FC<IHeaderProps> = () => {
     setVisibleSearchResult(false)
   })
 
+  const signIn = () => {
+    if (walletConnection) {
+      walletConnection.requestSignIn(
+        env.CAMPAIGN_CONTRACT_FACTORY, // contract requesting access
+        "The Platz", // optional
+        env.APP_URL, // optional
+        env.APP_URL // optional
+      ) 
+    } else {
+        toast({
+          title: 'Wallet connection error',
+          description: "Wallet connection is not initialized!",
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+      })
+    }
+  }
+
   const signOut = () => {
-    window.location.replace(window.location.origin + window.location.pathname);
+    if (walletConnection) {
+      walletConnection.signOut() 
+      dispatch(walletSliceSignOut())
+    } else {
+        toast({
+          title: 'Wallet connection error',
+          description: "Wallet connection is not initialized!",
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+      })
+    }
   };
 
   const handleSearchChange = useCallback(
@@ -67,22 +93,22 @@ const Header: React.FC<IHeaderProps> = () => {
 
   useEffect(() => {
     if (Boolean(visibleSearchResult && debounceSearchText && isLoading)) {
-      campaignFactory?.account_campaigns?.forEach(campaign => {
-        if (campaign.toLowerCase().includes(debounceSearchText.toLowerCase())) {
-          if (!!searchCampaigns) {
-            setIsLoading(false)
-            return setSearchCampaigns([...searchCampaigns, campaign])
-          }
-          setIsLoading(false)
-          return setSearchCampaigns([campaign])
-        }
-      })
+      // campaignFactory?.account_campaigns?.forEach(campaign => {
+      //   if (campaign.toLowerCase().includes(debounceSearchText.toLowerCase())) {
+      //     if (!!searchCampaigns) {
+      //       setIsLoading(false)
+      //       return setSearchCampaigns([...searchCampaigns, campaign])
+      //     }
+      //     setIsLoading(false)
+      //     return setSearchCampaigns([campaign])
+      //   }
+      // })
     }
 
-    if (walletConnection && walletConnection.isSignedIn()) {
-      setIsSignedIn(true)
+    if (walletConnection) {
+      setIsSignedIn(walletConnection.isSignedIn())
     }
-  }, [walletConnection, isSignedIn, visibleSearchResult, debounceSearchText, campaignFactory, searchCampaigns, isLoading])
+  }, [walletConnection, visibleSearchResult, debounceSearchText, searchCampaigns, isLoading])
 
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -148,7 +174,7 @@ const Header: React.FC<IHeaderProps> = () => {
               colorScheme='blackAlpha'
               mr={4}
               textColor={'black'}
-              onClick={walletConnect}>
+              onClick={signIn}>
               Sign in
             </Button>
             :

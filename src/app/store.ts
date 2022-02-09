@@ -1,15 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
-import walletSlice from '../reducers/walletSlice';
+import nearSlice from './slices/nearSlice';
+import walletSlice from './slices/walletSlice';
 
 export const store = configureStore({
     reducer: {
-        wallet: walletSlice
+        wallet: walletSlice,
+        near: nearSlice
     },
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
-        ignoredActions: ['wallet/signIn'],
+        ignoredActions: ['wallet/signIn', 'near/setNear'],
       },
     }),
 })

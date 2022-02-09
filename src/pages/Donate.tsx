@@ -1,6 +1,5 @@
 import { Button, Flex, Text } from "@chakra-ui/react"
 import {useEffect, useState } from "react"
-import { useGlobalContext } from "../globalContext"
 import * as nearAPI from "near-api-js"
 import { Contract } from "near-api-js"
 import { useToast } from '@chakra-ui/react'
@@ -23,7 +22,6 @@ type CampaignProps = {
 
 const Donation = () => {
   const [loading, setLoading] = useState(false)
-  const { campaignFactory } = useGlobalContext()
   const toast = useToast()
   const [campaigns, setCampaigns] = useState<CampaignProps[] | undefined>(undefined)
 
@@ -81,43 +79,43 @@ const Donation = () => {
   // }
 
   useEffect(() => {
-    const getCampaigns = () => {
-      campaignFactory?.account_campaigns?.forEach(async (campaign_account_id: string) => {
-        const user_account_id = (window as any).walletConnection.account()
-        const contract: Contract & { get_campaign_info?: () => CampaignInfo; donate?: donateFn } = new nearAPI.Contract(
-          user_account_id, // the account object that is connecting
-          campaign_account_id,
-          {
-            // name of contract you're connecting to
-            viewMethods: ["get_campaign_info"], // view methods do not change state but usually return a value
-            changeMethods: ["donate"], // change methods modify state
-          }
-        )
-        if (contract?.get_campaign_info) {
-          try {
-            const response = await contract.get_campaign_info()
-            setCampaigns(existing_campaigns => {
-              let new_campaign = {name: campaign_account_id, ...response, donate: contract?.donate }
-              if (!!existing_campaigns && existing_campaigns?.length > 0) {
-                return  [...existing_campaigns, new_campaign]
-              }
-              return [new_campaign]
-            })
-          }
-          catch (e: any) {
-            toast({
-              title: 'Error.',
-              description: e,
-              status: 'error',
-              duration: 5000,
-              isClosable: true,
-            })
-          }
-        }
-      })
-    }
-    getCampaigns()
-  }, [toast, utils, campaignFactory])
+    // const getCampaigns = () => {
+    //   campaignFactory?.account_campaigns?.forEach(async (campaign_account_id: string) => {
+    //     const user_account_id = (window as any).walletConnection.account()
+    //     const contract: Contract & { get_campaign_info?: () => CampaignInfo; donate?: donateFn } = new nearAPI.Contract(
+    //       user_account_id, // the account object that is connecting
+    //       campaign_account_id,
+    //       {
+    //         // name of contract you're connecting to
+    //         viewMethods: ["get_campaign_info"], // view methods do not change state but usually return a value
+    //         changeMethods: ["donate"], // change methods modify state
+    //       }
+    //     )
+    //     if (contract?.get_campaign_info) {
+    //       try {
+    //         const response = await contract.get_campaign_info()
+    //         setCampaigns(existing_campaigns => {
+    //           let new_campaign = {name: campaign_account_id, ...response, donate: contract?.donate }
+    //           if (!!existing_campaigns && existing_campaigns?.length > 0) {
+    //             return  [...existing_campaigns, new_campaign]
+    //           }
+    //           return [new_campaign]
+    //         })
+    //       }
+    //       catch (e: any) {
+    //         toast({
+    //           title: 'Error.',
+    //           description: e,
+    //           status: 'error',
+    //           duration: 5000,
+    //           isClosable: true,
+    //         })
+    //       }
+    //     }
+    //   })
+    // }
+    // getCampaigns()
+  }, [toast, utils])
 
   return (
    <Flex flexDirection="column" my={16}>

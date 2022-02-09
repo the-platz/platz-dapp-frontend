@@ -1,8 +1,7 @@
 import { FC, useEffect, useState } from "react"
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
-import { Provider as ReduxProvider } from 'react-redux'
+
 import AuthController from "./containers/AuthController";
-import { store } from './app/store';
 import {
   ChakraProvider,
   theme,
@@ -10,22 +9,24 @@ import {
 import BaseLayout from "./components/Layout/BaseLayout"
 import HomePage from "./pages/Home"
 import About from "./pages/About"
-import { ICurrentUser } from "."
-import { NearConfig } from "near-api-js/lib/near"
 import KOLProfile from "./pages/KOLProfile"
 import MyAccount from "./pages/MyAccount";
 import CreateCampaign from "./pages/CreateCampaign";
 import MyCampaigns from "./pages/MyCampaigns";
-import { CampaignFactoryInfo } from "./models/contracts/campaign_factory_contract";
 import * as env from "./env"
 import * as nearAPI from "near-api-js";
 import * as consts from "./utils/consts"
-import { ConnectConfig } from "near-api-js";
+import { ConnectConfig, WalletConnection } from "near-api-js";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { selectWalletConnection, setWalletConnection, signIn } from "./app/slices/walletSlice";
+import { selectNear, setNear } from "./app/slices/nearSlice";
 
-const { connect, keyStores, WalletConnection, Contract } = nearAPI;
+const { connect, keyStores } = nearAPI;
 
-export const App: FC<any> = ({ contract, currentUser: user, nearConfig, walletConnection, authData }) => {
-  const [near, setNear] = useState<nearAPI.Near>()
+export const App = () => {
+  const near = useAppSelector(selectNear)
+  const walletConnection = useAppSelector(selectWalletConnection)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (!near) {
@@ -49,40 +50,36 @@ export const App: FC<any> = ({ contract, currentUser: user, nearConfig, walletCo
       const connectNear = async () => {
         // connect to NEAR
         const near = await connect(config)
-        setNear(near)
+        dispatch(setNear({ near: near }))
       }
       connectNear()
     }
-  }, [near])
+
+    if (near && !walletConnection) {
+      // create wallet connection
+      const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
+      dispatch(setWalletConnection({ walletConnection: walletConnection }))
+    }
+  }, [near, walletConnection])
 
   return (
-    <ReduxProvider store={store}>
-      <ChakraProvider theme={theme}>
-        {/* <MyGlobalContext.Provider 
-          value={{ 
-            campaignFactory, 
-            setCampaignFactory, 
-            currentUser, 
-            setCurrentUser }}>
-        
-        </MyGlobalContext.Provider> */}
-        <AuthController>
-          <Router>
-            <Routes>
-              <Route path="/" element={<BaseLayout contract={contract} walletConnection={walletConnection} />}>
-                <Route index element={<HomePage />} />
-                <Route path="about" element={<About />} />
-                <Route path="kols" element={<Outlet />}>
-                  <Route path=":id" element={<KOLProfile />} />
-                </Route>
-                <Route path="myaccount" element={<MyAccount />} />
-                <Route path="createcampaign" element={<CreateCampaign />} />
-                <Route path="mycampaigns" element={<MyCampaigns />} />
+    <ChakraProvider theme={theme}>
+      <AuthController>
+        <Router>
+          <Routes>
+            <Route path="/" element={<BaseLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="about" element={<About />} />
+              <Route path="kols" element={<Outlet />}>
+                <Route path=":id" element={<KOLProfile />} />
               </Route>
-            </Routes>
-          </Router>
-        </AuthController>
-      </ChakraProvider>
-    </ReduxProvider>
+              <Route path="myaccount" element={<MyAccount />} />
+              <Route path="createcampaign" element={<CreateCampaign />} />
+              <Route path="mycampaigns" element={<MyCampaigns />} />
+            </Route>
+          </Routes>
+        </Router>
+      </AuthController>
+    </ChakraProvider>
   )
 }

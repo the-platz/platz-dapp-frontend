@@ -12,7 +12,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { useAppSelector } from '../../app/hooks';
-import { selectWalletConnection } from '../../reducers/walletSlice';
+import { selectWalletConnection } from '../../app/slices/walletSlice';
 
 type DonationTransaction = {
     transaction_hash: string,

@@ -1,71 +1,19 @@
 import { ColorModeScript } from "@chakra-ui/react"
-import { NearConfig } from "near-api-js/lib/near"
 import * as React from "react"
 import ReactDOM from "react-dom"
-import * as nearAPI from 'near-api-js';
+import { store } from './app/store';
+import { Provider as ReduxProvider } from 'react-redux'
 
 import { App } from "./App"
 import reportWebVitals from "./reportWebVitals"
 import * as serviceWorker from "./serviceWorker"
 
-const ContractName = 'iko.theplatz.testnet';
-const AppKeyPrefix = 'platz';
-const AuthDataKey = AppKeyPrefix + '_wallet_auth_key';
-
-export interface ICurrentUser {
-  accountId: string;
-  balance: string;
-}
-
-// const initNear = async () => {
-//   const nearConfig: NearConfig = {
-//     networkId: 'testnet',
-//     nodeUrl: 'https://rpc.testnet.near.org',
-//     walletUrl: 'https://wallet.testnet.near.org',
-//     headers: {}
-//   };
-
-//   const keyStore = new nearAPI.keyStores.BrowserLocalStorageKeyStore();
-//   const near = await nearAPI.connect(Object.assign({ deps: { keyStore } }, nearConfig));
-
-//   (window as any).walletConnection = new nearAPI.WalletConnection(near, AppKeyPrefix);
-
-//   let currentUser: ICurrentUser | null = null;
-//   if ((window as any).walletConnection.getAccountId()) {
-//     currentUser = {
-//       accountId: (window as any).walletConnection.getAccountId(),
-//       balance: (await (window as any).walletConnection.account().state()).amount
-//     }
-//   }
-
-//   (window as any).contract = await new nearAPI.Contract(
-//     (window as any).walletConnection.account(),
-//     ContractName,
-//     {
-//       viewMethods: ['get_campaign_factory_info', 'get_campaign_info'],
-//       changeMethods: ['create_account_campaign', 'donate']
-//     }
-//   )
-
-
-//   const authData = JSON.parse(window.localStorage.getItem(AuthDataKey) || '{}')
-//   return {
-//     currentUser,
-//     contract: ((window as any).contract as IContract),
-//     authData,
-//     nearConfig,
-//     walletConnection: (window as any).walletConnection
-//   }
-// }
-
-// (window as any).nearInitPromise = initNear().then(
-//   ({ ...props }) => {
-
-//   })
 ReactDOM.render(
   <React.StrictMode>
     <ColorModeScript />
-    <App/>
+    <ReduxProvider store={store}>
+      <App />
+    </ReduxProvider>
   </React.StrictMode>,
   document.getElementById("root"),
 )
