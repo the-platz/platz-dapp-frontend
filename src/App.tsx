@@ -11,10 +11,13 @@ import About from "./pages/About"
 import { Contract, WalletConnection } from "near-api-js"
 import { ICurrentUser } from "."
 import { NearConfig } from "near-api-js/lib/near"
-import Campaign from "./pages/Campaign"
-import { CampaignFactoryInfo, MyGlobalContext } from "./globalContext"
+import KOLProfile from "./pages/KOLProfile"
+import { MyGlobalContext } from "./globalContext"
 import MyAccount from "./pages/MyAccount";
-import KOLProfile from "./pages/KOLProfile";
+import CreateCampaign from "./pages/CreateCampaign";
+import MyCampaigns from "./pages/MyCampaigns";
+import { CampaignFactoryInfo } from "./models/contracts/campaign_factory_contract";
+import Campaign from "./pages/Campaign";
 
 export interface IContract extends Contract {
   create_account_campaign: any,
@@ -56,12 +59,14 @@ export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, wal
             <Route index element={<HomePage currentUser={currentUser} />} />
             <Route path="about" element={<About/>} />
             <Route path="campaigns" element={<Outlet/>}>
-              <Route path=":id" element={<Campaign/>} />
+              <Route path=":id" element={<Campaign />} />
             </Route>
             <Route path="kols" element={<Outlet/>}>
               <Route path=":id" element={<KOLProfile/>} />
             </Route>
             <Route path="myaccount" element={<MyAccount/>} />
+            <Route path="createcampaign" element={<CreateCampaign/>} />
+            <Route path="mycampaigns" element={<MyCampaigns/>} />
           </Route>
         </Routes>
       </Router>

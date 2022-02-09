@@ -1,7 +1,6 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons"
 import { Box, Flex, Text } from "@chakra-ui/react"
-import { BiGlobe, BiLink } from "react-icons/bi"
-import { FaFacebook, FaLink, FaTwitter } from "react-icons/fa"
+import { BiGlobe } from "react-icons/bi"
+import { FaFacebook, FaTwitter } from "react-icons/fa"
 
 const KOLProfile = () => {
   return (
@@ -12,7 +11,7 @@ const KOLProfile = () => {
        <Box maxHeight="200" height="200" bg="gray.300" width="100%"></Box>
         <Flex flexDirection="column" alignItems="center">
           <Box bg="gray.600" height="80px" maxHeight="80" width="80px" maxWidth="80" borderRadius="50%" mt="-40px"></Box>
-          <Text fontSize={['2xl', '4xl']}>User</Text>
+          <Text fontSize={['2xl', '4xl']}>KOL Nào đó</Text>
         </Flex>
      </Flex>
 
@@ -45,9 +44,9 @@ const KOLProfile = () => {
       </Flex>
 
       {/* Campaigns */}
-      <Flex justifyContent="center" flexDirection="column" mx="auto" mt={24} maxWidth="984" overflow="auto">
+      <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
-        <Flex sx={{ '& > *:not(:first-child)': { ml: [16, 32] }}} mt={4}>
+        <Flex sx={{ '& > *:not(:first-child)': { ml: [12, 24] }}} mt={4}>
           <Flex flexDirection="column" width="250px" minWidth="250px" height="200px" minHeight="200px" borderRadius="md" overflow="hidden">
             <Box bg="gray.100" width="250px" minWidth="250px" height="150px" minHeight="150px"></Box>
             <Text fontWeight="medium" p={3}>Campaign</Text>
@@ -56,7 +55,7 @@ const KOLProfile = () => {
       </Flex>
 
       {/* Donation history */}
-      <Flex justifyContent="center" flexDirection="column" mx="auto" my={16} maxWidth="984" overflow="auto">
+      {/* <Flex justifyContent="center" flexDirection="column" mx="auto" my={16} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Lịch sử quyên góp</Text>
         <Flex mt={4} flexDirection="column">
           <Flex sx={{ '& > *:not(:first-child)': { ml: [8, 12] }}} px={8} alignItems="center" color="gray.500">
@@ -82,7 +81,7 @@ const KOLProfile = () => {
               </Box>
           </Flex>
         </Flex>
-      </Flex>
+      </Flex> */}
    </Box>
   )
 }
