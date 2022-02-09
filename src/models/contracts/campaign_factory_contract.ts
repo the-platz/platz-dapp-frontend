@@ -14,7 +14,8 @@ const CampaignContractOptions: ContractMethods = {
 }
 
 export type CampaignFactoryContract = Contract & {
-    create_campaign?: (args: any, gas: string, deposit: string) => void
+    create_campaign?: (args: any, gas: string, deposit: string) => void,
+    get_campaign_factory_info?: () => CampaignFactoryInfo
 }
 
 export const getCampaignFactoryContract = (walletConnection: WalletConnection): CampaignFactoryContract => {

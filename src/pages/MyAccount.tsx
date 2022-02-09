@@ -10,7 +10,7 @@ const MyAccount = () => {
   // const toast = useToast()
   const walletConnection = useAppSelector(selectWalletConnection)
   const [totalPunkt, setTotalPunkts] = useState<string | undefined>(undefined)
-  
+
   useEffect(() => {
     // call punkt contract to get this account punkts
     if (!totalPunkt && walletConnection) {

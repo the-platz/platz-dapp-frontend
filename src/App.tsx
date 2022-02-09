@@ -18,20 +18,18 @@ import * as nearAPI from "near-api-js";
 import * as consts from "./utils/consts"
 import { ConnectConfig, WalletConnection } from "near-api-js";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { selectWalletConnection, setWalletConnection } from "./app/slices/walletSlice";
+import { setWalletConnection } from "./app/slices/walletSlice";
 import { selectNear, setNear } from "./app/slices/nearSlice";
+import Campaign from "./pages/Campaign";
 
 const { connect, keyStores } = nearAPI;
 
 export const App = () => {
   const near = useAppSelector(selectNear)
-  const walletConnection = useAppSelector(selectWalletConnection)
   const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (!near) {
-      console.log("near init");
-      
       const config: ConnectConfig = env.NETWORK_ID === consts.TESTNET ?
         {
           networkId: "testnet",
@@ -56,7 +54,6 @@ export const App = () => {
         // create wallet connection
         const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
         dispatch(setWalletConnection({ walletConnection: walletConnection }))
-        console.log("near init", near, walletConnection);
       }
       connectNear()
     }
@@ -73,13 +70,16 @@ export const App = () => {
               <Route path="kols" element={<Outlet />}>
                 <Route path=":id" element={<KOLProfile />} />
               </Route>
+              <Route path="campaigns" element={<Outlet />}>
+                <Route path=":id" element={<Campaign />} />
+              </Route>
               <Route path="myaccount" element={<MyAccount />} />
               <Route path="createcampaign" element={<CreateCampaign />} />
               <Route path="mycampaigns" element={<MyCampaigns />} />
-            </Route>
-          </Routes>
-        </Router>
-      </AuthController>
-    </ChakraProvider>
+          </Route>
+        </Routes>
+      </Router>
+    </AuthController>
+    </ChakraProvider >
   )
 }

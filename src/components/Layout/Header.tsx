@@ -41,7 +41,7 @@ const Header = () => {
   const [searchText, setSearchText] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
   const debounceSearchText = useDebounce<string>(searchText)
-  const [searchCampaigns, setSearchCampaigns] = useState<string[]>([])
+  const [searchCampaigns] = useState<string[]>([])
 
   useOnClickOutside(searchWrapperRef, () => {
     setVisibleSearchResult(false)
