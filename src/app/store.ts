@@ -11,7 +11,12 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
-        ignoredActions: ['wallet/signIn', 'near/setNear'],
+        ignoredActions: [
+          'wallet/signIn', 
+          'wallet/signOut', 
+          'wallet/setWalletConnection', 
+          'near/setNear'
+        ],
       },
     }),
 })

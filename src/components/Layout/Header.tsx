@@ -22,7 +22,6 @@ import { BiUserCircle } from "react-icons/bi";
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
 import useOnClickOutside from '../../hooks/useOnClickOutside'
-import { walletConnect } from '../../app/dispatchers/walletConnect';
 import { selectWalletConnection } from '../../app/slices/walletSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import * as env from "../../env"

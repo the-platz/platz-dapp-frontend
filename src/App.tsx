@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react"
+import { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 
 import AuthController from "./containers/AuthController";
@@ -18,7 +18,7 @@ import * as nearAPI from "near-api-js";
 import * as consts from "./utils/consts"
 import { ConnectConfig, WalletConnection } from "near-api-js";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { selectWalletConnection, setWalletConnection, signIn } from "./app/slices/walletSlice";
+import { selectWalletConnection, setWalletConnection } from "./app/slices/walletSlice";
 import { selectNear, setNear } from "./app/slices/nearSlice";
 
 const { connect, keyStores } = nearAPI;
@@ -30,6 +30,8 @@ export const App = () => {
 
   useEffect(() => {
     if (!near) {
+      console.log("near init");
+      
       const config: ConnectConfig = env.NETWORK_ID === consts.TESTNET ?
         {
           networkId: "testnet",
@@ -51,16 +53,14 @@ export const App = () => {
         // connect to NEAR
         const near = await connect(config)
         dispatch(setNear({ near: near }))
+        // create wallet connection
+        const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
+        dispatch(setWalletConnection({ walletConnection: walletConnection }))
+        console.log("near init", near, walletConnection);
       }
       connectNear()
     }
-
-    if (near && !walletConnection) {
-      // create wallet connection
-      const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
-      dispatch(setWalletConnection({ walletConnection: walletConnection }))
-    }
-  }, [near, walletConnection])
+  }, [dispatch, near])
 
   return (
     <ChakraProvider theme={theme}>
