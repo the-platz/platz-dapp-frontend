@@ -5,8 +5,12 @@ import { Fragment, useEffect, useState } from "react";
 import { Box, Button, Text, useToast } from "@chakra-ui/react"
 import { Contract } from "near-api-js";
 import { CampaignContract, CampaignContractOptions } from "../models/contracts/campaign_contract";
+import { selectWalletConnection } from "../reducers/walletSlice";
+import { useAppSelector } from "../app/hooks";
 
 const MyCampaigns = () => {
+    const walletConnection = useAppSelector(selectWalletConnection)
+
     const toast = useToast()
     const [myCampaignAccountIds, setMyCampaignAccountIds] = useState<string[] | undefined>(undefined)
     const [myCampaignContracts, setMyCampaignContracts] = useState<CampaignContract[] | undefined>(undefined)
@@ -52,6 +56,8 @@ const MyCampaigns = () => {
                 })
             }
         }
+
+        
     }, [myCampaignAccountIds, myCampaignContracts])
 
     const handleWithdraw = async (campaign_contract: CampaignContract) => {

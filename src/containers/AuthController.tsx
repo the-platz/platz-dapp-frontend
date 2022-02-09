@@ -9,7 +9,7 @@ import { ConnectConfig } from "near-api-js";
 
 const { connect, keyStores, WalletConnection } = nearAPI;
 
-const AuthController: React.FC<any> = (children: any) => {
+const AuthController: React.FC<any> = ({ children }) => {
     const dispatch = useDispatch();
     const [near, setNear] = useState<nearAPI.Near>()
 
@@ -49,9 +49,7 @@ const AuthController: React.FC<any> = (children: any) => {
         }
     }, [dispatch, near]);
 
-    return <>
-        
-    </> 
+    return children
 };
 
 export default AuthController;

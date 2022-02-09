@@ -11,6 +11,8 @@ import {
   } from '@chakra-ui/react'
 
 import { useEffect, useState } from "react";
+import { useAppSelector } from '../../app/hooks';
+import { selectWalletConnection } from '../../reducers/walletSlice';
 
 type DonationTransaction = {
     transaction_hash: string,
@@ -21,12 +23,13 @@ type DonationTransaction = {
 }
 
 const DonationHistory = () => {
+    const walletConnection = useAppSelector(selectWalletConnection)
     const [donationTxs, setDonationTxs] = useState<DonationTransaction[] | undefined>(undefined)
 
     useEffect(() => {
         // TODO: move the code to backend service
-        if (!donationTxs) {
-            const account = (window as any).walletConnection.account()
+        if (!donationTxs && walletConnection) {
+            const account = walletConnection.account()
             axios.get(`http://localhost:5001/transactions/donation?account_id=${account.accountId}&includeFailedTxs=${true}&limit=${100}&offset=${0}`)
             .then(res => {
                 setDonationTxs(res.data.data);

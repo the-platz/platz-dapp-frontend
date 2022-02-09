@@ -1,5 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WalletConnection } from 'near-api-js';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../app/store'
 
 type WalletSliceState = {
     isLoggedIn: boolean,
@@ -29,5 +31,7 @@ const walletSlice  = createSlice({
 })
 
 export const { signIn, signOut } = walletSlice.actions;
+
+export const selectWalletConnection = (state: RootState) => state.wallet.walletConnection
 
 export default walletSlice.reducer;

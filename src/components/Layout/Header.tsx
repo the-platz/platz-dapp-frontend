@@ -18,24 +18,25 @@ import {
 import { Link, useNavigate } from "react-router-dom"
 import { HamburgerIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import { BiUserCircle } from "react-icons/bi";
-import { ICurrentUser } from '../..'
 import { WalletConnection } from 'near-api-js'
-import { IContract } from '../../App'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
 import { useGlobalContext } from '../../globalContext'
 import useOnClickOutside from '../../hooks/useOnClickOutside'
 import { walletConnect } from '../../reducers/walletConnect';
+import { selectWalletConnection } from '../../reducers/walletSlice';
+import { useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-const Links = [{name: 'About', link: '/about'}];
+const Links = [{ name: 'About', link: '/about' }];
 
 interface IHeaderProps {
-  currentUser: ICurrentUser | null,
-  walletConnection: WalletConnection,
-  contract: IContract
 }
 
-const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract}) => {
+const Header: React.FC<IHeaderProps> = () => {
+  const walletConnection = useAppSelector(selectWalletConnection)
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { campaignFactory } = useGlobalContext()
   const navigate = useNavigate();
@@ -52,7 +53,6 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
   })
 
   const signOut = () => {
-    walletConnection.signOut();
     window.location.replace(window.location.origin + window.location.pathname);
   };
 
@@ -66,19 +66,23 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
   )
 
   useEffect(() => {
-   if (Boolean(visibleSearchResult && debounceSearchText && isLoading)) {
-    campaignFactory?.account_campaigns?.forEach(campaign => {
-      if (campaign.toLowerCase().includes(debounceSearchText.toLowerCase())) {
-        if (!!searchCampaigns) {
+    if (Boolean(visibleSearchResult && debounceSearchText && isLoading)) {
+      campaignFactory?.account_campaigns?.forEach(campaign => {
+        if (campaign.toLowerCase().includes(debounceSearchText.toLowerCase())) {
+          if (!!searchCampaigns) {
+            setIsLoading(false)
+            return setSearchCampaigns([...searchCampaigns, campaign])
+          }
           setIsLoading(false)
-          return setSearchCampaigns([...searchCampaigns, campaign])
+          return setSearchCampaigns([campaign])
         }
-        setIsLoading(false)
-        return setSearchCampaigns([campaign])
-      }
-    })
-   }
-  }, [visibleSearchResult, debounceSearchText, campaignFactory, searchCampaigns, isLoading])
+      })
+    }
+
+    if (walletConnection && walletConnection.isSignedIn()) {
+      setIsSignedIn(true)
+    }
+  }, [walletConnection, isSignedIn, visibleSearchResult, debounceSearchText, campaignFactory, searchCampaigns, isLoading])
 
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -109,7 +113,7 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
               pointerEvents='none'
               children={<SearchIcon color='gray.300' />}
             />
-            <Input type='text' placeholder='Find KOLs' onChange={handleSearchChange}/>
+            <Input type='text' placeholder='Find KOLs' onChange={handleSearchChange} />
           </InputGroup>
           {visibleSearchResult && (
             <Box sx={{ position: 'absolute', top: '52px', left: '-2rem', bg: 'gray.100', borderRadius: 'md', zIndex: 999 }}>
@@ -117,28 +121,28 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
                 <Box textAlign="center" py={4}>
                   Loading...
                 </Box>
-                ) : (
-                  <Flex flexDirection="column">
-                      {searchCampaigns?.length > 0 ?
-                        searchCampaigns.map((campaign, index) => (
-                          <Flex key={`${index}-${campaign}`} flexDirection="column" px={3} py={2}>
-                            {campaign}
-                          </Flex>
-                          ))
-                        : (
-                          <Box textAlign="center" py={4}>
-                            Không có kết quả bạn muốn tìm thấy
-                          </Box>
-                        )
-                      }
-                  </Flex>
-                )
+              ) : (
+                <Flex flexDirection="column">
+                  {searchCampaigns?.length > 0 ?
+                    searchCampaigns.map((campaign, index) => (
+                      <Flex key={`${index}-${campaign}`} flexDirection="column" px={3} py={2}>
+                        {campaign}
+                      </Flex>
+                    ))
+                    : (
+                      <Box textAlign="center" py={4}>
+                        Không có kết quả bạn muốn tìm thấy
+                      </Box>
+                    )
+                  }
+                </Flex>
+              )
               }
             </Box>
           )}
         </HStack>
         <Flex alignItems={'center'}>
-          {!currentUser ?
+          {!isSignedIn ?
             <Button
               variant='ghost'
               colorScheme='blackAlpha'
@@ -149,7 +153,7 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
             </Button>
             :
             <Menu>
-              <MenuButton 
+              <MenuButton
                 as={IconButton}
                 isRound={true}
                 variant='ghost'
@@ -162,10 +166,10 @@ const Header: React.FC<IHeaderProps> = ({currentUser, walletConnection, contract
               </MenuButton>
               <MenuList>
                 <MenuItem onClick={() => { navigate("/createcampaign", { replace: true }); }}>
-                    Create campaign
+                  Create campaign
                 </MenuItem>
                 <MenuItem onClick={() => { navigate("/mycampaigns", { replace: true }); }}>
-                    My campaigns
+                  My campaigns
                 </MenuItem>
                 <MenuItem onClick={() => { navigate("/myaccount", { replace: true }); }}>
                   My account
