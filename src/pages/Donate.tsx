@@ -1,7 +1,6 @@
 import { Button, Flex, Text } from "@chakra-ui/react"
 import {useEffect, useState } from "react"
 import * as nearAPI from "near-api-js"
-import { Contract } from "near-api-js"
 import { useToast } from '@chakra-ui/react'
 import { useAppSelector } from "../app/hooks"
 import { selectWalletConnection } from "../app/slices/walletSlice"
