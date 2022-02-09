@@ -70,6 +70,7 @@ const Header = () => {
     if (walletConnection) {
       walletConnection.signOut() 
       dispatch(walletSliceSignOut())
+      setIsSignedIn(false)
     } else {
         toast({
           title: 'Wallet connection error',
