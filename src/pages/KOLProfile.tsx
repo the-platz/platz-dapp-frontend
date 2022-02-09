@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react"
+import { Box, Flex, Image, Text } from "@chakra-ui/react"
 import { BiGlobe } from "react-icons/bi"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
 
@@ -8,10 +8,13 @@ const KOLProfile = () => {
 
      {/* User avatar */}
      <Flex flexDirection="column">
-       <Box maxHeight="200" height="200" bg="gray.300" width="100%"></Box>
-        <Flex flexDirection="column" alignItems="center">
-          <Box bg="gray.600" height="80px" maxHeight="80" width="80px" maxWidth="80" borderRadius="50%" mt="-40px"></Box>
-          <Text fontSize={['2xl', '4xl']}>KOL Nào đó</Text>
+       <Box maxHeight="200" height="200" bg="#d5ccc0" width="100%" position="relative" overflow="hidden">
+          <Image src="/images/default_kol_cover_1.png" position="absolute" height="250" top="0" left="calc(50% - 400px)" />
+          <Image src="/images/default_kol_cover_2.png" position="absolute" height="250" top="0" left="calc(50% + 250px)" />
+       </Box>
+        <Flex flexDirection="column" alignItems="center" position="relative" zIndex={101}>
+          <Box bgImg="/images/default_kol_avatar.jpg" bgPosition="center" bgSize="cover" height="80px" maxHeight="80" width="80px" maxWidth="80" borderRadius="50%" mt="-40px"></Box>
+          <Text fontSize={['2xl', '4xl']}>Miss Platz</Text>
         </Flex>
      </Flex>
 
@@ -48,9 +51,22 @@ const KOLProfile = () => {
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
         <Flex sx={{ '& > *:not(:first-child)': { ml: [12, 24] }}} mt={4}>
           <Flex flexDirection="column" width="250px" minWidth="250px" height="200px" minHeight="200px" borderRadius="md" overflow="hidden">
-            <Box bg="gray.100" width="250px" minWidth="250px" height="150px" minHeight="150px"></Box>
+            <Box bg="#d5ccc0" width="250px" minWidth="250px" height="150px" minHeight="150px"></Box>
             <Text fontWeight="medium" p={3}>Campaign</Text>
           </Flex>
+        </Flex>
+      </Flex>
+
+      {/* About KOL */}
+      <Flex justifyContent="center" flexDirection="column" my={24} mx="auto" maxWidth="984" overflow="auto" >
+        <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Giới thiệu</Text>
+        <Flex position="relative" mt={4} height="560px" bgImg="linear-gradient(to bottom right, #4e353b, #e9c27a)" borderRadius="md" overflow="hidden">
+          <Image src="/images/default_kol_about.png" maxH="480px" position="absolute" top="80px" right="0" zIndex="101" />
+          <Text fontSize={['7xl', '9xl']} color="transparent" fontWeight="medium" p={3} textShadow="1px 1px 1px black" textTransform="uppercase" position="absolute" top="-5" right="28px" zIndex="100" opacity="0.5">Platz</Text>
+
+          <Text fontSize={['3xl', '4xl']} color="white" fontWeight="medium" p={3} position="absolute" top="20%" left="10%" zIndex="100">Hi! Mình là</Text>
+          <Text fontSize={['5xl', '6xl']} color="#e9d0b1" fontWeight="bold" p={3} position="absolute" top="27%" left="10%" zIndex="100" letterSpacing="wider">Miss Platz</Text>
+          <Text fontSize={['lg', 'xl']} color="white" fontWeight="medium" p={3} position="absolute" top="50%" left="10%" zIndex="100" maxWidth="420px" textOverflow="nowrap">Artist, influencer, troublemaker, streamer... Mình thích các hoạt động sáng tạo và muốn mang lại niềm vui cho mọi người xung quanh.</Text>
         </Flex>
       </Flex>
 
