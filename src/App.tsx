@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 
-import AuthController from "./containers/AuthController";
 import {
   ChakraProvider,
   theme,
@@ -61,7 +60,6 @@ export const App = () => {
 
   return (
     <ChakraProvider theme={theme}>
-      <AuthController>
         <Router>
           <Routes>
             <Route path="/" element={<BaseLayout />}>
@@ -79,7 +77,6 @@ export const App = () => {
           </Route>
         </Routes>
       </Router>
-    </AuthController>
     </ChakraProvider >
   )
 }
