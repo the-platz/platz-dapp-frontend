@@ -17,7 +17,7 @@ const MyCampaigns = () => {
 
     useEffect(() => {
         if (!myCampaignAccountIds && walletConnection) {
-            axios.get(`http://localhost:5001/mycampaign?account_id=${walletConnection.account().accountId}`)
+            axios.get(`http://localhost:5001/campaigns/account/${walletConnection.account().accountId}`)
                 .then(res => {
                     // TODO:: remove below stupid mapping
                     type MyCampaignResponse = {
