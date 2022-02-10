@@ -1,4 +1,6 @@
-import { Contract } from "near-api-js"
+import { Contract, WalletConnection } from "near-api-js"
+import { ContractMethods } from "near-api-js/lib/contract"
+import * as env from "../../env"
 
 export type CampaignFactoryInfo = {
     account_campaigns: string[]
@@ -6,8 +8,21 @@ export type CampaignFactoryInfo = {
     punkt_contract_account_id: string
 }
 
-export type CampaignContractFactory = Contract & {
-    create_campaign?: (args: any, gas: string, deposit: string) => void
+const CampaignContractOptions: ContractMethods = {
+    viewMethods: ['get_campaign_factory_info'],
+    changeMethods: ['create_campaign']
 }
 
-export { }
+export type CampaignFactoryContract = Contract & {
+    create_campaign?: (args: any, gas: string, deposit: string) => void,
+    get_campaign_factory_info?: () => CampaignFactoryInfo
+}
+
+export const getCampaignFactoryContract = (walletConnection: WalletConnection): CampaignFactoryContract => {
+    const contract: CampaignFactoryContract = new Contract(
+        walletConnection.account(),
+        env.CAMPAIGN_CONTRACT_FACTORY,
+        CampaignContractOptions)
+    
+    return contract
+}

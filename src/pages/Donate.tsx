@@ -1,9 +1,11 @@
 import { Button, Flex, Text } from "@chakra-ui/react"
 import {useEffect, useState } from "react"
-import { useGlobalContext } from "../globalContext"
 import * as nearAPI from "near-api-js"
-import { Contract } from "near-api-js"
 import { useToast } from '@chakra-ui/react'
+import { useAppSelector } from "../app/hooks"
+import { selectWalletConnection } from "../app/slices/walletSlice"
+import { getCampaignFactoryContract } from "../models/contracts/campaign_factory_contract"
+import { CampaignContract, getCampaignContract } from "../models/contracts/campaign_contract"
 
 
 type donateFn = ({ amount }?: any, gas?: string, deposit?: string) => void
@@ -22,11 +24,12 @@ type CampaignProps = {
 } & CampaignInfo
 
 const Donation = () => {
+  const walletConnection = useAppSelector(selectWalletConnection)
+
   const [loading, setLoading] = useState(false)
-  const { campaignFactory } = useGlobalContext()
   const toast = useToast()
   const [campaigns, setCampaigns] = useState<CampaignProps[] | undefined>(undefined)
-  const [first, setFirst] = useState(true)
+  // const [first, setFirst] = useState(true)
 
   const { utils } = nearAPI
 
@@ -81,46 +84,53 @@ const Donation = () => {
   //   }
   // }
 
-  useEffect(() => {
-    if (!first) return
-    const getCampaigns = () => {
-      campaignFactory?.account_campaigns?.forEach(async (campaign_account_id: string) => {
-        const user_account_id = (window as any).walletConnection.account()
-        const contract: Contract & { get_campaign_info?: () => CampaignInfo; donate?: donateFn } = new nearAPI.Contract(
-          user_account_id, // the account object that is connecting
-          campaign_account_id,
-          {
-            // name of contract you're connecting to
-            viewMethods: ["get_campaign_info"], // view methods do not change state but usually return a value
-            changeMethods: ["donate"], // change methods modify state
-          }
-        )
-        if (contract?.get_campaign_info) {
-          try {
-            const response = await contract.get_campaign_info()
-            setCampaigns(existing_campaigns => {
-              let new_campaign = {name: campaign_account_id, ...response, donate: contract?.donate }
-              if (!!existing_campaigns && existing_campaigns?.length > 0) {
-                return  [...existing_campaigns, new_campaign]
+  const getCampaigns = async() => {
+    if (walletConnection) {
+      const campaignFactory = getCampaignFactoryContract(walletConnection)
+      if (campaignFactory.get_campaign_factory_info) {
+        const campaignFactoryInfo = await campaignFactory.get_campaign_factory_info()
+        campaignFactoryInfo.account_campaigns.forEach(async (campaign_account_id: string) => {
+            const contract: CampaignContract = getCampaignContract(walletConnection, campaign_account_id)
+            if (contract.get_campaign_info) {
+              try {
+                const response = await contract.get_campaign_info()
+                setCampaigns(existing_campaigns => {
+                  let new_campaign = {name: campaign_account_id, ...response, donate: contract?.donate }
+                  if (!!existing_campaigns && existing_campaigns?.length > 0) {
+                    return  [...existing_campaigns, new_campaign]
+                  }
+                  return [new_campaign]
+                })
               }
-              return [new_campaign]
-            })
-          }
-          catch (e: any) {
-            toast({
-              title: 'Error.',
-              description: e,
-              status: 'error',
-              duration: 5000,
-              isClosable: true,
-            })
-          }
-        }
+              catch (e: any) {
+                toast({
+                  title: 'Error.',
+                  description: e,
+                  status: 'error',
+                  duration: 5000,
+                  isClosable: true,
+                })
+              }
+            }
+          })
+      }
+    } else {
+      toast({
+        title: 'Wallet connnection error.',
+        description: "Wallet connnection is not initialized",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
       })
-      setFirst(true)
     }
-    getCampaigns()
-  }, [toast, utils, campaignFactory, first])
+  }
+
+  useEffect(() => {
+    if (!campaigns && walletConnection) {
+      getCampaigns()
+    }
+    
+  }, [walletConnection, toast])
 
   return (
    <Flex flexDirection="column" my={16}>
@@ -135,10 +145,10 @@ const Donation = () => {
               {campaign.name}
             </Text>
             <Text fontSize="sm" fontWeight="normal">
-              Số tiền ủng hộ: <Text fontWeight="bold" display="inline">{utils.format.formatNearAmount(campaign.donated_amount)}</Text> NEAR
+              Số tiền ủng hộ: {utils.format.formatNearAmount(campaign.donated_amount)} NEAR
             </Text>
             <Text fontSize="sm" fontWeight="normal">
-              Mục tiêu: <Text fontWeight="bold" display="inline">{utils.format.formatNearAmount(campaign.target_amount)}</Text> NEAR
+              Mục tiêu: {utils.format.formatNearAmount(campaign.target_amount)} NEAR
             </Text>
             <Button mt={4} colorScheme="whiteAlpha" onClick={() => {
               setLoading(true)

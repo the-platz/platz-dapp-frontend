@@ -1,6 +1,7 @@
-import { FC, useEffect, useState } from "react"
-import {BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
+import { useEffect } from "react"
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 
+import AuthController from "./containers/AuthController";
 import {
   ChakraProvider,
   theme,
@@ -8,69 +9,77 @@ import {
 import BaseLayout from "./components/Layout/BaseLayout"
 import HomePage from "./pages/Home"
 import About from "./pages/About"
-import { Contract, WalletConnection } from "near-api-js"
-import { ICurrentUser } from "."
-import { NearConfig } from "near-api-js/lib/near"
 import KOLProfile from "./pages/KOLProfile"
-import { MyGlobalContext } from "./globalContext"
 import MyAccount from "./pages/MyAccount";
 import CreateCampaign from "./pages/CreateCampaign";
 import MyCampaigns from "./pages/MyCampaigns";
-import { CampaignFactoryInfo } from "./models/contracts/campaign_factory_contract";
+import * as env from "./env"
+import * as nearAPI from "near-api-js";
+import * as consts from "./utils/consts"
+import { ConnectConfig, WalletConnection } from "near-api-js";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { setWalletConnection } from "./app/slices/walletSlice";
+import { selectNear, setNear } from "./app/slices/nearSlice";
 import Campaign from "./pages/Campaign";
 
-export interface IContract extends Contract {
-  create_account_campaign: any,
-  donate: any
-}
+const { connect, keyStores } = nearAPI;
 
-interface IAppProps {
-  contract: IContract,
-  currentUser: ICurrentUser | null,
-  nearConfig: NearConfig,
-  walletConnection: WalletConnection,
-  authData: any
-}
-
-export const App: FC<IAppProps> = ({contract, currentUser: user, nearConfig, walletConnection, authData}) => {
-  const [campaignFactory, setCampaignFactory] = useState<CampaignFactoryInfo | undefined>(undefined)
-  const [currentUser, setCurrentUser] = useState<ICurrentUser | null>(user)
+export const App = () => {
+  const near = useAppSelector(selectNear)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
-    (window as any).contract
-    .get_campaign_factory_info()
-    .then((res: CampaignFactoryInfo) => {
-      console.log('res', res)
-      setCampaignFactory(res)
-    })
-  }, [])
+    if (!near) {
+      const config: ConnectConfig = env.NETWORK_ID === consts.TESTNET ?
+        {
+          networkId: "testnet",
+          keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+          nodeUrl: "https://rpc.testnet.near.org",
+          walletUrl: "https://wallet.testnet.near.org",
+          helperUrl: "https://helper.testnet.near.org",
+          headers: {}
+        } : {
+          networkId: "mainnet",
+          keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+          nodeUrl: "https://rpc.mainnet.near.org",
+          walletUrl: "https://wallet.mainnet.near.org",
+          helperUrl: "https://helper.mainnet.near.org",
+          headers: {}
+        }
+
+      const connectNear = async () => {
+        // connect to NEAR
+        const near = await connect(config)
+        dispatch(setNear({ near: near }))
+        // create wallet connection
+        const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
+        dispatch(setWalletConnection({ walletConnection: walletConnection }))
+      }
+      connectNear()
+    }
+  }, [dispatch, near])
 
   return (
     <ChakraProvider theme={theme}>
-      <MyGlobalContext.Provider
-        value={{
-          campaignFactory,
-          setCampaignFactory,
-          currentUser,
-          setCurrentUser }}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<BaseLayout contract={contract} walletConnection={walletConnection} currentUser={currentUser} />}>
-            <Route index element={<HomePage currentUser={currentUser} />} />
-            <Route path="about" element={<About/>} />
-            <Route path="campaigns" element={<Outlet/>}>
-              <Route path=":id" element={<Campaign />} />
-            </Route>
-            <Route path="kols" element={<Outlet/>}>
-              <Route path=":id" element={<KOLProfile/>} />
-            </Route>
-            <Route path="myaccount" element={<MyAccount/>} />
-            <Route path="createcampaign" element={<CreateCampaign/>} />
-            <Route path="mycampaigns" element={<MyCampaigns/>} />
+      <AuthController>
+        <Router>
+          <Routes>
+            <Route path="/" element={<BaseLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="about" element={<About />} />
+              <Route path="kols" element={<Outlet />}>
+                <Route path=":id" element={<KOLProfile />} />
+              </Route>
+              <Route path="campaigns" element={<Outlet />}>
+                <Route path=":id" element={<Campaign />} />
+              </Route>
+              <Route path="myaccount" element={<MyAccount />} />
+              <Route path="createcampaign" element={<CreateCampaign />} />
+              <Route path="mycampaigns" element={<MyCampaigns />} />
           </Route>
         </Routes>
       </Router>
-      </MyGlobalContext.Provider>
-    </ChakraProvider>
+    </AuthController>
+    </ChakraProvider >
   )
 }
