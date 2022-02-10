@@ -1,6 +1,7 @@
 import { Box, Button, Flex, HStack, Image, Link, Text, VStack, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import Donation from "./Donate";
+import KOLList from "../components/KOLList/KOLList";
 
 // const COLOR_PRIMARY = '#9F7E69'
 const COLOR_PRIMARY = 'teal'
@@ -48,6 +49,7 @@ const HomePage: React.FC<any> = () => {
       </VStack>
     </HStack>
 
+    <KOLList />
     <Donation />
   </Box>
 };
