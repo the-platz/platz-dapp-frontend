@@ -31,10 +31,12 @@ const KOLProfile = () => {
             <Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
             <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">100,000,000 đ</Text>
           </Flex>
-          <Flex flexDirection="column">
+
+          {/* Rewarded points are in my account */}
+          {/* <Flex flexDirection="column">
             <Text fontSize={['lg', 'xl']}>Điểm thưởng</Text>
             <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">100,000 đ</Text>
-          </Flex>
+          </Flex> */}
           <Flex flexDirection="column">
             <Text fontSize={['lg', 'xl']}>Campaigns</Text>
             <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">10</Text>

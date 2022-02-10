@@ -10,8 +10,8 @@ const MyCampaigns = () => {
     const toast = useToast()
     const [myCampaignAccountIds, setMyCampaignAccountIds] = useState<string[] | undefined>(undefined)
     const [myCampaignContracts, setMyCampaignContracts] = useState<CampaignContract[] | undefined>(undefined)
-    const [loading, setLoading] = useState<boolean>(false)
-    
+    // const [loading, setLoading] = useState<boolean>(false)
+
     useEffect(() => {
         if (!myCampaignAccountIds) {
             // TODO: remove window object
@@ -40,14 +40,14 @@ const MyCampaigns = () => {
                         user_account_id,
                         campaign_account_id,
                         CampaignContractOptions)
-                        
+
                     contract.campaign_account_id = campaign_account_id
                     if (contract?.get_campaign_info) {
                         contract.campaign_info = await contract.get_campaign_info()
                     }
 
-                    setMyCampaignContracts((existingCampaigns) => 
-                        !!existingCampaigns && existingCampaigns?.length > 0? 
+                    setMyCampaignContracts((existingCampaigns) =>
+                        !!existingCampaigns && existingCampaigns?.length > 0?
                             [...existingCampaigns, contract] : [contract])
                 })
             }
@@ -87,7 +87,7 @@ const MyCampaigns = () => {
                     <Text fontSize="sm" fontWeight="normal">
                         Mục tiêu: {near_utils.format.formatNearAmount(campaign_contract.campaign_info.target_amount, 2)} NEAR
                     </Text>
-                    <Button key={campaign_contract.campaign_account_id} mt={4} 
+                    <Button key={campaign_contract.campaign_account_id} mt={4}
                         onClick={() => handleWithdraw(campaign_contract)}>Withdraw</Button>
                 </Box>
             )}
