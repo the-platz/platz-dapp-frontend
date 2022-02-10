@@ -1,6 +1,7 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
 import { BiGlobe } from "react-icons/bi"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
 const KOLProfile = () => {
   return (
@@ -52,10 +53,12 @@ const KOLProfile = () => {
       <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
         <Flex sx={{ '& > *:not(:first-child)': { ml: [12, 24] }}} mt={4}>
-          <Flex flexDirection="column" width="250px" minWidth="250px" height="200px" minHeight="200px" borderRadius="md" overflow="hidden">
-            <Box bg="#d5ccc0" width="250px" minWidth="250px" height="150px" minHeight="150px"></Box>
-            <Text fontWeight="medium" p={3}>Campaign</Text>
-          </Flex>
+          <Link to="/campaigns/1">
+            <Flex flexDirection="column" width="250px" minWidth="250px" height="200px" minHeight="200px" borderRadius="md" overflow="hidden">
+              <Box bg="#d5ccc0" width="250px" minWidth="250px" height="150px" minHeight="150px"></Box>
+              <Text fontWeight="medium" p={3}>Campaign</Text>
+            </Flex>
+          </Link>
         </Flex>
       </Flex>
 

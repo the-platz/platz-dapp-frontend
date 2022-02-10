@@ -1,8 +1,8 @@
 import axios from "axios";
 import { near_utils } from "../utils/utils";
 
-import { Fragment, useEffect, useState } from "react";
-import { Box, Button, Text, useToast } from "@chakra-ui/react"
+import { useEffect, useState } from "react";
+import { Box, Button, Flex, Text, useToast } from "@chakra-ui/react"
 import { CampaignContract, getCampaignContract } from "../models/contracts/campaign_contract";
 import { selectWalletConnection } from "../app/slices/walletSlice";
 import { useAppSelector } from "../app/hooks";
@@ -69,7 +69,7 @@ const MyCampaigns = () => {
     }
 
     return (
-        <Fragment>
+        <Flex flexDirection="column" alignItems="center" maxWidth="886" mx="auto" py={16}>
             <Text>My Campaigns</Text>
 
             {myCampaignContracts?.map((campaign_contract, _, __) =>
@@ -91,7 +91,7 @@ const MyCampaigns = () => {
                             onClick={() => handleWithdraw(campaign_contract)}>Withdraw</Button>
                     </Box>
             )}
-        </Fragment>
+        </Flex>
     )
 };
 
