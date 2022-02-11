@@ -22,6 +22,7 @@ import Campaign from "./pages/Campaign";
 import { connectConfig } from "./utils/utils";
 import { setCampaigns, setListKOL } from "./app/slices/campaignFactorySlice";
 import { getAllCampaignsAsync } from "./models/contracts/campaign_factory_contract";
+import TxCampaignCallback from "./components/Transactions/TxCampaignCallback";
 
 const { connect } = nearAPI;
 
@@ -67,11 +68,14 @@ export const App = () => {
               <Route path=":id" element={<KOLProfile />} />
             </Route>
             <Route path="campaigns" element={<Outlet />}>
-              <Route path=":id" element={<Campaign />} />
+              <Route path=":campaignAccountId" element={<Campaign />} />
             </Route>
             <Route path="myaccount" element={<MyAccount />} />
             <Route path="createcampaign" element={<CreateCampaign />} />
             <Route path="mycampaigns" element={<MyCampaigns />} />
+            <Route path="txCallback" element={<Outlet />}>
+              <Route path="campaign/:campaignAccountId/:actionType" element={<TxCampaignCallback />} />
+            </Route>
           </Route>
         </Routes>
       </Router>
