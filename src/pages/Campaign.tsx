@@ -1,9 +1,32 @@
+import BN from 'bn.js';
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
+import { useCallback, useEffect } from 'react'
 import { FaCalendar } from 'react-icons/fa'
+import { useParams } from 'react-router-dom'
+import { useAppSelector } from '../app/hooks'
+import { selectWalletConnection } from '../app/slices/walletSlice'
+import { donateAsync, getCampaignContract } from '../models/contracts/campaign_contract'
 
 const Campaign = () => {
+  const walletConnection = useAppSelector(selectWalletConnection)
+  const { campaignAccountId } = useParams()
+
+  // const donate = useCallback(async(donationAmount: string) => {
+  //   if (walletConnection && campaignAccountId) {
+  //     const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
+  //     await donateAsync(campaignContract, new BN(donationAmount))
+  //   }
+  // }, [])
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     donate("5000000000000000000000000")
+  //   }, 4000)
+  // }, [donate])
+
   return (
     <Box>
+      <Text>{ campaignAccountId }</Text>
       {/* Hero section */}
       <Flex h="100vh" maxH="1024px" bgImg={'https://afamilycdn.com/150157425591193600/2021/2/11/14751884443497880450504831813681599361407354o-1613040377435808694470.jpg'} bgPos="center" bgRepeat="no-repeat" bgSize="cover" position="relative">
           <Flex flexDirection="column" bg="blackAlpha.300" backdropFilter="blur(10px)" position="absolute" bottom="20%" right="50%" py={6} px={12} borderRadius="sm" color="white" sx={{ transform: 'translateX(50%)'}} justifyContent="center" alignItems="center">

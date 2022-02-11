@@ -6,6 +6,7 @@ import { Box, Button, Text, useToast } from "@chakra-ui/react"
 import { CampaignContract, getCampaignContract } from "../models/contracts/campaign_contract";
 import { selectWalletConnection } from "../app/slices/walletSlice";
 import { useAppSelector } from "../app/hooks";
+import CampaignCard from "../components/Campaigns/CampaignCard";
 
 const MyCampaigns = () => {
     const walletConnection = useAppSelector(selectWalletConnection)
@@ -16,7 +17,7 @@ const MyCampaigns = () => {
     // const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
-        if (!myCampaignAccountIds && walletConnection) {
+        if (walletConnection && !myCampaignAccountIds) {
             axios.get(`http://localhost:5001/campaigns/account/${walletConnection.account().accountId}`)
                 .then(res => {
                     // TODO:: remove below stupid mapping
@@ -31,32 +32,11 @@ const MyCampaigns = () => {
                     console.log(error)
                 });
         }
-
-        if (!myCampaignContracts && walletConnection) {
-            if (myCampaignAccountIds) {
-                myCampaignAccountIds.forEach(async (campaign_account_id) => {
-                    const contract: CampaignContract = getCampaignContract(walletConnection, campaign_account_id)
-
-                    contract.campaign_account_id = campaign_account_id
-                    if (contract?.get_campaign_info) {
-                        try {
-                            contract.campaign_info = await contract.get_campaign_info()
-                        } catch (e) {
-                            console.error(e);
-                        }
-                    }
-
-                    setMyCampaignContracts((existingCampaigns) =>
-                        !!existingCampaigns && existingCampaigns?.length > 0 ?
-                            [...existingCampaigns, contract] : [contract])
-                })
-            }
-        }
-    }, [walletConnection, myCampaignAccountIds, myCampaignContracts])
+    }, [walletConnection])
 
     const handleWithdraw = async (campaign_contract: CampaignContract) => {
         if (campaign_contract.withdraw) {
-            await campaign_contract.withdraw()
+            // await campaign_contract.withdraw({})
         } else {
             toast({
                 title: 'Contract error',
@@ -72,24 +52,8 @@ const MyCampaigns = () => {
         <Fragment>
             <Text>My Campaigns</Text>
 
-            {myCampaignContracts?.map((campaign_contract, _, __) =>
-                !campaign_contract.campaign_info ? null :
-                    <Box key={campaign_contract.campaign_account_id}
-                        maxW='sm'
-                        borderWidth='1px'
-                        borderRadius='lg'>
-                        <Text fontSize="md" fontWeight="bold">
-                            {campaign_contract.campaign_account_id}
-                        </Text>
-                        <Text fontSize="sm" fontWeight="normal">
-                            Số tiền ủng hộ: {near_utils.format.formatNearAmount(campaign_contract.campaign_info.donated_amount, 2)} NEAR
-                        </Text>
-                        <Text fontSize="sm" fontWeight="normal">
-                            Mục tiêu: {near_utils.format.formatNearAmount(campaign_contract.campaign_info.target_amount, 2)} NEAR
-                        </Text>
-                        <Button key={campaign_contract.campaign_account_id} mt={4}
-                            onClick={() => handleWithdraw(campaign_contract)}>Withdraw</Button>
-                    </Box>
+            {myCampaignAccountIds?.map((campaignAccountId) =>
+                <CampaignCard campaignAccountId={campaignAccountId} />
             )}
         </Fragment>
     )
