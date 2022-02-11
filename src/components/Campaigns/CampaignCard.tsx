@@ -5,6 +5,7 @@ import { selectWalletConnection } from "../../app/slices/walletSlice"
 import { getCampaignContract, getCampaignContractInfoAsync, withdrawAsync } from "../../models/contracts/campaign_contract"
 import { CampaignInfo } from "../../models/types"
 import { near_utils } from "../../utils/utils"
+import * as consts from "../../utils/consts"
 
 type ICampaignCardProps = {
     campaignAccountId: string
@@ -27,10 +28,10 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({ campaignAccountId }) => {
             withdrawAsync(campaignContract)
         } else {
             toast({
-                title: 'Contract error',
-                description: "Contract is not initialized!",
+                title: consts.TOAST_ERROR_WALLET_CONNECTION_NOT_INITIALIZED.title,
+                description: consts.TOAST_ERROR_WALLET_CONNECTION_NOT_INITIALIZED.title,
                 status: 'error',
-                duration: 5000,
+                duration: consts.ERROR_VISIBILITY_DURATION,
                 isClosable: true,
             })
         }

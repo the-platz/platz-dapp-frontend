@@ -1,7 +1,7 @@
 import BN from 'bn.js';
 import { Contract, WalletConnection } from "near-api-js"
 import { ContractMethods } from "near-api-js/lib/contract"
-import { IContractCall, IChangeMethodFn, ChangeMethodOptions } from "./interfaces"
+import { IChangeMethodFn, ChangeMethodOptions } from "./interfaces"
 
 type CampaignInfo = {
     campaign_beneficiary: string
