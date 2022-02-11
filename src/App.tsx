@@ -19,8 +19,9 @@ import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { selectWalletConnection, setWalletConnection, selectIsSignedIn } from "./app/slices/walletSlice";
 import { setNear } from "./app/slices/nearSlice";
 import Campaign from "./pages/Campaign";
-import { connectConfig, getCampaigns } from "./utils/utils";
+import { connectConfig } from "./utils/utils";
 import { setCampaigns, setListKOL } from "./app/slices/campaignFactorySlice";
+import { getAllCampaignsAsync } from "./models/contracts/campaign_factory_contract";
 
 const { connect } = nearAPI;
 
@@ -40,9 +41,9 @@ export const App = () => {
 
   const loadCampaigns = useCallback(async () => {
     if (isSignedIn && walletConnection) {
-      const campaigns = await getCampaigns(walletConnection)
+      const campaigns = await getAllCampaignsAsync(walletConnection)
       const listKOL = campaigns.map((campaign) => campaign.campaign_beneficiary).filter(function (item, pos, a) {
-        return a.indexOf(item) == pos;
+        return a.indexOf(item) === pos;
       })
       dispatch(setListKOL({ listKOL }))
       dispatch(setCampaigns({ campaigns }))

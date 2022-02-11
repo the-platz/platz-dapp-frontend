@@ -1,4 +1,4 @@
-import { Flex, useToast } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
 import { useEffect } from "react"
 import { useAppSelector } from "../../app/hooks"
 import { selectListKOL } from "../../app/slices/campaignFactorySlice"
@@ -6,8 +6,6 @@ import { selectListKOL } from "../../app/slices/campaignFactorySlice"
 import { Text } from "@chakra-ui/react"
 
 const KOLList = () => {
-    const toast = useToast()
-
     const listKOL = useAppSelector(selectListKOL)
 
     useEffect(() => {

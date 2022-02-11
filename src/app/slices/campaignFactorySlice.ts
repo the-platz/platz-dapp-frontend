@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import * as nearAPI from "near-api-js";
 import { CampaignFactoryInfo } from '../../models/contracts/campaign_factory_contract';
 import { CampaignProps } from '../../models/types';
 import type { RootState } from '../store'

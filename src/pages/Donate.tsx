@@ -1,12 +1,10 @@
 import { Button, Flex, Text } from "@chakra-ui/react"
 import {useEffect, useState } from "react"
 import * as nearAPI from "near-api-js"
-import { useToast } from '@chakra-ui/react'
 import { useAppSelector } from "../app/hooks"
 import { selectCampaigns } from "../app/slices/campaignFactorySlice"
 
 const Donation = () => {
-  const toast = useToast()
   const campaigns = useAppSelector(selectCampaigns)
 
   const [loading, setLoading] = useState(false)
