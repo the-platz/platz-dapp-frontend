@@ -15,6 +15,7 @@ import {
   MenuItem,
   MenuList,
   useToast,
+  Image,
 } from '@chakra-ui/react'
 import { Link, useNavigate } from "react-router-dom"
 import { HamburgerIcon, CloseIcon, SearchIcon } from '@chakra-ui/icons'
@@ -54,7 +55,7 @@ const Header = () => {
         "The Platz", // optional
         env.APP_URL, // optional
         env.APP_URL // optional
-      ) 
+      )
     } else {
         toast({
           title: 'Wallet connection error',
@@ -68,7 +69,7 @@ const Header = () => {
 
   const signOut = () => {
     if (walletConnection) {
-      walletConnection.signOut() 
+      walletConnection.signOut()
       dispatch(walletSliceSignOut())
       setIsSignedIn(false)
     } else {
@@ -111,7 +112,7 @@ const Header = () => {
   }, [walletConnection, visibleSearchResult, debounceSearchText, searchCampaigns, isLoading])
 
   return (
-    <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+    <Box bg={useColorModeValue('whiteAlpha.100', 'whiteAlpha.700')} px={4}>
       <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
         <IconButton
           size={'md'}
@@ -122,7 +123,7 @@ const Header = () => {
         />
         <HStack spacing={8} alignItems={'center'}>
           <Link to="/">
-            <Box>Platz Logo</Box>
+            <Image src="/logo.svg" />
           </Link>
           <HStack
             as={'nav'}

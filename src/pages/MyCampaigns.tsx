@@ -1,5 +1,5 @@
-import { Fragment, useCallback, useEffect, useState } from "react";
-import { Text } from "@chakra-ui/react"
+import { useCallback, useEffect, useState } from "react";
+import { Flex, Text } from "@chakra-ui/react"
 import { selectWalletConnection } from "../app/slices/walletSlice";
 import { useAppSelector } from "../app/hooks";
 import CampaignCard from "../components/Campaigns/CampaignCard";
@@ -24,13 +24,13 @@ const MyCampaigns = () => {
     }, [walletConnection, myCampaignAccountIds, getMyCampaigns])
 
     return (
-        <Fragment>
+        <Flex flexDirection="column" alignItems="center" maxWidth="886" mx="auto" py={16}>
             <Text>My Campaigns</Text>
 
             {myCampaignAccountIds?.map((campaignAccountId) =>
-                <CampaignCard key={campaignAccountId} campaignAccountId={campaignAccountId} />
+                <CampaignCard key={campaignAccountId} campaignAccountId={campaignAccountId} isOwner />
             )}
-        </Fragment>
+        </Flex>
     )
 };
 

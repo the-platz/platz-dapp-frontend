@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react"
+import { Flex, Text } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react";
 
 import DonationHistory from "../components/MyAccount/DonationHistory";
@@ -25,11 +25,11 @@ const MyAccount = () => {
   }, [walletConnection, totalPunkt])
 
   return (
-    <React.Fragment>
-      <Text>Total rewarded Punkts: { totalPunkt ? totalPunkt : 0 }</Text>
-      <Text>Donation History</Text>
+    <Flex flexDirection="column" alignItems="center" maxWidth="886" mx="auto" py={16}>
+      <Text fontSize={['2xl', '3xl']} mb={12}>Total rewarded Punkts: { totalPunkt ? totalPunkt : 0 }</Text>
+      <Text fontSize={['2xl', '3xl']} mb={2}>Lịch sử quyên góp</Text>
       <DonationHistory/>
-    </React.Fragment>
+    </Flex>
   )
 };
 

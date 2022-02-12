@@ -1,6 +1,6 @@
-import { Text ,Button, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from '@chakra-ui/react';
+import { Text ,Button, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Flex } from '@chakra-ui/react';
 import { useToast } from "@chakra-ui/react"
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import React from 'react';
 import { CampaignFactoryContract, getCampaignFactoryContract } from "../models/contracts/campaign_factory_contract";
 import { selectWalletConnection } from "../app/slices/walletSlice";
@@ -16,7 +16,7 @@ const CreateCampaign = () => {
 
     const [targetAmount, setTargetAmount] = React.useState<number>(20)
     const [minimumDonationAmount, setMinimumDonationAmount] = React.useState<number>(1)
-    
+
     useEffect(() => {
         if (!userAccountId && walletConnection) {
             setUserAccountId(walletConnection.account().accountId)
@@ -49,14 +49,14 @@ const CreateCampaign = () => {
             } else {
                 const campaign_args = {
                     punkt_contract_account_id: env.PUNKT_CONTRACT,
-                    campaign_beneficiary: userAccountId, 
-                    target_amount: toYochtoNear(targetAmount), 
+                    campaign_beneficiary: userAccountId,
+                    target_amount: toYochtoNear(targetAmount),
                     minimum_donation_amount: toYochtoNear(minimumDonationAmount)
                 }
                 const encoded_base64_campaign_args = btoa(JSON.stringify(campaign_args))
-                
+
                 await campaignContractFactory.create_campaign(
-                    { args: encoded_base64_campaign_args}, 
+                    { args: encoded_base64_campaign_args},
                     env.CREATE_CAMPAIGN_GAS_FEE,
                     env.CREATE_CAMPAIGN_DEPOSIT)
             }
@@ -68,14 +68,14 @@ const CreateCampaign = () => {
     }
 
     return (
-        <Fragment>
-            <Text>Create New Campaign</Text>
-            <Text>It's required to deposit 5 NEAR to create campaign</Text>
+        <Flex flexDirection="column" alignItems="center" maxWidth="420" mx="auto" py={16}>
+            <Text fontSize={['2xl', '3xl']} fontWeight="semibold">Tạo chiến dịch mới</Text>
+            <Text fontSize={['xs', 'sm']} mb={8}>* Bạn cần sở hữu ít nhất 5 NEAR *</Text>
             <Text>Beneficiary:</Text>
-            <Text>{ userAccountId }</Text>
+            <Text mb={12}>{ userAccountId }</Text>
             <Text>Target amount: </Text>
-            <NumberInput maxW='100px' mr='2rem' 
-                value={targetAmount} 
+            <NumberInput w='100%'
+                value={targetAmount}
                 onChange={(_, value: number) => setTargetAmount(value)}
                 min={20}
                 max={1000}>
@@ -85,9 +85,9 @@ const CreateCampaign = () => {
                 <NumberDecrementStepper />
                 </NumberInputStepper>
             </NumberInput>
-            <Text>Minimum donation amount: </Text>
-            <NumberInput maxW='100px' mr='2rem' 
-                value={minimumDonationAmount} 
+            <Text mt={2}>Minimum donation amount: </Text>
+            <NumberInput w='100%'
+                value={minimumDonationAmount}
                 onChange={(_, value: number) => setMinimumDonationAmount(value)}
                 min={1}
                 max={1000}>
@@ -97,8 +97,8 @@ const CreateCampaign = () => {
                 <NumberDecrementStepper />
                 </NumberInputStepper>
             </NumberInput>
-            <Button onClick={createCampaign}>Create campaign</Button>
-        </Fragment>
+            <Button onClick={createCampaign} mt={6} width="100%" colorScheme="orange">Tiếp tục</Button>
+        </Flex>
     )
 }
 
