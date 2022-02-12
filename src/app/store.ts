@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import nearSlice from './slices/nearSlice';
 import walletSlice from './slices/walletSlice';
 import campaignFactorySlice from './slices/campaignFactorySlice';
 
 export const store = configureStore({
     reducer: {
         wallet: walletSlice,
-        near: nearSlice,
         campaignFactory: campaignFactorySlice
     },
     middleware: (getDefaultMiddleware) =>

@@ -17,7 +17,6 @@ import * as consts from "./utils/consts"
 import { WalletConnection } from "near-api-js";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { selectWalletConnection, setWalletConnection, selectIsSignedIn } from "./app/slices/walletSlice";
-import { setNear } from "./app/slices/nearSlice";
 import Campaign from "./pages/Campaign";
 import { connectConfig } from "./utils/utils";
 import { setCampaigns, setListKOL } from "./app/slices/campaignFactorySlice";
@@ -34,7 +33,6 @@ export const App = () => {
   const connectNear = useCallback(async () => {
     // connect to NEAR
     const near = await connect(connectConfig)
-    dispatch(setNear({ near: near }))
     // create wallet connection
     const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
     dispatch(setWalletConnection({ walletConnection: walletConnection }))

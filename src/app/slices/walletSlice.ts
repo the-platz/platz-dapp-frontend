@@ -1,18 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { WalletConnection } from 'near-api-js';
-import * as nearAPI from "near-api-js";
 import type { RootState } from '../store'
 
 type WalletSliceState = {
     isLoggedIn: boolean,
     walletConnection?: WalletConnection,
-    near?: nearAPI.Near
 }
 
 const INITIAL_STATE: WalletSliceState = {
     isLoggedIn: false,
     walletConnection: undefined,
-    near: undefined
 }
 
 const walletSlice  = createSlice({
@@ -26,7 +23,6 @@ const walletSlice  = createSlice({
             state = { 
                 isLoggedIn: true,
                 walletConnection: (payload.walletConnection as WalletConnection), 
-                near: (payload.near as nearAPI.Near)
             };
         },
         signOut: (state) => {
@@ -34,7 +30,6 @@ const walletSlice  = createSlice({
             state = { 
                 isLoggedIn: false,
                 walletConnection: undefined,
-                near: undefined, 
             }
         }
     }
