@@ -1,28 +1,22 @@
 import { Box, Button, Flex, Image, Input, Text } from '@chakra-ui/react'
 import BN from 'bn.js';
-import { useCallback, useEffect } from 'react'
-import { FaCalendar } from 'react-icons/fa'
+import { useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAppSelector } from '../app/hooks'
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import { donateAsync, getCampaignContract } from '../models/contracts/campaign_contract'
+import { utils } from 'near-api-js'
 
 const Campaign = () => {
   const walletConnection = useAppSelector(selectWalletConnection)
   const { campaignAccountId } = useParams()
 
-  // const donate = useCallback(async(donationAmount: string) => {
-  //   if (walletConnection && campaignAccountId) {
-  //     const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
-  //     await donateAsync(campaignContract, new BN(donationAmount))
-  //   }
-  // }, [])
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     donate("5000000000000000000000000")
-  //   }, 4000)
-  // }, [donate])
+  const donate = useCallback(async(donationAmount: string) => {
+    if (walletConnection && campaignAccountId) {
+      const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
+      await donateAsync(campaignContract, new BN(donationAmount))
+    }
+  }, [campaignAccountId, walletConnection])
 
   return (
     <Box>
@@ -72,81 +66,87 @@ const Campaign = () => {
       <Flex justifyContent="center" flexDirection="column" my={24} mx="auto" maxWidth="984" overflow="auto" >
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Ủng hộ</Text>
         <Flex mt={4} flexDirection="column">
-            <Flex width="100%" borderColor="#cd7f32" borderRadius="md" overflow="hidden" mb={3}>
-                <Flex flex="0 1 60%" bg="#cd7f32">
-                  {/* Add image */}
+            <Flex width="100%" borderRadius="md" border="1px solid rgba(255, 122, 0, .5)" overflow="hidden" mb={3}>
+                <Flex flex="0 1 60%" bg="rgba(255, 122, 0, .5)">
+                  <Image src="/images/default_campaign_1.png" maxW={'60%'} objectFit="cover" objectPosition="center" mx="auto" />
                 </Flex>
                 <Flex flex="1 1 auto" flexDirection="column">
                   <Flex p={3} justifyContent="space-between" fontWeight="medium" alignItems="center">
-                    <Text color="#cd7f32">Supporter</Text>
-                    <Text fontSize="xl" fontWeight="semibold">1 NEAR</Text>
+                    <Text color="#cd7f32" fontSize="xl">Supporter</Text>
+                    <Text fontSize="4xl" fontWeight="semibold">1 NEAR</Text>
                   </Flex>
-                  <Flex p={3} height="150px" flexDirection="column" fontSize="sm" fontWeight="medium">
+                  <Flex p={3} height="150px" flexDirection="column" fontSize="lg" fontWeight="medium">
                     <Text>🎶 Badge NFT</Text>
                     <Text mt={2}>🎧 Hall of Mention</Text>
                   </Flex>
-                  <Flex>
-                    <Button variant="solid" backgroundColor="#cd7f32" my={4} width="calc(100% - 24px)" mx="auto" color="black">Tiếp tục</Button>
+                  <Flex mt="auto">
+                    <Button variant="solid" type="button" backgroundColor="rgba(255, 122, 0, .5)" my={4} width="calc(100% - 24px)" mx="auto" color="black" onClick={() => donate("1000000000000000000000000")}>Tiếp tục</Button>
                   </Flex>
                 </Flex>
             </Flex>
-            <Flex width="100%" borderColor="gray.300" borderRadius="md" overflow="hidden" mb={3}>
+            <Flex width="100%" border="1px solid" borderColor="gray.100" borderRadius="md" overflow="hidden" mb={3}>
                 <Flex flex="1 1 auto" flexDirection="column">
                   <Flex p={3} justifyContent="space-between" fontWeight="medium" alignItems="center">
-                    <Text color="gray.600">Fan chân chính</Text>
-                    <Text fontSize="xl" fontWeight="semibold">5 NEAR</Text>
+                    <Text color="gray.600" fontSize="xl">Fan chân chính</Text>
+                    <Text fontSize="4xl" fontWeight="semibold">5 NEAR</Text>
                   </Flex>
-                  <Flex p={3} height="150px" flexDirection="column" fontSize="sm" fontWeight="medium">
+                  <Flex p={3} height="150px" flexDirection="column" fontSize="lg" fontWeight="medium">
                     <Text>🎶 Badge NFT</Text>
                     <Text mt={2}>🎧 Hall of Mention</Text>
                     <Text mt={2}>⚡ Video đặc biệt</Text>
                   </Flex>
-                  <Flex>
-                    <Button variant="solid" backgroundColor="gray.300" my={4} width="calc(100% - 24px)" mx="auto" color="black">Tiếp tục</Button>
+                  <Flex mt="auto">
+                    <Button variant="solid" type="button" backgroundColor="gray.100" my={4} width="calc(100% - 24px)" mx="auto" color="black" onClick={() => donate("5000000000000000000000000")}>Tiếp tục</Button>
                   </Flex>
                 </Flex>
-                <Flex flex="0 1 60%" bg="gray.300">
-                  {/* Add image */}
+                <Flex flex="0 1 60%" bg="gray.100">
+                  <Image src="/images/default_campaign_2.png" maxW={'60%'} objectFit="cover" objectPosition="center" mx="auto" />
                 </Flex>
             </Flex>
-            <Flex width="100%" borderColor="gold" borderRadius="md" overflow="hidden" mb={3}>
-                <Flex flex="0 1 60%" bg="gold">
-                  {/* Add image */}
+            <Flex width="100%" border="1px solid rgba(255, 223, 142, .5)" borderRadius="md" overflow="hidden" mb={3}>
+                <Flex flex="0 1 60%" bg="rgba(255, 223, 142, .5)" py={5}>
+                  <Image src="/images/default_campaign_3.png" maxW={'60%'} objectFit="cover" objectPosition="center" mx="auto" />
                 </Flex>
                 <Flex flex="1 1 auto" flexDirection="column">
                   <Flex p={3} justifyContent="space-between" fontWeight="medium" alignItems="center">
-                    <Text color="#FFD700">Fan hardcore</Text>
-                    <Text fontSize="xl" fontWeight="semibold">10 NEAR</Text>
+                    <Text color="goldenrod" fontSize="xl">Fan hardcore</Text>
+                    <Text fontSize="4xl" fontWeight="semibold">10 NEAR</Text>
                   </Flex>
-                  <Flex p={3} height="150px" flexDirection="column" fontSize="sm" fontWeight="medium">
+                  <Flex p={3} height="150px" flexDirection="column" fontSize="lg" fontWeight="medium">
                     <Text>🎶 Badge NFT</Text>
                     <Text mt={2}>🎧 Hall of Mention</Text>
                     <Text mt={2}>⚡ Video đặc biệt</Text>
                     <Text mt={2}>😋 5p meeting gặp gỡ</Text>
                   </Flex>
-                  <Flex>
-                    <Button variant="solid" backgroundColor="#FFD700" my={4} width="calc(100% - 24px)" mx="auto" color="black">Tiếp tục</Button>
+                  <Flex mt="auto">
+                    <Button variant="solid" backgroundColor="rgba(255, 223, 142, .5)" my={4} width="calc(100% - 24px)" mx="auto" color="black" type="button" onClick={() => donate("10000000000000000000000000")}>Tiếp tục</Button>
                   </Flex>
                 </Flex>
             </Flex>
-            <Flex width="100%" borderColor="gray.300" borderRadius="md" overflow="hidden" mb={3}>
-              <form>
-                <Flex flex="1 1 auto" flexDirection="column">
+            <Flex width="100%" border="1px solid" borderColor="linear-gradient(to bottom, #000000, #934FB8)" borderRadius="md" overflow="hidden" mb={3}>
+              <form
+                onSubmit={(e: any) => {
+                  e.preventDefault()
+                  donate(utils.format.parseNearAmount(e.target.donation.value) ?? "1000000000000000000000000")
+                }}
+              >
+                <Flex flex="1 1 auto" flexDirection="column" height="100%">
                   <Flex p={3} justifyContent="space-between" fontWeight="medium" alignItems="center">
-                    <Text color="gray.600">Fan tự quyết</Text>
-                    <Text fontSize="xl" fontWeight="semibold">??? NEAR</Text>
+                    <Text color="gray.600" fontSize="xl">Fan tự quyết</Text>
+                    <Text fontSize="4xl" fontWeight="semibold" color="linear-gradient(to bottom, #000000, #934FB8)">??? NEAR</Text>
                   </Flex>
                   <Flex p={3} height="150px" maxWidth="100%" flexDirection="column" fontSize="sm" fontWeight="medium">
-                    <Text fontSize="xs" mb={2}>Dựa vào số lượng ủng hộ, bạn sẽ nhận được những món quà phù hợp</Text>
-                    <Input placeholder="Nhập số lượng ủng hộ" width="100%" type="number" />
+                    <Text fontSize="md" maxWidth="100%" mb={5}>Dựa vào số lượng ủng hộ, bạn sẽ nhận được những món quà phù hợp</Text>
+                    <Input placeholder="Nhập số lượng ủng hộ" width="100%" type="number" name="donation" min={1} py={3} />
+                    <Text fontSize="xs" mt={2}>* Vui lòng nhập ít nhất 1 NEAR</Text>
                   </Flex>
-                  <Flex>
-                    <Button variant="solid" backgroundColor="gray.300" my={4} width="calc(100% - 24px)" mx="auto" color="black">Tiếp tục</Button>
+                  <Flex mt="auto">
+                    <Button variant="solid" type="submit" backgroundColor="#934FB8" my={4} width="calc(100% - 24px)" mx="auto" color="white">Tiếp tục</Button>
                   </Flex>
                 </Flex>
               </form>
-              <Flex flex="0 1 60%" bg="gray.300">
-                  {/* Add image */}
+              <Flex flex="0 1 60%" bg="linear-gradient(to bottom, #000000, #934FB8)">
+              <Image src="/images/default_campaign_4.png" maxW={'60%'} objectFit="cover" objectPosition="center" mx="auto" />
               </Flex>
             </Flex>
 

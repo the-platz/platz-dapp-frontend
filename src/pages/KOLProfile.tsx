@@ -1,9 +1,38 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
+import axios from "axios"
+import { useEffect, useState } from "react"
 import { BiGlobe } from "react-icons/bi"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
+import { useAppSelector } from "../app/hooks"
+import { selectWalletConnection } from "../app/slices/walletSlice"
+import CampaignCard from "../components/Campaigns/CampaignCard"
 
 const KOLProfile = () => {
+  const walletConnection = useAppSelector(selectWalletConnection)
+  const { id: kolId } = useParams()
+
+  const [campaigns, setCampaigns] = useState<string[] | undefined>(undefined)
+    // const [loading, setLoading] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (!!walletConnection && !campaigns && !!kolId) {
+            axios.get(`http://localhost:5001/campaigns/account/${kolId}`)
+                .then(res => {
+                    // TODO:: remove below stupid mapping
+                    type MyCampaignResponse = {
+                        campaign_account_id: string,
+                        campaign_beneficiary: string,
+                    }
+                    setCampaigns((res.data.data as MyCampaignResponse[])
+                        .map(campaignResp => campaignResp.campaign_account_id));
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        }
+    }, [walletConnection, campaigns, kolId])
+
   return (
    <Box>
 
@@ -15,7 +44,7 @@ const KOLProfile = () => {
        </Box>
         <Flex flexDirection="column" alignItems="center" position="relative" zIndex={101}>
           <Box bgImg="/images/default_kol_avatar.jpg" bgPosition="center" bgSize="cover" height="80px" maxHeight="80" width="80px" maxWidth="80" borderRadius="50%" mt="-40px"></Box>
-          <Text fontSize={['2xl', '4xl']}>Miss Platz</Text>
+          <Text fontSize={['2xl', '4xl']}>{kolId}</Text>
         </Flex>
      </Flex>
 
@@ -30,7 +59,7 @@ const KOLProfile = () => {
       <Flex justifyContent="center" mx="auto" mt={12} color="gray.500" sx={{ '& > *:not(:first-child)': { ml: [16, 32] }}} maxWidth="800" overflow="auto">
           <Flex flexDirection="column">
             <Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
-            <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">100,000,000 đ</Text>
+            <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">1000 NEAR</Text>
           </Flex>
 
           {/* Rewarded points are in my account */}
@@ -53,12 +82,20 @@ const KOLProfile = () => {
       <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
         <Flex sx={{ '& > *:not(:first-child)': { ml: [12, 24] }}} mt={4}>
-          <Link to="/campaigns/1">
-            <Flex flexDirection="column" width="250px" minWidth="250px" height="200px" minHeight="200px" borderRadius="md" overflow="hidden">
-              <Box bg="#d5ccc0" width="250px" minWidth="250px" height="150px" minHeight="150px"></Box>
-              <Text fontWeight="medium" p={3}>Campaign</Text>
-            </Flex>
-          </Link>
+          {!campaigns &&
+            [...Array(3)].map((_, index) => (
+              <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={index}>
+                <Box bg="#d5ccc0" width="100%" height="150px" minHeight="150px" borderTopRadius="md"></Box>
+                <Text p={3}>Loading...</Text>
+              </Flex>
+            ))
+          }
+          {campaigns?.map((campaignAccountId) =>
+              <Link to={`/campaigns/${campaignAccountId}`} key={campaignAccountId}>
+                <CampaignCard campaignAccountId={campaignAccountId} />
+              </Link>
+            )
+          }
         </Flex>
       </Flex>
 
@@ -70,7 +107,7 @@ const KOLProfile = () => {
           <Text fontSize={['7xl', '9xl']} color="transparent" fontWeight="medium" p={3} textShadow="1px 1px 1px black" textTransform="uppercase" position="absolute" top="-5" right="28px" zIndex="100" opacity="0.5">Platz</Text>
 
           <Text fontSize={['3xl', '4xl']} color="white" fontWeight="medium" p={3} position="absolute" top="20%" left="10%" zIndex="100">Hi! Mình là</Text>
-          <Text fontSize={['5xl', '6xl']} color="#e9d0b1" fontWeight="bold" p={3} position="absolute" top="27%" left="10%" zIndex="100" letterSpacing="wider">Miss Platz</Text>
+          <Text fontSize={['4xl', '5xl']} color="#e9d0b1" fontWeight="bold" p={3} position="absolute" top="27%" left="10%" zIndex="100" letterSpacing="wider">{kolId}</Text>
           <Text fontSize={['lg', 'xl']} color="white" fontWeight="medium" p={3} position="absolute" top="50%" left="10%" zIndex="100" maxWidth="420px" textOverflow="nowrap">Artist, influencer, troublemaker, streamer... Mình thích các hoạt động sáng tạo và muốn mang lại niềm vui cho mọi người xung quanh.</Text>
         </Flex>
       </Flex>

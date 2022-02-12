@@ -19,11 +19,11 @@ const TxCampaignCallback = () => {
             const txStatus = await provider.txStatus(queries.get("transactionHashes"), walletConnection.account().accountId);
             setTxStatus(txStatus.status.SuccessValue === "")
         }
-    }, [walletConnection])
+    }, [walletConnection, queries])
 
     useEffect(() => {
         getTxStatus()
-    }, [walletConnection])
+    }, [walletConnection, getTxStatus])
 
     return (<>
         <p>Tx callback campaign {campaignAccountId} with action {actionType}</p>

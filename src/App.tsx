@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react"
+import { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 
 import {
@@ -31,31 +31,32 @@ export const App = () => {
   const walletConnection = useAppSelector(selectWalletConnection)
   const isSignedIn = useAppSelector(selectIsSignedIn)
 
-  const connectNear = useCallback(async () => {
-    // connect to NEAR
-    const near = await connect(connectConfig)
-    dispatch(setNear({ near: near }))
-    // create wallet connection
-    const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
-    dispatch(setWalletConnection({ walletConnection: walletConnection }))
-  }, [/* no dependencies to make this function called once */])
-
-  const loadCampaigns = useCallback(async () => {
-    if (isSignedIn && walletConnection) {
-      const campaigns = await getAllCampaignsAsync(walletConnection)
-      const listKOL = campaigns.map((campaign) => campaign.campaign_beneficiary).filter(function (item, pos, a) {
-        return a.indexOf(item) === pos;
-      })
-      dispatch(setListKOL({ listKOL }))
-      dispatch(setCampaigns({ campaigns }))
+  useEffect(() => {
+    const connectNear = async () => {
+      // connect to NEAR
+      const near = await connect(connectConfig)
+      dispatch(setNear({ near: near }))
+      // create wallet connection
+      const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
+      dispatch(setWalletConnection({ walletConnection: walletConnection }))
     }
-  }, [isSignedIn])
+    connectNear()
+  }, [dispatch])
 
   useEffect(() => {
-    connectNear()
+    const loadCampaigns = async () => {
+      if (isSignedIn && walletConnection) {
+        const campaigns = await getAllCampaignsAsync(walletConnection)
+        const listKOL = campaigns.map((campaign) => campaign.campaign_beneficiary).filter(function (item, pos, a) {
+          return a.indexOf(item) === pos;
+        })
+        dispatch(setListKOL({ listKOL }))
+        dispatch(setCampaigns({ campaigns }))
+      }
+    }
 
     loadCampaigns()
-  }, [connectNear, loadCampaigns])
+  }, [dispatch, isSignedIn, walletConnection])
 
   return (
     <ChakraProvider theme={theme}>

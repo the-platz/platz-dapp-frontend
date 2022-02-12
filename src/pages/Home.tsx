@@ -1,12 +1,9 @@
 import { Box, Button, Flex, Image, Text, VStack, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-<<<<<<< HEAD
 import { Link } from 'react-router-dom'
-=======
-import Donation from "./Donate";
+// import Donation from "./Donate";
 import KOLList from "../components/KOLList/KOLList";
 
->>>>>>> 6633682f100527c7fefd14cd1e322216a549bd56
 // const COLOR_PRIMARY = '#9F7E69'
 const COLOR_PRIMARY = 'orange'
 const COLOR_NEUTRAL_LIGHT = '#414141'
@@ -55,53 +52,10 @@ const HomePage: React.FC<any> = () => {
           </VStack>
         </Flex>
 
-        {/* Influencers */}
-        <Flex flexDirection="column" alignItems="flex-start" mt={16}>
-          <Text fontSize={['2xl', '4xl']} fontWeight="bold">Influencer nổi bật</Text>
-          <Flex sx={{ '& > *:not(:first-child)': { ml: [4, 8] }}} mt={3} mb={16}>
-            <Link to={'/kols/1'}>
-              <Flex height="320px" width="250px" borderRadius="md" flexDirection="column" overflow="hidden" border="1px solid gray" p={2}>
-                  <Image src="/images/default_home_1.jpg" objectFit="cover" boxSize="250" />
-                  <Flex flexDirection="column" p={2}>
-                    <Text fontWeight="semibold">Influencer #1</Text>
-                    <Text fontWeight="medium" fontSize="sm">300 NEAR</Text>
-                  </Flex>
-              </Flex>
-            </Link>
-            <Link to={'/kols/1'}>
-              <Flex height="320px" width="250px" borderRadius="md" flexDirection="column" overflow="hidden" border="1px solid gray" p={2}>
-                  <Image src="/images/default_home_3.jpg" objectFit="cover" boxSize="250" />
-                  <Flex flexDirection="column" p={2}>
-                    <Text fontWeight="semibold">Influencer #2</Text>
-                    <Text fontWeight="medium" fontSize="sm">100 NEAR</Text>
-                  </Flex>
-              </Flex>
-            </Link>
-          </Flex>
-<<<<<<< HEAD
-        </Flex>
-        {/* <Donation /> */}
-
-
-      </Box>
+      <KOLList />
     </Box>
-  )
-=======
-        </Box>
-        <RadioGroup colorScheme={COLOR_PRIMARY} defaultValue="1" size="md">
-          <Stack direction='row'>
-            <Radio value='1' bg={COLOR_PRIMARY}></Radio>
-            <Radio value='2'></Radio>
-            <Radio value='3'></Radio>
-          </Stack>
-        </RadioGroup>
-      </VStack>
-    </HStack>
-
-    <KOLList />
-    <Donation />
   </Box>
->>>>>>> 6633682f100527c7fefd14cd1e322216a549bd56
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
