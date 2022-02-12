@@ -1,6 +1,29 @@
 import { Box, Button, Flex, Image, Input, Text } from '@chakra-ui/react'
+import BN from 'bn.js';
+import { useCallback, useEffect } from 'react'
+import { FaCalendar } from 'react-icons/fa'
+import { useParams } from 'react-router-dom'
+import { useAppSelector } from '../app/hooks'
+import { selectWalletConnection } from '../app/slices/walletSlice'
+import { donateAsync, getCampaignContract } from '../models/contracts/campaign_contract'
 
 const Campaign = () => {
+  const walletConnection = useAppSelector(selectWalletConnection)
+  const { campaignAccountId } = useParams()
+
+  // const donate = useCallback(async(donationAmount: string) => {
+  //   if (walletConnection && campaignAccountId) {
+  //     const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
+  //     await donateAsync(campaignContract, new BN(donationAmount))
+  //   }
+  // }, [])
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     donate("5000000000000000000000000")
+  //   }, 4000)
+  // }, [donate])
+
   return (
     <Box>
 

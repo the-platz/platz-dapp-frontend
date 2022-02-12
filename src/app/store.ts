@@ -1,23 +1,28 @@
 import { configureStore } from '@reduxjs/toolkit';
 import nearSlice from './slices/nearSlice';
 import walletSlice from './slices/walletSlice';
+import campaignFactorySlice from './slices/campaignFactorySlice';
 
 export const store = configureStore({
     reducer: {
         wallet: walletSlice,
-        near: nearSlice
+        near: nearSlice,
+        campaignFactory: campaignFactorySlice
     },
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
+      serializableCheck: false
+      /*{
         // Ignore these action types
         ignoredActions: [
           'wallet/signIn', 
           'wallet/signOut', 
-          'wallet/setWalletConnection', 
-          'near/setNear'
+          'wallet/setWalletConnection',
+          'wallet.walletConnection',
+          'near/setNear',
+          'campaignFactory/setCampaigns',
         ],
-      },
+      }, */
     }),
 })
 

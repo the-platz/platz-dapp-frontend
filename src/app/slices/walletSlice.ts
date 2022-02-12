@@ -43,5 +43,6 @@ const walletSlice  = createSlice({
 export const { signIn, signOut, setWalletConnection } = walletSlice.actions;
 
 export const selectWalletConnection = (state: RootState) => state.wallet.walletConnection
+export const selectIsSignedIn = (state: RootState) => state.wallet.walletConnection?.isSignedIn()
 
 export default walletSlice.reducer;

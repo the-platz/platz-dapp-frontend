@@ -1,6 +1,12 @@
 import { Box, Button, Flex, Image, Text, VStack, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
+<<<<<<< HEAD
 import { Link } from 'react-router-dom'
+=======
+import Donation from "./Donate";
+import KOLList from "../components/KOLList/KOLList";
+
+>>>>>>> 6633682f100527c7fefd14cd1e322216a549bd56
 // const COLOR_PRIMARY = '#9F7E69'
 const COLOR_PRIMARY = 'orange'
 const COLOR_NEUTRAL_LIGHT = '#414141'
@@ -72,6 +78,7 @@ const HomePage: React.FC<any> = () => {
               </Flex>
             </Link>
           </Flex>
+<<<<<<< HEAD
         </Flex>
         {/* <Donation /> */}
 
@@ -79,6 +86,22 @@ const HomePage: React.FC<any> = () => {
       </Box>
     </Box>
   )
+=======
+        </Box>
+        <RadioGroup colorScheme={COLOR_PRIMARY} defaultValue="1" size="md">
+          <Stack direction='row'>
+            <Radio value='1' bg={COLOR_PRIMARY}></Radio>
+            <Radio value='2'></Radio>
+            <Radio value='3'></Radio>
+          </Stack>
+        </RadioGroup>
+      </VStack>
+    </HStack>
+
+    <KOLList />
+    <Donation />
+  </Box>
+>>>>>>> 6633682f100527c7fefd14cd1e322216a549bd56
 };
 
 export default HomePage;

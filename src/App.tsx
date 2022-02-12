@@ -1,7 +1,6 @@
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 
-import AuthController from "./containers/AuthController";
 import {
   ChakraProvider,
   theme,
@@ -13,73 +12,73 @@ import KOLProfile from "./pages/KOLProfile"
 import MyAccount from "./pages/MyAccount";
 import CreateCampaign from "./pages/CreateCampaign";
 import MyCampaigns from "./pages/MyCampaigns";
-import * as env from "./env"
 import * as nearAPI from "near-api-js";
 import * as consts from "./utils/consts"
-import { ConnectConfig, WalletConnection } from "near-api-js";
+import { WalletConnection } from "near-api-js";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { setWalletConnection } from "./app/slices/walletSlice";
-import { selectNear, setNear } from "./app/slices/nearSlice";
+import { selectWalletConnection, setWalletConnection, selectIsSignedIn } from "./app/slices/walletSlice";
+import { setNear } from "./app/slices/nearSlice";
 import Campaign from "./pages/Campaign";
+import { connectConfig } from "./utils/utils";
+import { setCampaigns, setListKOL } from "./app/slices/campaignFactorySlice";
+import { getAllCampaignsAsync } from "./models/contracts/campaign_factory_contract";
+import TxCampaignCallback from "./components/Transactions/TxCampaignCallback";
 
-const { connect, keyStores } = nearAPI;
+const { connect } = nearAPI;
 
 export const App = () => {
-  const near = useAppSelector(selectNear)
   const dispatch = useAppDispatch()
+  const walletConnection = useAppSelector(selectWalletConnection)
+  const isSignedIn = useAppSelector(selectIsSignedIn)
+
+  const connectNear = useCallback(async () => {
+    // connect to NEAR
+    const near = await connect(connectConfig)
+    dispatch(setNear({ near: near }))
+    // create wallet connection
+    const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
+    dispatch(setWalletConnection({ walletConnection: walletConnection }))
+  }, [/* no dependencies to make this function called once */])
+
+  const loadCampaigns = useCallback(async () => {
+    if (isSignedIn && walletConnection) {
+      const campaigns = await getAllCampaignsAsync(walletConnection)
+      const listKOL = campaigns.map((campaign) => campaign.campaign_beneficiary).filter(function (item, pos, a) {
+        return a.indexOf(item) === pos;
+      })
+      dispatch(setListKOL({ listKOL }))
+      dispatch(setCampaigns({ campaigns }))
+    }
+  }, [isSignedIn])
 
   useEffect(() => {
-    if (!near) {
-      const config: ConnectConfig = env.NETWORK_ID === consts.TESTNET ?
-        {
-          networkId: "testnet",
-          keyStore: new keyStores.BrowserLocalStorageKeyStore(),
-          nodeUrl: "https://rpc.testnet.near.org",
-          walletUrl: "https://wallet.testnet.near.org",
-          helperUrl: "https://helper.testnet.near.org",
-          headers: {}
-        } : {
-          networkId: "mainnet",
-          keyStore: new keyStores.BrowserLocalStorageKeyStore(),
-          nodeUrl: "https://rpc.mainnet.near.org",
-          walletUrl: "https://wallet.mainnet.near.org",
-          helperUrl: "https://helper.mainnet.near.org",
-          headers: {}
-        }
+    connectNear()
 
-      const connectNear = async () => {
-        // connect to NEAR
-        const near = await connect(config)
-        dispatch(setNear({ near: near }))
-        // create wallet connection
-        const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
-        dispatch(setWalletConnection({ walletConnection: walletConnection }))
-      }
-      connectNear()
-    }
-  }, [dispatch, near])
+    loadCampaigns()
+  }, [connectNear, loadCampaigns])
 
   return (
     <ChakraProvider theme={theme}>
-      <AuthController>
-        <Router>
-          <Routes>
-            <Route path="/" element={<BaseLayout />}>
-              <Route index element={<HomePage />} />
-              <Route path="about" element={<About />} />
-              <Route path="kols" element={<Outlet />}>
-                <Route path=":id" element={<KOLProfile />} />
-              </Route>
-              <Route path="campaigns" element={<Outlet />}>
-                <Route path=":id" element={<Campaign />} />
-              </Route>
-              <Route path="myaccount" element={<MyAccount />} />
-              <Route path="createcampaign" element={<CreateCampaign />} />
-              <Route path="mycampaigns" element={<MyCampaigns />} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<BaseLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="about" element={<About />} />
+            <Route path="kols" element={<Outlet />}>
+              <Route path=":id" element={<KOLProfile />} />
+            </Route>
+            <Route path="campaigns" element={<Outlet />}>
+              <Route path=":campaignAccountId" element={<Campaign />} />
+            </Route>
+            <Route path="myaccount" element={<MyAccount />} />
+            <Route path="createcampaign" element={<CreateCampaign />} />
+            <Route path="mycampaigns" element={<MyCampaigns />} />
+            <Route path="txCallback" element={<Outlet />}>
+              <Route path="campaign/:campaignAccountId/:actionType" element={<TxCampaignCallback />} />
+            </Route>
           </Route>
         </Routes>
       </Router>
-    </AuthController>
     </ChakraProvider >
   )
 }

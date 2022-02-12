@@ -1,35 +1,13 @@
 import { Button, Flex, Text } from "@chakra-ui/react"
 import {useEffect, useState } from "react"
 import * as nearAPI from "near-api-js"
-import { useToast } from '@chakra-ui/react'
 import { useAppSelector } from "../app/hooks"
-import { selectWalletConnection } from "../app/slices/walletSlice"
-import { getCampaignFactoryContract } from "../models/contracts/campaign_factory_contract"
-import { CampaignContract, getCampaignContract } from "../models/contracts/campaign_contract"
-
-
-type donateFn = ({ amount }?: any, gas?: string, deposit?: string) => void
-
-type CampaignInfo = {
-  campaign_beneficiary: string
-  campaign_metadata: any
-  donated_amount: string
-  minimum_donation_amount: string;
-  target_amount: string
-}
-
-type CampaignProps = {
-  name: string
-  donate?: donateFn
-} & CampaignInfo
+import { selectCampaigns } from "../app/slices/campaignFactorySlice"
 
 const Donation = () => {
-  const walletConnection = useAppSelector(selectWalletConnection)
+  const campaigns = useAppSelector(selectCampaigns)
 
   const [loading, setLoading] = useState(false)
-  const toast = useToast()
-  const [campaigns, setCampaigns] = useState<CampaignProps[] | undefined>(undefined)
-  // const [first, setFirst] = useState(true)
 
   const { utils } = nearAPI
 
@@ -84,53 +62,8 @@ const Donation = () => {
   //   }
   // }
 
-  const getCampaigns = async() => {
-    if (walletConnection) {
-      const campaignFactory = getCampaignFactoryContract(walletConnection)
-      if (campaignFactory.get_campaign_factory_info) {
-        const campaignFactoryInfo = await campaignFactory.get_campaign_factory_info()
-        campaignFactoryInfo.account_campaigns.forEach(async (campaign_account_id: string) => {
-            const contract: CampaignContract = getCampaignContract(walletConnection, campaign_account_id)
-            if (contract.get_campaign_info) {
-              try {
-                const response = await contract.get_campaign_info()
-                setCampaigns(existing_campaigns => {
-                  let new_campaign = {name: campaign_account_id, ...response, donate: contract?.donate }
-                  if (!!existing_campaigns && existing_campaigns?.length > 0) {
-                    return  [...existing_campaigns, new_campaign]
-                  }
-                  return [new_campaign]
-                })
-              }
-              catch (e: any) {
-                toast({
-                  title: 'Error.',
-                  description: e,
-                  status: 'error',
-                  duration: 5000,
-                  isClosable: true,
-                })
-              }
-            }
-          })
-      }
-    } else {
-      toast({
-        title: 'Wallet connnection error.',
-        description: "Wallet connnection is not initialized",
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
-  }
-
   useEffect(() => {
-    if (!campaigns && walletConnection) {
-      getCampaigns()
-    }
-    
-  }, [walletConnection, toast])
+  }, [campaigns])
 
   return (
    <Flex flexDirection="column" my={16}>
