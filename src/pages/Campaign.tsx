@@ -16,13 +16,10 @@ const Campaign = () => {
       const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
       await donateAsync(campaignContract, new BN(donationAmount))
     }
-  }, [walletConnection])
+  }, [walletConnection, campaignAccountId])
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   donate("5000000000000000000000000")
-    // }, 4000)
-  }, [])
+  }, [walletConnection, donate])
 
   return (
     <Box>
