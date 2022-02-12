@@ -43,8 +43,6 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({ campaignAccountId }) => {
         }
     }, [walletConnection])
 
-
-
     return (<Box key={campaignAccountId}
         maxW='sm'
         borderWidth='1px'

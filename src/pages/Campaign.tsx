@@ -11,21 +11,22 @@ const Campaign = () => {
   const walletConnection = useAppSelector(selectWalletConnection)
   const { campaignAccountId } = useParams()
 
-  // const donate = useCallback(async(donationAmount: string) => {
-  //   if (walletConnection && campaignAccountId) {
-  //     const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
-  //     await donateAsync(campaignContract, new BN(donationAmount))
-  //   }
-  // }, [])
+  const donate = useCallback(async(donationAmount: string) => {
+    if (walletConnection && campaignAccountId) {
+      const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
+      await donateAsync(campaignContract, new BN(donationAmount))
+    }
+  }, [walletConnection])
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     donate("5000000000000000000000000")
-  //   }, 4000)
-  // }, [donate])
+  useEffect(() => {
+    // setTimeout(() => {
+    //   donate("5000000000000000000000000")
+    // }, 4000)
+  }, [])
 
   return (
     <Box>
+      <Button onClick={() => donate("5000000000000000000000000")}>Donate</Button>
       <Text>{ campaignAccountId }</Text>
       {/* Hero section */}
       <Flex h="100vh" maxH="1024px" bgImg={'https://afamilycdn.com/150157425591193600/2021/2/11/14751884443497880450504831813681599361407354o-1613040377435808694470.jpg'} bgPos="center" bgRepeat="no-repeat" bgSize="cover" position="relative">
