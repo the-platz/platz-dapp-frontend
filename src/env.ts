@@ -11,3 +11,4 @@ export const CAMPAIGN_CONTRACT_FACTORY = process.env.REACT_APP_CAMPAIGN_CONTRACT
 export const PUNKT_CONTRACT = process.env.REACT_APP_PUNKT_CONTRACT || 'punkt.theplatz.testnet'
 export const CREATE_CAMPAIGN_GAS_FEE = process.env.REACT_APP_CREATE_CAMPAIGN_GAS_FEE || '300000000000000' // yochto near
 export const CREATE_CAMPAIGN_DEPOSIT = process.env.REACT_APP_CREATE_CAMPAIGN_DEPOSIT || '3000000000000000000000000' // 3 near
+export const IKO_BACKEND_ADDR = process.env.REACT_APP_IKO_BACKEND_ADDR || 'http://localhost:5001'
