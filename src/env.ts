@@ -4,8 +4,11 @@
 // export const ADDRESS_RECEIVER = process.env.REACT_APP_ADDRESS_RECEIVER || '0xE31Cc7E1DAa1fE565eBF8D58629034611C57FC03';
 // export const NETWORK_CHAIN_IDS = process.env.REACT_APP_NETWORK_CHAIN_IDS || '0x61';
 
-export const APP_URL = process.env.REACT_APP_VERCEL_URL ? 
-    `https://${process.env.REACT_APP_VERCEL_URL}` : (process.env.REACT_APP_URL || 'http://localhost:3000')
+export const APP_URL = process.env.REACT_APP_VERCEL_ENV === 'production' ? 
+    'https://platz-dapp-frontend.vercel.app' : 
+    ( process.env.REACT_APP_VERCEL_URL ? 
+        `https://${process.env.REACT_APP_VERCEL_URL}` : 
+        (process.env.REACT_APP_URL || 'http://localhost:3000') )
 export const NETWORK_ID = process.env.REACT_APP_NETWORK_ID || 'testnet'
 export const CAMPAIGN_CONTRACT_FACTORY = process.env.REACT_APP_CAMPAIGN_CONTRACT_FACTORY || 'iko.theplatz.testnet'
 export const PUNKT_CONTRACT = process.env.REACT_APP_PUNKT_CONTRACT || 'punkt.theplatz.testnet'
