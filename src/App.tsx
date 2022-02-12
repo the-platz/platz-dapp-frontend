@@ -36,7 +36,7 @@ export const App = () => {
     // create wallet connection
     const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
     dispatch(setWalletConnection({ walletConnection: walletConnection }))
-  }, [/* no dependencies to make this function called once */])
+  }, [dispatch /* no dependencies to make this function called once */])
 
   const loadCampaigns = useCallback(async () => {
     if (isSignedIn && walletConnection) {
@@ -47,6 +47,7 @@ export const App = () => {
       dispatch(setListKOL({ listKOL }))
       dispatch(setCampaigns({ campaigns }))
     }
+    // eslint-disable-next-line
   }, [isSignedIn])
 
   useEffect(() => {

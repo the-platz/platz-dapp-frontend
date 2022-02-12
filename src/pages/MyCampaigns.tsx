@@ -28,7 +28,7 @@ const MyCampaigns = () => {
                     console.log(error)
                 });
         }
-    }, [walletConnection])
+    }, [walletConnection, myCampaignAccountIds])
 
     return (
         <Fragment>

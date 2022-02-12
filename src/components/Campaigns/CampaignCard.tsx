@@ -20,7 +20,7 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({ campaignAccountId }) => {
         const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
         const cpInfo = await getCampaignContractInfoAsync(campaignContract)
         setCampaignInfo(cpInfo)
-    }, [])
+    }, [campaignAccountId])
 
     const withdraw = () => {
         if (walletConnection) {
@@ -41,7 +41,7 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({ campaignAccountId }) => {
         if (walletConnection) {
             getCampaignInfo(walletConnection)
         }
-    }, [walletConnection])
+    }, [walletConnection, getCampaignInfo])
 
     return (<Box key={campaignAccountId}
         maxW='sm'
