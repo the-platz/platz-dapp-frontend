@@ -30,39 +30,16 @@ export const App = () => {
   const walletConnection = useAppSelector(selectWalletConnection)
   const isSignedIn = useAppSelector(selectIsSignedIn)
 
-<<<<<<< HEAD
   useEffect(() => {
     const connectNear = async () => {
       // connect to NEAR
       const near = await connect(connectConfig)
-      dispatch(setNear({ near: near }))
       // create wallet connection
       const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
       dispatch(setWalletConnection({ walletConnection: walletConnection }))
     }
     connectNear()
   }, [dispatch])
-=======
-  const connectNear = useCallback(async () => {
-    // connect to NEAR
-    const near = await connect(connectConfig)
-    // create wallet connection
-    const walletConnection = new WalletConnection(near, consts.APP_KEY_PREFIX);
-    dispatch(setWalletConnection({ walletConnection: walletConnection }))
-  }, [dispatch /* no dependencies to make this function called once */])
-
-  const loadCampaigns = useCallback(async () => {
-    if (isSignedIn && walletConnection) {
-      const campaigns = await getAllCampaignsAsync(walletConnection)
-      const listKOL = campaigns.map((campaign) => campaign.campaign_beneficiary).filter(function (item, pos, a) {
-        return a.indexOf(item) === pos;
-      })
-      dispatch(setListKOL({ listKOL }))
-      dispatch(setCampaigns({ campaigns }))
-    }
-    // eslint-disable-next-line
-  }, [isSignedIn])
->>>>>>> a0f92601505b16c44904b8af0828b278cbeef40c
 
   useEffect(() => {
     const loadCampaigns = async () => {
