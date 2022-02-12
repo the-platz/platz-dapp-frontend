@@ -1,11 +1,12 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
-import axios from "axios"
-import { useEffect, useState } from "react"
+import { WalletConnection } from "near-api-js"
+import { useCallback, useEffect, useState } from "react"
 import { BiGlobe } from "react-icons/bi"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
 import { Link, useParams } from "react-router-dom"
 import { useAppSelector } from "../app/hooks"
 import { selectWalletConnection } from "../app/slices/walletSlice"
+import { getAllCampaignsOfAccountIdAsync } from "../services/campaigns"
 import CampaignCard from "../components/Campaigns/CampaignCard"
 
 const KOLProfile = () => {
@@ -13,64 +14,57 @@ const KOLProfile = () => {
   const { id: kolId } = useParams()
 
   const [campaigns, setCampaigns] = useState<string[] | undefined>(undefined)
-    // const [loading, setLoading] = useState<boolean>(false)
+  // const [loading, setLoading] = useState<boolean>(false)
 
-    useEffect(() => {
-        if (!!walletConnection && !campaigns && !!kolId) {
-            axios.get(`http://localhost:5001/campaigns/account/${kolId}`)
-                .then(res => {
-                    // TODO:: remove below stupid mapping
-                    type MyCampaignResponse = {
-                        campaign_account_id: string,
-                        campaign_beneficiary: string,
-                    }
-                    setCampaigns((res.data.data as MyCampaignResponse[])
-                        .map(campaignResp => campaignResp.campaign_account_id));
-                })
-                .catch(error => {
-                    console.log(error)
-                });
-        }
-    }, [walletConnection, campaigns, kolId])
+  const getCampaigns = useCallback(async (walletConnection: WalletConnection, kolId: string) => {
+    const myCampaigns = await getAllCampaignsOfAccountIdAsync(kolId)
+    setCampaigns(myCampaigns.map(campaignResp => campaignResp.campaign_account_id));
+  }, [])
+
+  useEffect(() => {
+    if (!!walletConnection && !campaigns && !!kolId) {
+      getCampaigns(walletConnection, kolId)
+    }
+  }, [walletConnection, campaigns, kolId, getCampaigns])
 
   return (
-   <Box>
+    <Box>
 
-     {/* User avatar */}
-     <Flex flexDirection="column">
-       <Box maxHeight="200" height="200" bg="#d5ccc0" width="100%" position="relative" overflow="hidden">
+      {/* User avatar */}
+      <Flex flexDirection="column">
+        <Box maxHeight="200" height="200" bg="#d5ccc0" width="100%" position="relative" overflow="hidden">
           <Image src="/images/default_kol_cover_1.png" position="absolute" height="250" top="0" left="calc(50% - 400px)" />
           <Image src="/images/default_kol_cover_2.png" position="absolute" height="250" top="0" left="calc(50% + 250px)" />
-       </Box>
+        </Box>
         <Flex flexDirection="column" alignItems="center" position="relative" zIndex={101}>
           <Box bgImg="/images/default_kol_avatar.jpg" bgPosition="center" bgSize="cover" height="80px" maxHeight="80" width="80px" maxWidth="80" borderRadius="50%" mt="-40px"></Box>
           <Text fontSize={['2xl', '4xl']}>{kolId}</Text>
         </Flex>
-     </Flex>
+      </Flex>
 
-     {/* Social links */}
-     <Flex justifyContent="center" mt={3} color="gray.500" sx={{ '& > *:not(:first-child)': { ml: 5 }}}>
-       <BiGlobe size={24} />
-       <FaTwitter size={24} />
-       <FaFacebook size={24} />
-     </Flex>
+      {/* Social links */}
+      <Flex justifyContent="center" mt={3} color="gray.500" sx={{ '& > *:not(:first-child)': { ml: 5 } }}>
+        <BiGlobe size={24} />
+        <FaTwitter size={24} />
+        <FaFacebook size={24} />
+      </Flex>
 
-     {/* Achievements */}
-      <Flex justifyContent="center" mx="auto" mt={12} color="gray.500" sx={{ '& > *:not(:first-child)': { ml: [16, 32] }}} maxWidth="800" overflow="auto">
-          <Flex flexDirection="column">
-            <Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
-            <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">1000 NEAR</Text>
-          </Flex>
+      {/* Achievements */}
+      <Flex justifyContent="center" mx="auto" mt={12} color="gray.500" sx={{ '& > *:not(:first-child)': { ml: [16, 32] } }} maxWidth="800" overflow="auto">
+        <Flex flexDirection="column">
+          <Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
+          <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">1000 NEAR</Text>
+        </Flex>
 
-          {/* Rewarded points are in my account */}
-          {/* <Flex flexDirection="column">
+        {/* Rewarded points are in my account */}
+        {/* <Flex flexDirection="column">
             <Text fontSize={['lg', 'xl']}>Điểm thưởng</Text>
             <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">100,000 đ</Text>
           </Flex> */}
-          <Flex flexDirection="column">
-            <Text fontSize={['lg', 'xl']}>Campaigns</Text>
-            <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">10</Text>
-          </Flex>
+        <Flex flexDirection="column">
+          <Text fontSize={['lg', 'xl']}>Campaigns</Text>
+          <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">10</Text>
+        </Flex>
       </Flex>
 
       {/* Bio description */}
@@ -81,7 +75,7 @@ const KOLProfile = () => {
       {/* Campaigns */}
       <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
-        <Flex sx={{ '& > *:not(:first-child)': { ml: [12, 24] }}} mt={4}>
+        <Flex sx={{ '& > *:not(:first-child)': { ml: [12, 24] } }} mt={4}>
           {!campaigns &&
             [...Array(3)].map((_, index) => (
               <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={index}>
@@ -91,10 +85,10 @@ const KOLProfile = () => {
             ))
           }
           {campaigns?.map((campaignAccountId) =>
-              <Link to={`/campaigns/${campaignAccountId}`} key={campaignAccountId}>
-                <CampaignCard campaignAccountId={campaignAccountId} />
-              </Link>
-            )
+            <Link to={`/campaigns/${campaignAccountId}`} key={campaignAccountId}>
+              <CampaignCard campaignAccountId={campaignAccountId} />
+            </Link>
+          )
           }
         </Flex>
       </Flex>
@@ -140,7 +134,7 @@ const KOLProfile = () => {
           </Flex>
         </Flex>
       </Flex> */}
-   </Box>
+    </Box>
   )
 }
 export default KOLProfile

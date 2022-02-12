@@ -1,10 +1,10 @@
-import axios from "axios";
-
-import {  useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react"
 import { selectWalletConnection } from "../app/slices/walletSlice";
 import { useAppSelector } from "../app/hooks";
 import CampaignCard from "../components/Campaigns/CampaignCard";
+import { getAllCampaignsOfAccountIdAsync } from "../services/campaigns";
+import { WalletConnection } from "near-api-js";
 
 const MyCampaigns = () => {
     const walletConnection = useAppSelector(selectWalletConnection)
@@ -12,23 +12,16 @@ const MyCampaigns = () => {
     const [myCampaignAccountIds, setMyCampaignAccountIds] = useState<string[] | undefined>(undefined)
     // const [loading, setLoading] = useState<boolean>(false)
 
+    const getMyCampaigns = useCallback(async(walletConnection: WalletConnection) => {
+        const myCampaigns = await getAllCampaignsOfAccountIdAsync(walletConnection.account().accountId)
+        setMyCampaignAccountIds(myCampaigns.map(campaignResp => campaignResp.campaign_account_id));
+    }, [])
+
     useEffect(() => {
         if (walletConnection && !myCampaignAccountIds) {
-            axios.get(`http://localhost:5001/campaigns/account/${walletConnection.account().accountId}`)
-                .then(res => {
-                    // TODO:: remove below stupid mapping
-                    type MyCampaignResponse = {
-                        campaign_account_id: string,
-                        campaign_beneficiary: string,
-                    }
-                    setMyCampaignAccountIds((res.data.data as MyCampaignResponse[])
-                        .map(campaignResp => campaignResp.campaign_account_id));
-                })
-                .catch(error => {
-                    console.log(error)
-                });
+            getMyCampaigns(walletConnection)
         }
-    }, [walletConnection, myCampaignAccountIds])
+    }, [walletConnection, myCampaignAccountIds, getMyCampaigns])
 
     return (
         <Flex flexDirection="column" alignItems="center" maxWidth="886" mx="auto" py={16}>

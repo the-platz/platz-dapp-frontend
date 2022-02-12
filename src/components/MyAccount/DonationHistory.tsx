@@ -1,6 +1,5 @@
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { Badge, Link } from '@chakra-ui/react';
-import axios from 'axios';
 import {
     Table,
     Thead,
@@ -10,9 +9,11 @@ import {
     Td,
   } from '@chakra-ui/react'
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppSelector } from '../../app/hooks';
 import { selectWalletConnection } from '../../app/slices/walletSlice';
+import { WalletConnection } from 'near-api-js';
+import { getDonationTxsOfAccountIdAsync } from "../../services/transactions"
 
 type DonationTransaction = {
     transaction_hash: string,
@@ -26,17 +27,16 @@ const DonationHistory = () => {
     const walletConnection = useAppSelector(selectWalletConnection)
     const [donationTxs, setDonationTxs] = useState<DonationTransaction[] | undefined>(undefined)
 
+    const getDonationTxs = useCallback(async(walletConnection: WalletConnection) => {
+        const donationTxs = await getDonationTxsOfAccountIdAsync(walletConnection)
+        setDonationTxs(donationTxs);
+    }, [])
+
     useEffect(() => {
-        // TODO: move the code to backend service
-        if (!donationTxs && walletConnection) {
-            const account = walletConnection.account()
-            axios.get(`http://localhost:5001/transactions/donation?account_id=${account.accountId}&includeFailedTxs=${true}&limit=${100}&offset=${0}`)
-            .then(res => {
-                setDonationTxs(res.data.data);
-            })
-            .catch(error => console.log(error));
+        if (walletConnection && !donationTxs) {
+            getDonationTxs(walletConnection)
         }
-    })
+    }, [walletConnection, donationTxs, getDonationTxs])
 
     const shortenTxHash = (tx_hash: string) => {
         return `${tx_hash.substring(0, 7)}...${tx_hash.substring(40)}` 
