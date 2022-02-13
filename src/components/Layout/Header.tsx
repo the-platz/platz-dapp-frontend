@@ -27,7 +27,7 @@ import { selectWalletConnection } from '../../app/slices/walletSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import * as env from "../../env"
 import { signOut as walletSliceSignOut } from '../../app/slices/walletSlice';
-const Links = [{ name: 'About', link: '/about' }];
+// const Links = [{ name: 'About', link: '/about' }];
 
 const Header = () => {
   const dispatch = useAppDispatch()
@@ -125,14 +125,14 @@ const Header = () => {
           <Link to="/">
             <Image src="/logo.svg" />
           </Link>
-          <HStack
+          {/* <HStack
             as={'nav'}
             spacing={4}
             display={{ base: 'none', md: 'flex' }}>
             {Links.map((link) => (
               <Link key={link.link} to={link.link}>{link.name}</Link>
             ))}
-          </HStack>
+          </HStack> */}
         </HStack>
         <HStack spacing={8} alignItems={'center'} sx={{ position: 'relative' }} ref={searchWrapperRef}>
           <InputGroup>
@@ -213,9 +213,9 @@ const Header = () => {
       {isOpen ? (
         <Box pb={4} display={{ md: 'none' }}>
           <Stack as={'nav'} spacing={4}>
-            {Links.map((link) => (
+            {/* {Links.map((link) => (
               <Link key={link.link} to={link.link}>{link.name}</Link>
-            ))}
+            ))} */}
           </Stack>
         </Box>
       ) : null}

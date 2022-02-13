@@ -4,8 +4,8 @@ import * as nearAPI from "near-api-js"
 import { useAppSelector } from "../app/hooks"
 import { selectCampaigns } from "../app/slices/campaignFactorySlice"
 
-const Donation = () => {
-  const campaigns = useAppSelector(selectCampaigns)
+const Donation = (kolName: string) => {
+  const campaigns = useAppSelector(selectCampaigns(kolName))
 
   const [loading, setLoading] = useState(false)
 

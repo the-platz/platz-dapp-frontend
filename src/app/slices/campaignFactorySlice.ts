@@ -1,18 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { sortBy } from 'lodash'
 import { CampaignFactoryInfo } from '../../models/contracts/campaign_factory_contract';
 import { CampaignProps } from '../../models/types';
 import type { RootState } from '../store'
 
+export interface IKOL {
+    name: string,
+    campaigns: CampaignProps[],
+}
+
+type MyCampaignResponse = {
+    campaign_account_id: string,
+    campaign_beneficiary: string,
+}
+
 type CampaignFactorySliceState = {
     campaignFactoryInfo?: CampaignFactoryInfo,
-    campaigns?: CampaignProps[]
-    listKOL?: string[]
+    listKOL: IKOL[],
+    myCampaigns: MyCampaignResponse[]
 }
 
 const INITIAL_STATE: CampaignFactorySliceState = {
-    campaignFactoryInfo: undefined,
-    campaigns: undefined,
-    listKOL: undefined
+    listKOL: [],
+    myCampaigns: []
 }
 
 const campaignFactorySlice  = createSlice({
@@ -23,22 +33,48 @@ const campaignFactorySlice  = createSlice({
             state.campaignFactoryInfo = payload.setCampaignFactoryInfo as CampaignFactoryInfo
         },
         setListKOL: (state, { payload }) => {
-            console.log(payload);
-            
-            state.listKOL = payload.listKOL as string[]
+            state.listKOL = payload as IKOL[]
+        },
+        setMyCampaigns: (state, { payload }) => {
+            state.myCampaigns = payload as MyCampaignResponse[]
         },
         setCampaigns: (state, { payload }) => {
-            console.log(payload);
-            
-            state.campaigns = payload.campaigns as CampaignProps[]
+            const kol = state.listKOL.find(el => el.name === payload.kolId)
+            if (kol) {
+                kol.campaigns = payload.campaigns
+                kol.campaigns = sortBy(kol.campaigns, ['name'])
+            }
+        },
+        setCampaign: (state, { payload }) => {
+            const kol = state.listKOL.find(el => el.name === payload.campaign_beneficiary)
+            if (kol) {
+                let campaign = kol.campaigns.find(el => el.name === payload.name);
+                if (campaign) {
+                    campaign = payload;
+                } else {
+                    kol.campaigns.push(payload)
+                }
+                kol.campaigns = sortBy(kol.campaigns, ['name'])
+            }
         }
     }
 })
 
-export const { setCampaignFactoryInfo, setCampaigns, setListKOL } = campaignFactorySlice.actions;
+export const { setListKOL, setCampaign, setCampaigns, setMyCampaigns } = campaignFactorySlice.actions;
 
 export const selectCampaignFactoryInfo = (state: RootState) => state.campaignFactory.campaignFactoryInfo
-export const selectCampaigns = (state: RootState) => state.campaignFactory.campaigns
+export const selectCampaigns = (kol?: string) => (state: RootState) => {
+    if(kol) {
+        return state.campaignFactory.listKOL.find(el => el.name === kol)?.campaigns
+    } else {
+        let campaigns: CampaignProps[] = [];
+        state.campaignFactory.listKOL.forEach(element => {
+            campaigns = campaigns.concat(element.campaigns)
+        });
+        return campaigns
+    }
+}
 export const selectListKOL = (state: RootState) => state.campaignFactory.listKOL
+export const selectMyCampaigns = (state: RootState) => state.campaignFactory.myCampaigns
 
 export default campaignFactorySlice.reducer;

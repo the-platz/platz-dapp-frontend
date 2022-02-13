@@ -1,30 +1,23 @@
 import { Box, Button, Flex, Text, useToast } from "@chakra-ui/react"
-import { useCallback, useEffect, useState } from "react"
-import { useAppSelector } from "../../app/hooks"
+import {  useAppSelector } from "../../app/hooks"
 import { selectWalletConnection } from "../../app/slices/walletSlice"
-import { getCampaignContract, getCampaignContractInfoAsync, withdrawAsync } from "../../models/contracts/campaign_contract"
-import { CampaignInfo } from "../../models/types"
+import { getCampaignContract, withdrawAsync } from "../../models/contracts/campaign_contract"
+import { CampaignProps } from "../../models/types"
 import { near_utils } from "../../utils/utils"
 import * as consts from "../../utils/consts"
 
 type ICampaignCardProps = {
-    campaignAccountId: string
+    campaignInfo: CampaignProps
+    campaignAccountId?: string
     isOwner?: boolean
 }
 
-const CampaignCard: React.FC<ICampaignCardProps> = ({ campaignAccountId, isOwner = false }) => {
+const CampaignCard: React.FC<ICampaignCardProps> = ({ campaignInfo, campaignAccountId, isOwner = false }) => {
     const toast = useToast()
     const walletConnection = useAppSelector(selectWalletConnection)
-    const [campaignInfo, setCampaignInfo] = useState<CampaignInfo>()
-
-    const getCampaignInfo = useCallback(async(walletConnection) => {
-        const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
-        const cpInfo = await getCampaignContractInfoAsync(campaignContract)
-        setCampaignInfo(cpInfo)
-    }, [campaignAccountId])
 
     const withdraw = () => {
-        if (walletConnection) {
+        if (walletConnection && campaignAccountId) {
             const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
             withdrawAsync(campaignContract)
         } else {
@@ -38,18 +31,10 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({ campaignAccountId, isOwner
         }
     }
 
-    useEffect(() => {
-        if (walletConnection) {
-            getCampaignInfo(walletConnection)
-        }
-    }, [walletConnection, getCampaignInfo])
-
-
-
     return (
         <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray">
           <Box bg="#d5ccc0" width="100%" height="150px" minHeight="150px" borderTopRadius="md"></Box>
-          <Text fontWeight="medium" p={3}>{campaignAccountId}</Text>
+          <Text fontWeight="medium" p={3}>{campaignInfo.name}</Text>
           <Text fontSize="sm" fontWeight="normal" px={3}>
               Số tiền ủng hộ: {campaignInfo ?
               near_utils.format.formatNearAmount(campaignInfo.donated_amount, 2) : "..."} NEAR
