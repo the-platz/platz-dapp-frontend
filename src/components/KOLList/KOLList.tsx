@@ -20,7 +20,7 @@ const KOLList = () => {
             <Text fontSize="3xl" fontWeight="bold">
                 Influencers nổi bật
             </Text>
-            <Flex sx={{ overflowX: 'auto', '& > *:not(:first-child)': { ml: [4, 8] } }} my={2}>
+            <Flex sx={{ overflowX: 'auto', '& > *:not(:first-type)': { ml: [4, 8] } }} my={2}>
                 {listKOL.map((kol) =>
                     <Link to={`/kols/${kol.name}`} key={kol.name}>
                     <Flex height="320px" width="250px" borderRadius="md" flexDirection="column" overflow="hidden" border="1px solid gray" p={2}>

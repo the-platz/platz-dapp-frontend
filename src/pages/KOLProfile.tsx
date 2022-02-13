@@ -9,6 +9,32 @@ import CampaignCard from "../components/Campaigns/CampaignCard"
 const KOLProfile = () => {
   const { id: kolId } = useParams()
   const currentCampaigns = useAppSelector(selectCampaigns(kolId))
+  const sellingItems = [
+    {
+      name: "Niche huite",
+      imageUrl: "https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxhcjI4ZmhjczczdWE1NHYwL2ZlYXR1cmVkX2ltYWdlX2FydHdvcmtfYzd0bGFyMjhmaGNzNzN1YTU0djBfMTY0Mzg2MTM1Ni5qcGVnIiwiZWRpdHMiOnsianBlZyI6eyJxdWFsaXR5Ijo4MH0sInJvdGF0ZSI6bnVsbCwicmVzaXplIjp7IndpZHRoIjozMDAwLCJoZWlnaHQiOjMwMDAsImZpdCI6Imluc2lkZSJ9fX0=",
+    },
+    {
+      name: "Nee stand",
+      imageUrl: "https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxqNzI4ZmhjczczdWE1NTIwL2ZlYXR1cmVkX2ltYWdlX2FydHdvcmtfYzd0bGo3MjhmaGNzNzN1YTU1MjBfMTY0Mzg2MjQyOC5qcGVnIiwiZWRpdHMiOnsianBlZyI6eyJxdWFsaXR5Ijo4MH0sInJvdGF0ZSI6bnVsbCwicmVzaXplIjp7IndpZHRoIjozMDAwLCJoZWlnaHQiOjMwMDAsImZpdCI6Imluc2lkZSJ9fX0=",
+    },
+    {
+      name: "Colorful",
+      imageUrl: "https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxqNzI4ZmhjczczdWE1NTIwL2FkZGl0aW9uYWxfaW1hZ2VfYXJ0d29ya19jN3RsajcyOGZoY3M3M3VhNTUyMF8wXzE2NDM4NjI0MjguanBlZyIsImVkaXRzIjp7ImpwZWciOnsicXVhbGl0eSI6ODB9LCJyb3RhdGUiOm51bGwsInJlc2l6ZSI6eyJ3aWR0aCI6MzAwMCwiaGVpZ2h0IjozMDAwLCJmaXQiOiJpbnNpZGUifX19",
+    },
+    {
+      name: "Chillin en",
+      imageUrl: "https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxpMnE4ZmhjczczdWE1NTFnL2FkZGl0aW9uYWxfaW1hZ2VfYXJ0d29ya19jN3RsaTJxOGZoY3M3M3VhNTUxZ18wXzE2NDM4NjIyODMuanBlZyIsImVkaXRzIjp7ImpwZWciOnsicXVhbGl0eSI6ODB9LCJyb3RhdGUiOm51bGwsInJlc2l6ZSI6eyJ3aWR0aCI6MzAwMCwiaGVpZ2h0IjozMDAwLCJmaXQiOiJpbnNpZGUifX19",
+    },
+    {
+      name: "Killin me",
+      imageUrl: "https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxpMnE4ZmhjczczdWE1NTFnL2FkZGl0aW9uYWxfaW1hZ2VfYXJ0d29ya19jN3RsaTJxOGZoY3M3M3VhNTUxZ18xXzE2NDM4NjIyODQuanBlZyIsImVkaXRzIjp7ImpwZWciOnsicXVhbGl0eSI6ODB9LCJyb3RhdGUiOm51bGwsInJlc2l6ZSI6eyJ3aWR0aCI6MzAwMCwiaGVpZ2h0IjozMDAwLCJmaXQiOiJpbnNpZGUifX19",
+    },
+    {
+      name: "Lwasa Had an Idea",
+      imageUrl: "https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxpMnE4ZmhjczczdWE1NTFnL2FkZGl0aW9uYWxfaW1hZ2VfYXJ0d29ya19jN3RsaTJxOGZoY3M3M3VhNTUxZ18yXzE2NDM4NjIyODUuanBlZyIsImVkaXRzIjp7ImpwZWciOnsicXVhbGl0eSI6ODB9LCJyb3RhdGUiOm51bGwsInJlc2l6ZSI6eyJ3aWR0aCI6MzAwMCwiaGVpZ2h0IjozMDAwLCJmaXQiOiJpbnNpZGUifX19",
+    },
+  ]
 
   return (
     <Box>
@@ -26,14 +52,14 @@ const KOLProfile = () => {
       </Flex>
 
       {/* Social links */}
-      <Flex justifyContent="center" mt={3} color="gray.500" sx={{ '& > *:not(:first-child)': { ml: 5 } }}>
+      <Flex justifyContent="center" mt={3} color="gray.500" sx={{ '& > *:not(first-of-type)': { ml: 5 } }}>
         <BiGlobe size={24} />
         <FaTwitter size={24} />
         <FaFacebook size={24} />
       </Flex>
 
       {/* Achievements */}
-      <Flex justifyContent="center" mx="auto" mt={12} color="gray.500" sx={{ '& > *:not(:first-child)': { ml: [16, 32] } }} maxWidth="800" overflow="auto">
+      <Flex justifyContent="center" mx="auto" mt={12} color="gray.500" sx={{ '& > *:not(first-of-type)': { ml: [16, 32] } }} maxWidth="800" overflow="auto">
         <Flex flexDirection="column">
           <Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
           <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">1000 NEAR</Text>
@@ -58,7 +84,7 @@ const KOLProfile = () => {
       {/* Campaigns */}
       <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
-        <Flex sx={{ '& > *:not(:first-child)': { ml: [12, 24] } }} mt={4}>
+        <Flex sx={{ '& > *:not(:first-type)': { ml: [12, 24] } }} mt={4}>
           {!currentCampaigns &&
             [...Array(3)].map((_, index) => (
               <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={index}>
@@ -89,17 +115,39 @@ const KOLProfile = () => {
         </Flex>
       </Flex>
 
+      <Flex justifyContent="center" flexDirection="column" my={24} mx="auto" maxWidth="984" overflow="auto" >
+        <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">VR Liveshows</Text>
+        <iframe width="auto" height="680px" src="https://www.youtube.com/embed/yoyf00nWASY" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+      </Flex>
+
+      <Flex justifyContent="center" flexDirection="column" my={10} mx="auto" maxWidth="984" overflow="auto" >
+        <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">VR Gallery</Text>
+        <iframe title="vr-gallery" src="https://embed.artland.com/shows/jesse-wright-reverie-c7tl8li8fhcs73ua54ug" width="auto" height="680px" frameBorder="0" scrolling="on" allowFullScreen={true}></iframe>
+      </Flex>
+
+      <Flex justifyContent="center" flexDirection="column" my={24} mx="auto" maxWidth="984" overflow="auto" >
+        <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Items</Text></Flex>
+      <Flex justifyContent="center" flexDirection="column" my={24} mx="auto" maxWidth="984" overflow="auto" >
+        <Flex flexDirection="row">
+          {sellingItems.map(({name, imageUrl}) => <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={name}>
+            <Box bg="#d5ccc0" width="100%" height="150px" minHeight="150px" borderTopRadius="sm" overflow='hidden'>
+              <Image src={imageUrl}></Image>
+            </Box>
+            <Text p={3}>{name}</Text>
+          </Flex>)}
+        </Flex>
+      </Flex>
       {/* Donation history */}
       {/* <Flex justifyContent="center" flexDirection="column" mx="auto" my={16} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Lịch sử quyên góp</Text>
         <Flex mt={4} flexDirection="column">
-          <Flex sx={{ '& > *:not(:first-child)': { ml: [8, 12] }}} px={8} alignItems="center" color="gray.500">
+          <Flex sx={{ '& > *:not(first-of-type)': { ml: [8, 12] }}} px={8} alignItems="center" color="gray.500">
               <Text width="25%">Tài khoản</Text>
               <Text width="25%">Số lượng</Text>
               <Text width="25%">Thời gian</Text>
               <Text width="25%">Chi tiết</Text>
           </Flex>
-          <Flex sx={{ '& > *:not(:first-child)': { ml: [8, 12] }}} p={8} _hover={{ bg: 'gray.100' }} alignItems="center" borderBottom="1px solid" borderColor="gray.200">
+          <Flex sx={{ '& > *:not(first-of-type)': { ml: [8, 12] }}} p={8} _hover={{ bg: 'gray.100' }} alignItems="center" borderBottom="1px solid" borderColor="gray.200">
               <Text width="25%">Fan #1</Text>
               <Text width="25%">1 NEAR</Text>
               <Text width="25%">1 ngày trước</Text>
@@ -107,7 +155,7 @@ const KOLProfile = () => {
                 <ExternalLinkIcon />
               </Box>
           </Flex>
-          <Flex sx={{ '& > *:not(:first-child)': { ml: [8, 12] }}} p={8} _hover={{ bg: 'gray.100' }} alignItems="center" borderBottom="1px solid" borderColor="gray.200">
+          <Flex sx={{ '& > *:not(first-of-type)': { ml: [8, 12] }}} p={8} _hover={{ bg: 'gray.100' }} alignItems="center" borderBottom="1px solid" borderColor="gray.200">
               <Text width="25%">Fan #2</Text>
               <Text width="25%">1 NEAR</Text>
               <Text width="25%">2 ngày trước</Text>
