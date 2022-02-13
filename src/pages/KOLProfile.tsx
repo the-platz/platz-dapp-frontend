@@ -1,26 +1,19 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
-import { WalletConnection } from "near-api-js"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect } from "react"
 import { BiGlobe } from "react-icons/bi"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
 import { Link, useParams } from "react-router-dom"
-import { useAppSelector } from "../app/hooks"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { selectCampaigns, setCampaigns } from "../app/slices/campaignFactorySlice"
 import { selectWalletConnection } from "../app/slices/walletSlice"
-import { getAllCampaignsOfAccountIdAsync } from "../services/campaigns"
 import CampaignCard from "../components/Campaigns/CampaignCard"
+import { getAllCampaignsInfo, getAllCampaignsOfAccountIdAsync } from "../services/campaigns"
 
 const KOLProfile = () => {
   const walletConnection = useAppSelector(selectWalletConnection)
+  const dispatch = useAppDispatch()
   const { id: kolId } = useParams()
-
-  const [campaigns, setCampaigns] = useState<string[] | undefined>(undefined)
-  // const [loading, setLoading] = useState<boolean>(false)
-
-  const getCampaigns = useCallback(async (walletConnection: WalletConnection, kolId: string) => {
-    const myCampaigns = await getAllCampaignsOfAccountIdAsync(kolId)
-    setCampaigns(myCampaigns.map(campaignResp => campaignResp.campaign_account_id));
-  }, [])
-
+  const currentCampaigns = useAppSelector(selectCampaigns(kolId))
   const sellingItems = [
     {
       name: "Niche huite",
@@ -49,10 +42,19 @@ const KOLProfile = () => {
   ]
 
   useEffect(() => {
-    if (!!walletConnection && !campaigns && !!kolId) {
-      getCampaigns(walletConnection, kolId)
+    const loadCampaigns = async () => {
+      if (walletConnection && kolId) {
+        const myCampaigns = await getAllCampaignsOfAccountIdAsync(kolId)
+        const myCampaignInfos = await getAllCampaignsInfo(walletConnection, myCampaigns);
+        dispatch(setCampaigns({
+          kolId,
+          campaigns: myCampaignInfos
+        }));
+      }
     }
-  }, [walletConnection, campaigns, kolId, getCampaigns])
+
+    loadCampaigns()
+  }, [dispatch, walletConnection, kolId])
 
   return (
     <Box>
@@ -102,8 +104,8 @@ const KOLProfile = () => {
       {/* Campaigns */}
       <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
-        <Flex sx={{ '& > *:not(:first-of-type)': { ml: [12, 24] } }} mt={4}>
-          {!campaigns &&
+        <Flex sx={{ '& > *:not(:first-type)': { ml: [12, 24] } }} mt={4}>
+          {!currentCampaigns &&
             [...Array(3)].map((_, index) => (
               <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={index}>
                 <Box bg="#d5ccc0" width="100%" height="150px" minHeight="150px" borderTopRadius="md"></Box>
@@ -111,9 +113,9 @@ const KOLProfile = () => {
               </Flex>
             ))
           }
-          {campaigns?.map((campaignAccountId) =>
-            <Link to={`/campaigns/${campaignAccountId}`} key={campaignAccountId}>
-              <CampaignCard campaignAccountId={campaignAccountId} />
+          {currentCampaigns?.map((campaign) =>
+            <Link to={`/campaigns/${campaign.name}`} key={campaign.name}>
+              <CampaignCard campaignInfo={campaign} />
             </Link>
           )
           }
@@ -147,7 +149,7 @@ const KOLProfile = () => {
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Items</Text></Flex>
       <Flex justifyContent="center" flexDirection="column" my={24} mx="auto" maxWidth="984" overflow="auto" >
         <Flex flexDirection="row">
-          {sellingItems.map(({name, imageUrl}) => <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={1}>
+          {sellingItems.map(({name, imageUrl}) => <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={name}>
             <Box bg="#d5ccc0" width="100%" height="150px" minHeight="150px" borderTopRadius="sm" overflow='hidden'>
               <Image src={imageUrl}></Image>
             </Box>

@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import BaseLayout from "./components/Layout/BaseLayout"
 import HomePage from "./pages/Home"
-import About from "./pages/About"
+// import About from "./pages/About"
 import KOLProfile from "./pages/KOLProfile"
 import MyAccount from "./pages/MyAccount";
 import CreateCampaign from "./pages/CreateCampaign";
@@ -19,9 +19,10 @@ import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { selectWalletConnection, setWalletConnection, selectIsSignedIn } from "./app/slices/walletSlice";
 import Campaign from "./pages/Campaign";
 import { connectConfig } from "./utils/utils";
-import { setCampaigns, setListKOL } from "./app/slices/campaignFactorySlice";
+import { IKOL, setListKOL, setMyCampaigns } from "./app/slices/campaignFactorySlice";
 import { getAllCampaignsAsync } from "./models/contracts/campaign_factory_contract";
 import TxCampaignCallback from "./components/Transactions/TxCampaignCallback";
+import { getAllCampaignsOfAccountIdAsync } from "./services/campaigns";
 
 const { connect } = nearAPI;
 
@@ -45,11 +46,22 @@ export const App = () => {
     const loadCampaigns = async () => {
       if (isSignedIn && walletConnection) {
         const campaigns = await getAllCampaignsAsync(walletConnection)
-        const listKOL = campaigns.map((campaign) => campaign.campaign_beneficiary).filter(function (item, pos, a) {
-          return a.indexOf(item) === pos;
-        })
-        dispatch(setListKOL({ listKOL }))
-        dispatch(setCampaigns({ campaigns }))
+        const listKOL: IKOL[] = [];
+        campaigns.forEach(element => {
+          let kol = listKOL.find(el => el.name === element.campaign_beneficiary)
+          if (kol) {
+            kol.campaigns.push(element);
+          }else {
+            kol = {
+              name: element.campaign_beneficiary,
+              campaigns: [element]
+            };
+            listKOL.push(kol);
+          }
+        });
+        dispatch(setListKOL(listKOL))
+        const myCampaigns = await getAllCampaignsOfAccountIdAsync(walletConnection.account().accountId)
+        dispatch(setMyCampaigns(myCampaigns))
       }
     }
 
@@ -62,7 +74,6 @@ export const App = () => {
         <Routes>
           <Route path="/" element={<BaseLayout />}>
             <Route index element={<HomePage />} />
-            <Route path="about" element={<About />} />
             <Route path="kols" element={<Outlet />}>
               <Route path=":id" element={<KOLProfile />} />
             </Route>
