@@ -58,9 +58,9 @@ export const selectCampaigns = (kol?: string) => (state: RootState) => {
     if(kol) {
         return state.campaignFactory.listKOL.find(el => el.name === kol)?.campaigns
     } else {
-        const campaigns: CampaignProps[] = [];
+        let campaigns: CampaignProps[] = [];
         state.campaignFactory.listKOL.forEach(element => {
-            campaigns.concat(element.campaigns)
+            campaigns = campaigns.concat(element.campaigns)
         });
         return campaigns
     }
