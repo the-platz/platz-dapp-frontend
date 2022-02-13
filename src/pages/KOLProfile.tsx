@@ -104,7 +104,7 @@ const KOLProfile = () => {
       {/* Campaigns */}
       <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
-        <Flex sx={{ '& > *:not(:first-type)': { ml: [12, 24] } }} mt={4}>
+        <Flex sx={{ '& > *:not(:first-of-type)': { ml: [12, 24] } }} mt={4}>
           {!currentCampaigns &&
             [...Array(3)].map((_, index) => (
               <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={index}>

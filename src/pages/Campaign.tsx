@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Image, Input, Text } from '@chakra-ui/react'
 import BN from 'bn.js';
 import { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useAppSelector } from '../app/hooks'
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import { CampaignContract, donateAsync, getCampaignContract, getCampaignContractInfoAsync } from '../models/contracts/campaign_contract'
@@ -90,7 +90,13 @@ const Campaign = () => {
       </Flex>
 
       {/* Bio description */}
-      <Flex justifyContent="center" textAlign="center" mx="auto" mt={8} color="gray.500" maxWidth="800" overflow="auto">
+      <Flex justifyContent="center" mx="auto" flexDirection="column" alignItems="center" maxWidth="800" mt={12}>
+          <Box bgImg="/images/default_kol_avatar.jpg" bgPosition="center" bgSize="cover" height="80px" maxHeight="80" width="80px" maxWidth="80" borderRadius="50%"></Box>
+          <Link to={`/kols/${campaignInfo?.campaign_beneficiary}`}>
+            <Text Text fontSize={['xl', '2xl']}>{campaignInfo?.campaign_beneficiary}</Text>
+          </Link>
+        </Flex>
+      <Flex justifyContent="center" textAlign="center" mx="auto" mt={6} color="gray.500" maxWidth="800" overflow="auto">
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Velit nobis error animi iusto. Hic maiores laboriosam, in adipisci, odio ea eum at iste dolorem non aspernatur asperiores, rerum dolores omnis?
       </Flex>
 
