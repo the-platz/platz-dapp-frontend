@@ -54,7 +54,7 @@ export const App = () => {
           }else {
             kol = {
               name: element.campaign_beneficiary,
-              campaigns: []
+              campaigns: [element]
             };
             listKOL.push(kol);
           }
