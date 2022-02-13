@@ -1,22 +1,54 @@
 import { Box, Button, Flex, Image, Input, Text } from '@chakra-ui/react'
 import BN from 'bn.js';
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAppSelector } from '../app/hooks'
 import { selectWalletConnection } from '../app/slices/walletSlice'
-import { donateAsync, getCampaignContract } from '../models/contracts/campaign_contract'
+import { CampaignContract, donateAsync, getCampaignContract, getCampaignContractInfoAsync } from '../models/contracts/campaign_contract'
 import { utils } from 'near-api-js'
+import { CampaignInfo } from '../models/types';
+import { getTopDonorsAsync, TopDonorsResponse } from '../services/campaigns';
+import ProgressBar from '../components/ProgressBar';
 
 const Campaign = () => {
   const walletConnection = useAppSelector(selectWalletConnection)
   const { campaignAccountId } = useParams()
+  const [campaignContract, setCampaignContract] = useState<CampaignContract | undefined>(undefined)
+  const [campaignInfo, setCampaignInfo] = useState<CampaignInfo | undefined>(undefined)
+  const [topDonors, setTopDonors] = useState<TopDonorsResponse[] | undefined>(undefined)
+
+  useEffect(() => {
+    if (walletConnection && campaignAccountId) {
+      const contract = getCampaignContract(walletConnection, campaignAccountId)
+      setCampaignContract(contract)
+    }
+  }, [walletConnection, campaignAccountId])
+
+  useEffect(() => {
+    const getInfo = async () => {
+      if (campaignContract) {
+        const info = await getCampaignContractInfoAsync(campaignContract)
+        setCampaignInfo(info)
+      }
+    }
+    getInfo()
+  }, [campaignContract])
+
+  useEffect(() => {
+    const getTopDonors = async () => {
+      if (campaignAccountId) {
+        const donors = await getTopDonorsAsync(campaignAccountId)
+        setTopDonors(donors)
+      }
+    }
+    getTopDonors()
+  }, [campaignAccountId])
 
   const donate = useCallback(async (donationAmount: string) => {
-    if (walletConnection && campaignAccountId) {
-      const campaignContract = getCampaignContract(walletConnection, campaignAccountId)
+    if (campaignContract) {
       await donateAsync(campaignContract, new BN(donationAmount))
     }
-  }, [campaignAccountId, walletConnection])
+  }, [campaignContract])
 
   return (
     <Box>
@@ -24,7 +56,7 @@ const Campaign = () => {
       {/* Campaign info */}
       <Flex flexDirection="column" mt={16}>
         <Flex flexDirection="column" alignItems="center">
-          <Text fontSize={['2xl', '4xl']} fontWeight="semibold">Hát Cùng Platz</Text>
+          <Text fontSize={['2xl', '4xl']} fontWeight="semibold">{campaignAccountId}</Text>
           <Flex mt={2}>
             <Text fontSize={['xs', 'sm']} px={4} py={1} bg="yellow.300" borderRadius={"md"} fontWeight="semibold">🔥 Nổi bật</Text>
             <Text fontSize={['xs', 'sm']} px={4} py={1} bg="purple.300" borderRadius={"md"} fontWeight="semibold" ml={3}>🎵 Âm nhạc</Text>
@@ -33,7 +65,12 @@ const Campaign = () => {
       </Flex>
 
       {/* Achievements */}
-      <Flex justifyContent="center" mx="auto" mt={12} color="gray.500" sx={{ '& > *:not(first-of-type)': { ml: [16, 32] } }} maxWidth="984" overflow="auto">
+      {!!campaignInfo && (
+        <Flex maxWidth="984" mx="auto" mb={4}  mt={12}>
+            <ProgressBar current={parseInt(utils.format.formatNearAmount(campaignInfo.donated_amount, 0))} total={parseInt(utils.format.formatNearAmount(campaignInfo.target_amount, 0))} />
+        </Flex>
+      )}
+      <Flex justifyContent="center" color="gray.500" sx={{ '& > *:not(:first-of-type)': { ml: [16, 32] } }} overflow="auto">
         <Flex flexDirection="column">
           <Text fontSize={['lg', 'xl']}>Bắt đầu</Text>
           <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">15/01/2022</Text>
@@ -44,11 +81,11 @@ const Campaign = () => {
         </Flex>
         <Flex flexDirection="column">
           <Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
-          <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">100 NEAR</Text>
+          {campaignInfo?.donated_amount && <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">{utils.format.formatNearAmount(campaignInfo.donated_amount, 2)} NEAR</Text>}
         </Flex>
         <Flex flexDirection="column">
           <Text fontSize={['lg', 'xl']}>Mục tiêu</Text>
-          <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">300 NEAR</Text>
+          {campaignInfo?.target_amount && <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">{utils.format.formatNearAmount(campaignInfo.target_amount, 2)} NEAR</Text>}
         </Flex>
       </Flex>
 
@@ -64,7 +101,7 @@ const Campaign = () => {
 
       {/* Donate */}
       <Flex justifyContent="center" flexDirection="column" my={24} mx="auto" maxWidth="984" overflow="auto" >
-        <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Ủng hộ</Text>
+        <Text fontSize={['2xl', '3xl']} color="black" fontWeight="semibold">Ủng hộ</Text>
         <Flex mt={4} flexDirection="column">
           <Flex width="100%" borderRadius="md" border="1px solid rgba(255, 122, 0, .5)" overflow="hidden" mb={3}>
             <Flex flex="0 1 60%" bg="rgba(255, 122, 0, .5)">
@@ -153,11 +190,32 @@ const Campaign = () => {
         </Flex>
       </Flex>
 
-      {/* About KOL */}
+      {/* Top donors */}
+      {!!topDonors && Boolean(topDonors?.length > 0) && (
       <Flex justifyContent="center" flexDirection="column" my={24} mx="auto" maxWidth="984" overflow="auto" >
-        <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Giới thiệu</Text>
-
+        <Text fontSize={['2xl', '3xl']} color="black" fontWeight="semibold">Fan cứng</Text>
+        <Flex flexDirection="column" maxWidth="100%" maxHeight={600} overflow="auto" py={3}>
+          <Flex justifyContent="space-between">
+                <Flex flex="1 1 60%">
+                  <Text fontSize="lg" fontWeight="light" color="black">Tài khoản</Text>
+                </Flex>
+                <Flex flex="1 1 40%">
+                  <Text fontSize="lg" fontWeight="light" color="black">Ủng hộ</Text>
+                </Flex>
+          </Flex>
+          {topDonors.map((donor: TopDonorsResponse) => (
+            <Flex key={donor.signer_account_id} justifyContent="space-between" py={3} borderBottom="1px solid" borderColor="lightgray">
+                <Flex flex="1 1 60%">
+                  <Text fontSize="lg" fontWeight="medium" color="black">{donor.signer_account_id}</Text>
+                </Flex>
+                <Flex flex="1 1 40%">
+                  <Text fontSize="lg" fontWeight="medium" color="black">{utils.format.formatNearAmount(donor.total_donation_amount, 2)} NEAR</Text>
+                </Flex>
+            </Flex>
+          ))}
+        </Flex>
       </Flex>
+      )}
     </Box>
   )
 }
