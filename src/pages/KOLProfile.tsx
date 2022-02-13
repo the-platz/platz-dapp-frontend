@@ -72,14 +72,14 @@ const KOLProfile = () => {
       </Flex>
 
       {/* Social links */}
-      <Flex justifyContent="center" mt={3} color="gray.500" sx={{ '& > *:not(first-of-type)': { ml: 5 } }}>
+      <Flex justifyContent="center" mt={3} color="gray.500" sx={{ '& > *:not(:first-of-type)': { ml: 5 } }}>
         <BiGlobe size={24} />
         <FaTwitter size={24} />
         <FaFacebook size={24} />
       </Flex>
 
       {/* Achievements */}
-      <Flex justifyContent="center" mx="auto" mt={12} color="gray.500" sx={{ '& > *:not(first-of-type)': { ml: [16, 32] } }} maxWidth="800" overflow="auto">
+      <Flex justifyContent="center" mx="auto" mt={12} color="gray.500" sx={{ '& > *:not(:first-of-type)': { ml: [16, 32] } }} maxWidth="800" overflow="auto">
         <Flex flexDirection="column">
           <Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
           <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">1000 NEAR</Text>
@@ -104,7 +104,7 @@ const KOLProfile = () => {
       {/* Campaigns */}
       <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
-        <Flex sx={{ '& > *:not(:first-type)': { ml: [12, 24] } }} mt={4}>
+        <Flex sx={{ '& > *:not(:first-of-type)': { ml: [12, 24] } }} mt={4}>
           {!currentCampaigns &&
             [...Array(3)].map((_, index) => (
               <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={index}>
@@ -161,13 +161,13 @@ const KOLProfile = () => {
       {/* <Flex justifyContent="center" flexDirection="column" mx="auto" my={16} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Lịch sử quyên góp</Text>
         <Flex mt={4} flexDirection="column">
-          <Flex sx={{ '& > *:not(first-of-type)': { ml: [8, 12] }}} px={8} alignItems="center" color="gray.500">
+          <Flex sx={{ '& > *:not(:first-of-type)': { ml: [8, 12] }}} px={8} alignItems="center" color="gray.500">
               <Text width="25%">Tài khoản</Text>
               <Text width="25%">Số lượng</Text>
               <Text width="25%">Thời gian</Text>
               <Text width="25%">Chi tiết</Text>
           </Flex>
-          <Flex sx={{ '& > *:not(first-of-type)': { ml: [8, 12] }}} p={8} _hover={{ bg: 'gray.100' }} alignItems="center" borderBottom="1px solid" borderColor="gray.200">
+          <Flex sx={{ '& > *:not(:first-of-type)': { ml: [8, 12] }}} p={8} _hover={{ bg: 'gray.100' }} alignItems="center" borderBottom="1px solid" borderColor="gray.200">
               <Text width="25%">Fan #1</Text>
               <Text width="25%">1 NEAR</Text>
               <Text width="25%">1 ngày trước</Text>
@@ -175,7 +175,7 @@ const KOLProfile = () => {
                 <ExternalLinkIcon />
               </Box>
           </Flex>
-          <Flex sx={{ '& > *:not(first-of-type)': { ml: [8, 12] }}} p={8} _hover={{ bg: 'gray.100' }} alignItems="center" borderBottom="1px solid" borderColor="gray.200">
+          <Flex sx={{ '& > *:not(:first-of-type)': { ml: [8, 12] }}} p={8} _hover={{ bg: 'gray.100' }} alignItems="center" borderBottom="1px solid" borderColor="gray.200">
               <Text width="25%">Fan #2</Text>
               <Text width="25%">1 NEAR</Text>
               <Text width="25%">2 ngày trước</Text>
