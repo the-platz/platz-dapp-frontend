@@ -1,31 +1,14 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
-import { WalletConnection } from "near-api-js"
-import { useCallback, useEffect, useState } from "react"
 import { BiGlobe } from "react-icons/bi"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
 import { Link, useParams } from "react-router-dom"
 import { useAppSelector } from "../app/hooks"
-import { selectWalletConnection } from "../app/slices/walletSlice"
-import { getAllCampaignsOfAccountIdAsync } from "../services/campaigns"
+import { selectCampaigns } from "../app/slices/campaignFactorySlice"
 import CampaignCard from "../components/Campaigns/CampaignCard"
 
 const KOLProfile = () => {
-  const walletConnection = useAppSelector(selectWalletConnection)
   const { id: kolId } = useParams()
-
-  const [campaigns, setCampaigns] = useState<string[] | undefined>(undefined)
-  // const [loading, setLoading] = useState<boolean>(false)
-
-  const getCampaigns = useCallback(async (walletConnection: WalletConnection, kolId: string) => {
-    const myCampaigns = await getAllCampaignsOfAccountIdAsync(kolId)
-    setCampaigns(myCampaigns.map(campaignResp => campaignResp.campaign_account_id));
-  }, [])
-
-  useEffect(() => {
-    if (!!walletConnection && !campaigns && !!kolId) {
-      getCampaigns(walletConnection, kolId)
-    }
-  }, [walletConnection, campaigns, kolId, getCampaigns])
+  const currentCampaigns = useAppSelector(selectCampaigns(kolId))
 
   return (
     <Box>
@@ -76,7 +59,7 @@ const KOLProfile = () => {
       <Flex justifyContent="center" flexDirection="column" mx="auto" my={24} maxWidth="984" overflow="auto">
         <Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">Campaigns</Text>
         <Flex sx={{ '& > *:not(:first-child)': { ml: [12, 24] } }} mt={4}>
-          {!campaigns &&
+          {!currentCampaigns &&
             [...Array(3)].map((_, index) => (
               <Flex flexDirection="column" width="250px" minWidth="250px" height="250px" minHeight="250px" borderRadius="md" border="1px solid" borderColor="lightgray" key={index}>
                 <Box bg="#d5ccc0" width="100%" height="150px" minHeight="150px" borderTopRadius="md"></Box>
@@ -84,9 +67,9 @@ const KOLProfile = () => {
               </Flex>
             ))
           }
-          {campaigns?.map((campaignAccountId) =>
-            <Link to={`/campaigns/${campaignAccountId}`} key={campaignAccountId}>
-              <CampaignCard campaignAccountId={campaignAccountId} />
+          {currentCampaigns?.map((campaign) =>
+            <Link to={`/campaigns/${campaign.name}`} key={campaign.name}>
+              <CampaignCard campaignInfo={campaign} />
             </Link>
           )
           }

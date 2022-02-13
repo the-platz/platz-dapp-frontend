@@ -1,34 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react"
-import { selectWalletConnection } from "../app/slices/walletSlice";
 import { useAppSelector } from "../app/hooks";
 import CampaignCard from "../components/Campaigns/CampaignCard";
-import { getAllCampaignsOfAccountIdAsync } from "../services/campaigns";
-import { WalletConnection } from "near-api-js";
+import { selectCampaigns, selectMyCampaigns } from "../app/slices/campaignFactorySlice";
 
 const MyCampaigns = () => {
-    const walletConnection = useAppSelector(selectWalletConnection)
-
-    const [myCampaignAccountIds, setMyCampaignAccountIds] = useState<string[] | undefined>(undefined)
-    // const [loading, setLoading] = useState<boolean>(false)
-
-    const getMyCampaigns = useCallback(async(walletConnection: WalletConnection) => {
-        const myCampaigns = await getAllCampaignsOfAccountIdAsync(walletConnection.account().accountId)
-        setMyCampaignAccountIds(myCampaigns.map(campaignResp => campaignResp.campaign_account_id));
-    }, [])
-
-    useEffect(() => {
-        if (walletConnection && !myCampaignAccountIds) {
-            getMyCampaigns(walletConnection)
-        }
-    }, [walletConnection, myCampaignAccountIds, getMyCampaigns])
+    const myCampaigns = useAppSelector(selectMyCampaigns)
+    const campaigns = useAppSelector(selectCampaigns())
 
     return (
         <Flex flexDirection="column" alignItems="center" maxWidth="886" mx="auto" py={16}>
             <Text>My Campaigns</Text>
 
-            {myCampaignAccountIds?.map((campaignAccountId) =>
-                <CampaignCard key={campaignAccountId} campaignAccountId={campaignAccountId} isOwner />
+            {campaigns && myCampaigns?.map((campaign) => {
+                    const myCampaignInfo = campaigns.find(el=> el.campaign_beneficiary === campaign.campaign_beneficiary)
+                    if (myCampaignInfo) {
+                        return (
+                            <CampaignCard key={campaign.campaign_account_id} campaignInfo={myCampaignInfo} campaignAccountId={campaign.campaign_account_id} isOwner />
+                        );
+                    }
+                    return null;
+                }
             )}
         </Flex>
     )
