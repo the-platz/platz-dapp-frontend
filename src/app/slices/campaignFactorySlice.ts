@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { sortBy } from 'lodash'
 import { CampaignFactoryInfo } from '../../models/contracts/campaign_factory_contract';
 import { CampaignProps } from '../../models/types';
 import type { RootState } from '../store'
@@ -37,6 +38,13 @@ const campaignFactorySlice  = createSlice({
         setMyCampaigns: (state, { payload }) => {
             state.myCampaigns = payload as MyCampaignResponse[]
         },
+        setCampaigns: (state, { payload }) => {
+            const kol = state.listKOL.find(el => el.name === payload.kolId)
+            if (kol) {
+                kol.campaigns = payload.campaigns
+                kol.campaigns = sortBy(kol.campaigns, ['name'])
+            }
+        },
         setCampaign: (state, { payload }) => {
             const kol = state.listKOL.find(el => el.name === payload.campaign_beneficiary)
             if (kol) {
@@ -46,12 +54,13 @@ const campaignFactorySlice  = createSlice({
                 } else {
                     kol.campaigns.push(payload)
                 }
+                kol.campaigns = sortBy(kol.campaigns, ['name'])
             }
         }
     }
 })
 
-export const { setListKOL, setCampaign, setMyCampaigns } = campaignFactorySlice.actions;
+export const { setListKOL, setCampaign, setCampaigns, setMyCampaigns } = campaignFactorySlice.actions;
 
 export const selectCampaignFactoryInfo = (state: RootState) => state.campaignFactory.campaignFactoryInfo
 export const selectCampaigns = (kol?: string) => (state: RootState) => {

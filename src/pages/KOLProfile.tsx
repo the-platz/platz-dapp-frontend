@@ -1,12 +1,17 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react"
+import { useEffect } from "react"
 import { BiGlobe } from "react-icons/bi"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
 import { Link, useParams } from "react-router-dom"
-import { useAppSelector } from "../app/hooks"
-import { selectCampaigns } from "../app/slices/campaignFactorySlice"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { selectCampaigns, setCampaigns } from "../app/slices/campaignFactorySlice"
+import { selectWalletConnection } from "../app/slices/walletSlice"
 import CampaignCard from "../components/Campaigns/CampaignCard"
+import { getAllCampaignsInfo, getAllCampaignsOfAccountIdAsync } from "../services/campaigns"
 
 const KOLProfile = () => {
+  const walletConnection = useAppSelector(selectWalletConnection)
+  const dispatch = useAppDispatch()
   const { id: kolId } = useParams()
   const currentCampaigns = useAppSelector(selectCampaigns(kolId))
   const sellingItems = [
@@ -35,6 +40,21 @@ const KOLProfile = () => {
       imageUrl: "https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxpMnE4ZmhjczczdWE1NTFnL2FkZGl0aW9uYWxfaW1hZ2VfYXJ0d29ya19jN3RsaTJxOGZoY3M3M3VhNTUxZ18yXzE2NDM4NjIyODUuanBlZyIsImVkaXRzIjp7ImpwZWciOnsicXVhbGl0eSI6ODB9LCJyb3RhdGUiOm51bGwsInJlc2l6ZSI6eyJ3aWR0aCI6MzAwMCwiaGVpZ2h0IjozMDAwLCJmaXQiOiJpbnNpZGUifX19",
     },
   ]
+
+  useEffect(() => {
+    const loadCampaigns = async () => {
+      if (walletConnection && kolId) {
+        const myCampaigns = await getAllCampaignsOfAccountIdAsync(kolId)
+        const myCampaignInfos = await getAllCampaignsInfo(walletConnection, myCampaigns);
+        dispatch(setCampaigns({
+          kolId,
+          campaigns: myCampaignInfos
+        }));
+      }
+    }
+
+    loadCampaigns()
+  }, [dispatch, walletConnection, kolId])
 
   return (
     <Box>
