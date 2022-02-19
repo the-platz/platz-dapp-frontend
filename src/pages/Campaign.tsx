@@ -4,8 +4,13 @@ import {
 	Flex,
 	Image,
 	Input,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
 	Text,
-	useToast,
 } from '@chakra-ui/react'
 import BN from 'bn.js'
 import { useCallback, useEffect, useState } from 'react'
@@ -22,6 +27,9 @@ import { utils } from 'near-api-js'
 import { CampaignInfo } from '../models/types'
 import { getTopDonorsAsync, TopDonorsResponse } from '../services/campaigns'
 import ProgressBar from '../components/ProgressBar'
+import { BiLinkExternal } from 'react-icons/bi'
+import { NEAR_TRANSACTION_URL } from '../utils/consts'
+import { FaFacebook, FaTwitter, FaYoutube } from 'react-icons/fa'
 
 const Campaign = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)
@@ -37,7 +45,8 @@ const Campaign = () => {
 	)
 
 	let [searchParams] = useSearchParams()
-	const toast = useToast()
+
+	const [isDonationSuccessOpen, setIsDonationSuccessOpen] = useState(false)
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
@@ -45,10 +54,9 @@ const Campaign = () => {
 
 	useEffect(() => {
 		if (searchParams.get('transactionHashes')) {
-			toast({ status: 'success', title: 'Donation successful', duration: 3000 })
-			searchParams.delete('transactionHashes')
+			setIsDonationSuccessOpen(true)
 		}
-	}, [searchParams, toast])
+	}, [searchParams])
 
 	useEffect(() => {
 		if (walletConnection && campaignAccountId) {
@@ -563,6 +571,90 @@ const Campaign = () => {
 					</Flex>
 				</Flex>
 			)}
+
+			<Modal
+				isOpen={isDonationSuccessOpen}
+				onClose={() => {
+					setIsDonationSuccessOpen(false)
+					searchParams.delete('transactionHashes')
+				}}
+			>
+				<ModalOverlay />
+				<ModalContent pb={5} textAlign={'center'}>
+					<ModalHeader>Donate Successful</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<Flex flexDirection="column">
+							<Text fontSize={['lg', 'xl']} mb={6}>
+								You have officially become a fan!
+							</Text>
+
+							<Flex flexDir="column" p={3} bg={'gray.100'} borderRadius={'md'}>
+								<Text color={'gray.500'}>TxHash</Text>
+								<a
+									href={`${NEAR_TRANSACTION_URL}${searchParams.get(
+										'transactionHashes'
+									)}`}
+									target="_blank"
+									rel="noreferrer"
+								>
+									<Flex alignItems={'center'} color={'teal.400'}>
+										<Text
+											fontWeight={'semibold'}
+											mr={2}
+											overflowWrap={'break-word'}
+											textOverflow={'ellipsis'}
+											wordBreak={'break-all'}
+										>
+											{searchParams.get('transactionHashes')}
+										</Text>
+										<BiLinkExternal />
+									</Flex>
+								</a>
+							</Flex>
+
+							<Text fontSize={['lg', 'xl']} my={6}>
+								Share it now!
+							</Text>
+							<Flex
+								sx={{ '& > *:not(:first-of-type)': { ml: 8 } }}
+								justifyContent={'center'}
+							>
+								<Flex
+									width={'48px'}
+									height={'48px'}
+									border="1px solid black"
+									borderRadius={'full'}
+									alignItems="center"
+									justifyContent={'center'}
+								>
+									<FaTwitter size={24} />
+								</Flex>
+								<Flex
+									width={'48px'}
+									height={'48px'}
+									border="1px solid black"
+									borderRadius={'full'}
+									alignItems="center"
+									justifyContent={'center'}
+								>
+									<FaFacebook size={24} />
+								</Flex>
+								<Flex
+									width={'48px'}
+									height={'48px'}
+									border="1px solid black"
+									borderRadius={'full'}
+									alignItems="center"
+									justifyContent={'center'}
+								>
+									<FaYoutube size={24} />
+								</Flex>
+							</Flex>
+						</Flex>
+					</ModalBody>
+				</ModalContent>
+			</Modal>
 		</Box>
 	)
 }
