@@ -28,7 +28,7 @@ const HomePage: React.FC<any> = () => {
 				<Flex>
 					<Flex flexDirection="column" maxWidth="564px" align="flex-start">
 						<Text
-							fontSize="5xl"
+							fontSize={['3xl', '5xl']}
 							fontWeight="bold"
 							lineHeight={'50px'}
 							mt={12}
@@ -37,8 +37,8 @@ const HomePage: React.FC<any> = () => {
 							Donate, collect, and earn NFTs from KOLs
 						</Text>
 						<Text
-							fontSize="xl"
-							maxWidth="80%"
+							fontSize={['lg', 'xl']}
+							maxWidth={['100%', '80%']}
 							fontWeight="normal"
 							color={COLOR_NEUTRAL_LIGHT}
 						>
@@ -77,6 +77,7 @@ const HomePage: React.FC<any> = () => {
 						mx="auto"
 						width="100%"
 						position="relative"
+						display={['none', 'flex']}
 					>
 						<Box
 							borderRadius="12px"

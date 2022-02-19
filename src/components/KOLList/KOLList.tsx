@@ -39,7 +39,7 @@ const KOLList = () => {
 
 	return (
 		<Flex flexDirection="column" my={16}>
-			<Text fontSize="3xl" fontWeight="bold">
+			<Text fontSize={['2xl', '3xl']} fontWeight="bold">
 				Top Influencers
 			</Text>
 			{walletConnection?.isSignedIn() ? (

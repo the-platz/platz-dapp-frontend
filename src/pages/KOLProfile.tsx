@@ -131,6 +131,7 @@ const KOLProfile = () => {
 				mt={3}
 				color="gray.500"
 				sx={{ '& > *:not(:first-of-type)': { ml: 5 } }}
+				px={[4, 3, 2, 0]}
 			>
 				<BiGlobe size={24} />
 				<FaTwitter size={24} />
@@ -146,6 +147,7 @@ const KOLProfile = () => {
 				sx={{ '& > *:not(:first-of-type)': { ml: [16, 32] } }}
 				maxWidth="800"
 				overflow="auto"
+				px={[4, 3, 2, 0]}
 			>
 				<Flex flexDirection="column">
 					<Text fontSize={['lg', 'xl']}>Volume</Text>
@@ -176,6 +178,7 @@ const KOLProfile = () => {
 				color="gray.500"
 				maxWidth="800"
 				overflow="auto"
+				px={[4, 3, 2, 0]}
 			>
 				Lorem ipsum dolor sit amet consectetur, adipisicing elit. Velit nobis
 				error animi iusto. Hic maiores laboriosam, in adipisci, odio ea eum at
@@ -190,6 +193,7 @@ const KOLProfile = () => {
 				my={24}
 				maxWidth="984"
 				overflow="auto"
+				px={[4, 3, 2, 0]}
 			>
 				<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
 					Campaigns
@@ -234,6 +238,7 @@ const KOLProfile = () => {
 				mx="auto"
 				maxWidth="984"
 				overflow="auto"
+				px={[4, 3, 2, 0]}
 			>
 				<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
 					About
@@ -253,6 +258,7 @@ const KOLProfile = () => {
 						top="80px"
 						right="0"
 						zIndex="101"
+						display={['none', 'block']}
 					/>
 					<Text
 						fontSize={['7xl', '9xl']}
@@ -283,7 +289,7 @@ const KOLProfile = () => {
 						Hi! I'm
 					</Text>
 					<Text
-						fontSize={['4xl', '5xl']}
+						fontSize={['2xl', '4xl', '5xl']}
 						color="#e9d0b1"
 						fontWeight="bold"
 						p={3}
@@ -320,6 +326,7 @@ const KOLProfile = () => {
 				mx="auto"
 				maxWidth="984"
 				overflow="auto"
+				px={[4, 3, 2, 0]}
 			>
 				<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
 					VR Liveshows
@@ -342,6 +349,7 @@ const KOLProfile = () => {
 				mx="auto"
 				maxWidth="984"
 				overflow="auto"
+				px={[4, 3, 2, 0]}
 			>
 				<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
 					VR Gallery
@@ -364,6 +372,7 @@ const KOLProfile = () => {
 				mx="auto"
 				maxWidth="984"
 				overflow="auto"
+				px={[4, 3, 2, 0]}
 			>
 				<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
 					Items
@@ -376,6 +385,7 @@ const KOLProfile = () => {
 				mx="auto"
 				maxWidth="984"
 				overflow="auto"
+				px={[4, 3, 2, 0]}
 			>
 				<Flex flexDirection="row">
 					{sellingItems.map(({ name, imageUrl }) => (

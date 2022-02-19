@@ -105,7 +105,7 @@ const Campaign = () => {
 	return (
 		<Box>
 			{/* Campaign info */}
-			<Flex flexDirection="column" mt={16}>
+			<Flex flexDirection="column" mt={16} p={[4, 3, 2, 0]}>
 				<Flex flexDirection="column" alignItems="center">
 					<Text fontSize={['2xl', '4xl']} fontWeight="semibold">
 						{campaignAccountId}
