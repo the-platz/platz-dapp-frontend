@@ -24,12 +24,13 @@ import {
 	getCampaignContractInfoAsync,
 } from '../models/contracts/campaign_contract'
 import { utils } from 'near-api-js'
-import { CampaignInfo } from '../models/types'
+import { CampaignInfo, TxDonationResult } from '../models/types'
 import { getTopDonorsAsync, TopDonorsResponse } from '../services/campaigns'
 import ProgressBar from '../components/ProgressBar'
 import { BiLinkExternal } from 'react-icons/bi'
 import { NEAR_TRANSACTION_URL } from '../utils/consts'
 import { FaFacebook, FaTwitter, FaYoutube } from 'react-icons/fa'
+import { getTxDonationResultAsync } from '../utils/utils'
 
 const Campaign = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)
@@ -47,16 +48,23 @@ const Campaign = () => {
 	let [searchParams] = useSearchParams()
 
 	const [isDonationSuccessOpen, setIsDonationSuccessOpen] = useState(false)
+	const [donationResult, setDonationResult] = useState<
+		TxDonationResult | undefined
+	>(undefined)
 
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
 
 	useEffect(() => {
-		if (searchParams.get('transactionHashes')) {
+		if (searchParams.get('transactionHashes') && walletConnection) {
 			setIsDonationSuccessOpen(true)
+			getTxDonationResultAsync(
+				searchParams.get('transactionHashes') ?? '',
+				walletConnection.account().accountId
+			).then(setDonationResult)
 		}
-	}, [searchParams])
+	}, [searchParams, walletConnection])
 
 	useEffect(() => {
 		if (walletConnection && campaignAccountId) {
@@ -590,6 +598,15 @@ const Campaign = () => {
 							</Text>
 
 							<Flex flexDir="column" p={3} bg={'gray.100'} borderRadius={'md'}>
+								<Text color={'gray.500'}>Amount</Text>
+								<Text color={'teal.400'} mb={2}>
+									{utils.format.formatNearAmount(
+										donationResult?.donationAmount ?? '',
+										2
+									)}{' '}
+									NEAR
+								</Text>
+
 								<Text color={'gray.500'}>TxHash</Text>
 								<a
 									href={`${NEAR_TRANSACTION_URL}${searchParams.get(
