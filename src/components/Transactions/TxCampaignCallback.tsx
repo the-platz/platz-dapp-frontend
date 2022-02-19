@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { useAppSelector } from '../../app/hooks';
 import { selectWalletConnection } from '../../app/slices/walletSlice';
 import { useQueries } from '../../hooks/useQueries';
-const { providers } = require("near-api-js");
+import { getTxDonationResultAsync } from '../../utils/utils';
 
 const TxCampaignCallback = () => {
     const walletConnection = useAppSelector(selectWalletConnection)
@@ -12,12 +12,10 @@ const TxCampaignCallback = () => {
     const [txStatus, setTxStatus] = useState(false)
 
     const getTxStatus = useCallback(async () => {
-        const provider = new providers.JsonRpcProvider(
-            "https://archival-rpc.testnet.near.org"
-        );
         if (walletConnection) {
-            const txStatus = await provider.txStatus(queries.get("transactionHashes"), walletConnection.account().accountId);
-            setTxStatus(txStatus.status.SuccessValue === "")
+            const txDonationResult = await getTxDonationResultAsync(queries.get("transactionHashes") || '', walletConnection.account().accountId)
+            setTxStatus(txDonationResult.isSucceeded)
+            console.log(txDonationResult.donationAmount)
         }
     }, [walletConnection, queries])
 
