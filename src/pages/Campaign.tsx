@@ -1,7 +1,15 @@
-import { Box, Button, Flex, Image, Input, Text } from '@chakra-ui/react'
+import {
+	Box,
+	Button,
+	Flex,
+	Image,
+	Input,
+	Text,
+	useToast,
+} from '@chakra-ui/react'
 import BN from 'bn.js'
 import { useCallback, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAppSelector } from '../app/hooks'
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import {
@@ -28,9 +36,19 @@ const Campaign = () => {
 		undefined
 	)
 
+	let [searchParams] = useSearchParams()
+	const toast = useToast()
+
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
+
+	useEffect(() => {
+		if (searchParams.get('transactionHashes')) {
+			toast({ status: 'success', title: 'Donation successful', duration: 3000 })
+			searchParams.delete('transactionHashes')
+		}
+	}, [searchParams, toast])
 
 	useEffect(() => {
 		if (walletConnection && campaignAccountId) {
@@ -221,7 +239,7 @@ const Campaign = () => {
 				overflow="auto"
 			>
 				<Text fontSize={['2xl', '3xl']} color="black" fontWeight="semibold">
-					Ủng hộ
+					Donation
 				</Text>
 				<Flex mt={4} flexDirection="column">
 					<Flex
@@ -275,7 +293,7 @@ const Campaign = () => {
 									color="black"
 									onClick={() => donate('1000000000000000000000000')}
 								>
-									Tiếp tục
+									Continue
 								</Button>
 							</Flex>
 						</Flex>
@@ -296,7 +314,7 @@ const Campaign = () => {
 								alignItems="center"
 							>
 								<Text color="gray.600" fontSize="xl">
-									Fan chân chính
+									Real Fan
 								</Text>
 								<Text fontSize="4xl" fontWeight="semibold">
 									5 NEAR
@@ -311,7 +329,7 @@ const Campaign = () => {
 							>
 								<Text>🎶 Badge NFT</Text>
 								<Text mt={2}>🎧 Hall of Mention</Text>
-								<Text mt={2}>⚡ Video đặc biệt</Text>
+								<Text mt={2}>⚡ Special Video</Text>
 							</Flex>
 							<Flex mt="auto">
 								<Button
@@ -324,7 +342,7 @@ const Campaign = () => {
 									color="black"
 									onClick={() => donate('5000000000000000000000000')}
 								>
-									Tiếp tục
+									Continue
 								</Button>
 							</Flex>
 						</Flex>
@@ -362,7 +380,7 @@ const Campaign = () => {
 								alignItems="center"
 							>
 								<Text color="goldenrod" fontSize="xl">
-									Fan hardcore
+									Hardcore Fan
 								</Text>
 								<Text fontSize="4xl" fontWeight="semibold">
 									10 NEAR
@@ -377,8 +395,8 @@ const Campaign = () => {
 							>
 								<Text>🎶 Badge NFT</Text>
 								<Text mt={2}>🎧 Hall of Mention</Text>
-								<Text mt={2}>⚡ Video đặc biệt</Text>
-								<Text mt={2}>😋 5p meeting gặp gỡ</Text>
+								<Text mt={2}>⚡ Special Video</Text>
+								<Text mt={2}>😋 5-min meeting (in Metaverse?)</Text>
 							</Flex>
 							<Flex mt="auto">
 								<Button
@@ -391,7 +409,7 @@ const Campaign = () => {
 									type="button"
 									onClick={() => donate('10000000000000000000000000')}
 								>
-									Tiếp tục
+									Continue
 								</Button>
 							</Flex>
 						</Flex>
@@ -421,7 +439,7 @@ const Campaign = () => {
 									alignItems="center"
 								>
 									<Text color="gray.600" fontSize="xl">
-										Fan tự quyết
+										Choose Your Own Title
 									</Text>
 									<Text
 										fontSize="4xl"
@@ -440,11 +458,11 @@ const Campaign = () => {
 									fontWeight="medium"
 								>
 									<Text fontSize="md" maxWidth="100%" mb={5}>
-										Dựa vào số lượng ủng hộ, bạn sẽ nhận được những món quà phù
-										hợp
+										Depending on the donation amount, you will receive
+										appropriate rewards.
 									</Text>
 									<Input
-										placeholder="Nhập số lượng ủng hộ"
+										placeholder="Enter the amount you want to donate"
 										width="100%"
 										type="number"
 										name="donation"
@@ -452,7 +470,7 @@ const Campaign = () => {
 										py={3}
 									/>
 									<Text fontSize="xs" mt={2}>
-										* Vui lòng nhập ít nhất 1 NEAR
+										* 1 NEAR minimum *
 									</Text>
 								</Flex>
 								<Flex mt="auto">
@@ -465,7 +483,7 @@ const Campaign = () => {
 										mx="auto"
 										color="white"
 									>
-										Tiếp tục
+										Continue
 									</Button>
 								</Flex>
 							</Flex>
@@ -497,7 +515,7 @@ const Campaign = () => {
 					overflow="auto"
 				>
 					<Text fontSize={['2xl', '3xl']} color="black" fontWeight="semibold">
-						Fan cứng
+						Top Fan
 					</Text>
 					<Flex
 						flexDirection="column"
@@ -509,12 +527,12 @@ const Campaign = () => {
 						<Flex justifyContent="space-between">
 							<Flex flex="1 1 60%">
 								<Text fontSize="lg" fontWeight="light" color="black">
-									Tài khoản
+									Account
 								</Text>
 							</Flex>
 							<Flex flex="1 1 40%">
 								<Text fontSize="lg" fontWeight="light" color="black">
-									Ủng hộ
+									Donated
 								</Text>
 							</Flex>
 						</Flex>
