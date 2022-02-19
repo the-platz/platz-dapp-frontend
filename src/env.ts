@@ -10,6 +10,7 @@ export const APP_URL = process.env.REACT_APP_VERCEL_ENV === 'production' ?
         `https://${process.env.REACT_APP_VERCEL_URL}` : 
         (process.env.REACT_APP_URL || 'http://localhost:3000') )
 export const NETWORK_ID = process.env.REACT_APP_NETWORK_ID || 'testnet'
+export const ARCHIVAL_RPC_URL = NETWORK_ID === 'testnet' ? "https://archival-rpc.testnet.near.org" : "https://archival-rpc.mainnet.near.org"
 export const CAMPAIGN_CONTRACT_FACTORY = process.env.REACT_APP_CAMPAIGN_CONTRACT_FACTORY || 'iko.theplatz.testnet'
 export const PUNKT_CONTRACT = process.env.REACT_APP_PUNKT_CONTRACT || 'punkt.theplatz.testnet'
 export const CREATE_CAMPAIGN_GAS_FEE = process.env.REACT_APP_CREATE_CAMPAIGN_GAS_FEE || '300000000000000' // yochto near
