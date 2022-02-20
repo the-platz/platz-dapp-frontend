@@ -1,9 +1,8 @@
-import BN from 'bn.js';
+import BN from 'bn.js'
 import { Contract, WalletConnection } from "near-api-js"
 import { ContractMethods } from "near-api-js/lib/contract"
 import { IChangeMethodFn, ChangeMethodOptions } from "./interfaces"
-import * as env from "../../env"
-const host = window.location.origin;
+const host = window.location.origin
 
 type CampaignInfo = {
     campaign_beneficiary: string
