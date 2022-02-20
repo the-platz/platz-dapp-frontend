@@ -1,8 +1,8 @@
-import BN from 'bn.js';
+import BN from 'bn.js'
 import { Contract, WalletConnection } from "near-api-js"
 import { ContractMethods } from "near-api-js/lib/contract"
 import { IChangeMethodFn, ChangeMethodOptions } from "./interfaces"
-import * as env from "../../env"
+const host = window.location.origin
 
 type CampaignInfo = {
     campaign_beneficiary: string
@@ -49,7 +49,7 @@ export const donateAsync = async(campaignContract: CampaignContract, donationAmo
     if (campaignContract.donate) {
         const changeMethodOptions: ChangeMethodOptions = {
             meta: `You made the transaction to donate the campaign "${campaignContract.contractId}".`,
-            callbackUrl: `${env.APP_URL}/txCallback/campaign/${campaignContract.contractId}/donate`,
+            callbackUrl: `${host}/txCallback/campaign/${campaignContract.contractId}/donate`,
             args: {},
             amount: donationAmount,
             // gas auto fill
@@ -64,7 +64,7 @@ export const withdrawAsync = async(campaignContract: CampaignContract) => {
     if (campaignContract.withdraw) {
         const changeMethodOptions: ChangeMethodOptions = {
             meta: `You made the transaction to claim the campaign "${campaignContract.contractId}".`,
-            callbackUrl: `${env.APP_URL}/txCallback/campaign/${campaignContract.contractId}/withdraw`,
+            callbackUrl: `${host}/txCallback/campaign/${campaignContract.contractId}/withdraw`,
             args: {},
             // no deposit
             // gas auto fill
