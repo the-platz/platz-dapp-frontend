@@ -3,6 +3,7 @@ import { Contract, WalletConnection } from "near-api-js"
 import { ContractMethods } from "near-api-js/lib/contract"
 import { IChangeMethodFn, ChangeMethodOptions } from "./interfaces"
 import * as env from "../../env"
+import { CampaignInfo } from '../types'
 
 export const CampaignContractOptions: ContractMethods = {
 	viewMethods: ['get_campaign_info'],
