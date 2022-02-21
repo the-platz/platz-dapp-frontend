@@ -7,6 +7,8 @@ import {
 	NumberInputField,
 	NumberInputStepper,
 	Flex,
+	Input,
+	Textarea,
 } from '@chakra-ui/react'
 import { useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
@@ -18,6 +20,10 @@ import {
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import { useAppSelector } from '../app/hooks'
 import * as env from '../env'
+import { dateToEpoch } from '../utils/utils'
+
+const TODAY = new Date()
+const NEXT_WEEK = new Date(TODAY.getTime() + 7 * 24 * 60 * 60 * 1000)
 
 const CreateCampaign = () => {
 	const toast = useToast()
@@ -30,6 +36,10 @@ const CreateCampaign = () => {
 	const [targetAmount, setTargetAmount] = React.useState<number>(20)
 	const [minimumDonationAmount, setMinimumDonationAmount] =
 		React.useState<number>(1)
+	const [startDate, setStartDate] = useState(TODAY)
+	const [endDate, setEndDate] = useState(NEXT_WEEK)
+	const [campaignName, setCampaignName] = useState('')
+	const [campaignDescription, setCampaignDescription] = useState('')
 
 	useEffect(() => {
 		if (!userAccountId && walletConnection) {
@@ -66,6 +76,18 @@ const CreateCampaign = () => {
 					campaign_beneficiary: userAccountId,
 					target_amount: toYochtoNear(targetAmount),
 					minimum_donation_amount: toYochtoNear(minimumDonationAmount),
+					campaign_metadata: {
+						name: campaignName,
+						description: campaignDescription,
+						start_epoch: dateToEpoch(startDate),
+						end_epoch: dateToEpoch(endDate),
+						version: 'v1',
+						live_schedule: {
+							live_platform: 'none',
+							live_on_epoch: '0',
+							live_uri: '',
+						},
+					},
 				}
 				const encoded_base64_campaign_args = btoa(JSON.stringify(campaign_args))
 
@@ -96,9 +118,9 @@ const CreateCampaign = () => {
 			<Text fontSize={['xs', 'sm']} mb={8}>
 				* You should have at least 5 NEAR *
 			</Text>
-			<Text>Beneficiary:</Text>
+			<Text fontWeight={'medium'}>Beneficiary:</Text>
 			<Text mb={12}>{userAccountId}</Text>
-			<Text>Target amount: </Text>
+			<Text>Target amount </Text>
 			<NumberInput
 				w="100%"
 				value={targetAmount}
@@ -112,7 +134,7 @@ const CreateCampaign = () => {
 					<NumberDecrementStepper />
 				</NumberInputStepper>
 			</NumberInput>
-			<Text mt={2}>Minimum donation amount: </Text>
+			<Text mt={2}>Minimum donation amount </Text>
 			<NumberInput
 				w="100%"
 				value={minimumDonationAmount}
@@ -126,6 +148,43 @@ const CreateCampaign = () => {
 					<NumberDecrementStepper />
 				</NumberInputStepper>
 			</NumberInput>
+
+			<Text mt={4} fontWeight={'medium'}>
+				Metadata:
+			</Text>
+
+			<Text mt={2}>Name</Text>
+			<Input
+				type="text"
+				placeholder="Enter campaign name"
+				value={campaignName}
+				onChange={(e) => setCampaignName(e.target.value)}
+			/>
+			<Text mt={2}>Description</Text>
+			<Textarea
+				type="text"
+				placeholder="Enter description"
+				value={campaignDescription}
+				onChange={(e) => setCampaignDescription(e.target.value)}
+				width="100%"
+			/>
+
+			<Text mt={2}>Start date </Text>
+			<Input
+				type="date"
+				placeholder="Start date"
+				value={startDate.toLocaleDateString('en-CA')}
+				onChange={(e) => setStartDate(new Date(e.target.value))}
+			/>
+
+			<Text mt={2}>End date </Text>
+			<Input
+				type="date"
+				placeholder="End date"
+				value={endDate.toLocaleDateString('en-CA')}
+				onChange={(e) => setEndDate(new Date(e.target.value))}
+			/>
+
 			<Button onClick={createCampaign} mt={6} width="100%" colorScheme="orange">
 				Continue
 			</Button>

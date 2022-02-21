@@ -35,7 +35,7 @@ const MyAccount = () => {
 			py={16}
 		>
 			<Text fontSize={['2xl', '3xl']} mb={12}>
-				Total rewarded Punkts: {totalPunkt ? totalPunkt : 0}
+				Total rewarded Punkts: {totalPunkt ?? 0}
 			</Text>
 			<Text fontSize={['2xl', '3xl']} mb={2}>
 				Donations

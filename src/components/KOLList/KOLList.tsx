@@ -62,7 +62,7 @@ const KOLList = () => {
 								p={2}
 							>
 								<Image
-									src="/images/default_home_3.jpg"
+									src="/images/default_home_5.jpg"
 									objectFit="cover"
 									boxSize="250"
 								/>

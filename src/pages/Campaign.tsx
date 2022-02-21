@@ -30,7 +30,10 @@ import ProgressBar from '../components/ProgressBar'
 import { BiLinkExternal } from 'react-icons/bi'
 import { NEAR_TRANSACTION_URL } from '../utils/consts'
 import { FaFacebook, FaTwitter, FaYoutube } from 'react-icons/fa'
-import { getTxDonationResultAsync } from '../utils/utils'
+import {
+	getCampaignTotalDonatedAmount,
+	getTxDonationResultAsync,
+} from '../utils/utils'
 
 const Campaign = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)
@@ -140,9 +143,7 @@ const Campaign = () => {
 			{!!campaignInfo && (
 				<Flex maxWidth="984" mx="auto" mb={4} mt={12}>
 					<ProgressBar
-						current={parseInt(
-							utils.format.formatNearAmount(campaignInfo.donated_amount, 0)
-						)}
+						current={getCampaignTotalDonatedAmount(campaignInfo.donor_amounts)}
 						total={parseInt(
 							utils.format.formatNearAmount(campaignInfo.target_amount, 0)
 						)}
@@ -169,10 +170,9 @@ const Campaign = () => {
 				</Flex>
 				<Flex flexDirection="column">
 					<Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
-					{campaignInfo?.donated_amount && (
+					{!!campaignInfo?.donor_amounts && (
 						<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
-							{utils.format.formatNearAmount(campaignInfo.donated_amount, 2)}{' '}
-							NEAR
+							{getCampaignTotalDonatedAmount(campaignInfo?.donor_amounts)} NEAR
 						</Text>
 					)}
 				</Flex>

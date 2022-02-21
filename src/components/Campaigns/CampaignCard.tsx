@@ -6,7 +6,7 @@ import {
 	withdrawAsync,
 } from '../../models/contracts/campaign_contract'
 import { CampaignProps } from '../../models/types'
-import { near_utils } from '../../utils/utils'
+import { getCampaignTotalDonatedAmount, near_utils } from '../../utils/utils'
 import * as consts from '../../utils/consts'
 
 type ICampaignCardProps = {
@@ -65,7 +65,7 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({
 			<Text fontSize="sm" fontWeight="normal" px={3}>
 				Donated:{' '}
 				{campaignInfo
-					? near_utils.format.formatNearAmount(campaignInfo.donated_amount, 2)
+					? getCampaignTotalDonatedAmount(campaignInfo.donor_amounts)
 					: '...'}{' '}
 				NEAR
 			</Text>

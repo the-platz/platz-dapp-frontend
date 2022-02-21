@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import * as nearAPI from 'near-api-js'
 import { useAppSelector } from '../app/hooks'
 import { selectCampaigns } from '../app/slices/campaignFactorySlice'
+import { getCampaignTotalDonatedAmount } from '../utils/utils'
 
 const Donation = (kolName: string) => {
 	const campaigns = useAppSelector(selectCampaigns(kolName))
@@ -87,7 +88,7 @@ const Donation = (kolName: string) => {
 						</Text>
 						<Text fontSize="sm" fontWeight="normal">
 							Donated amount:{' '}
-							{utils.format.formatNearAmount(campaign.donated_amount)} NEAR
+							{getCampaignTotalDonatedAmount(campaign.donor_amounts)} NEAR
 						</Text>
 						<Text fontSize="sm" fontWeight="normal">
 							Target: {utils.format.formatNearAmount(campaign.target_amount)}{' '}
