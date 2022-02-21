@@ -3,44 +3,44 @@ import { Contract, WalletConnection } from "near-api-js"
 import { ContractMethods } from "near-api-js/lib/contract"
 import { IChangeMethodFn, ChangeMethodOptions } from "./interfaces"
 import * as env from "../../env"
-
-type CampaignInfo = {
-    campaign_beneficiary: string
-    campaign_metadata: any
-    donated_amount: string
-    minimum_donation_amount: string;
-    target_amount: string
-}
+import { CampaignInfo } from '../types'
 
 export const CampaignContractOptions: ContractMethods = {
-    viewMethods: ["get_campaign_info"],
-    changeMethods: ["donate", "withdraw"]
+	viewMethods: ['get_campaign_info'],
+	changeMethods: ['donate', 'withdraw'],
 }
 
 export type CampaignContract = Contract & {
-    campaign_account_id?: string,
-    campaign_info?: CampaignInfo,
-    get_campaign_info? : () => CampaignInfo,
-    donate? : IChangeMethodFn,
-    withdraw?: IChangeMethodFn
+	campaign_account_id?: string
+	campaign_info?: CampaignInfo
+	get_campaign_info?: () => CampaignInfo
+	donate?: IChangeMethodFn
+	withdraw?: IChangeMethodFn
 }
 
-export const getCampaignContract = (walletConnection: WalletConnection, campaignAccountId: string): CampaignContract => {
-    const contract: CampaignContract = new Contract(
-        walletConnection.account(),
-        campaignAccountId,
-        CampaignContractOptions)
-    
-    return contract
+export const getCampaignContract = (
+	walletConnection: WalletConnection,
+	campaignAccountId: string
+): CampaignContract => {
+	const contract: CampaignContract = new Contract(
+		walletConnection.account(),
+		campaignAccountId,
+		CampaignContractOptions
+	)
+
+	return contract
 }
 
-export const getCampaignContractInfoAsync = async(campaignContract: CampaignContract) => {
-    if (campaignContract.get_campaign_info) {
-        const campaignInfo: CampaignInfo = await campaignContract.get_campaign_info()
-        return campaignInfo
-    } else {
-        throw Error("Campaign contract is not initialized!")
-    }
+export const getCampaignContractInfoAsync = async (
+	campaignContract: CampaignContract
+) => {
+	if (campaignContract.get_campaign_info) {
+		const campaignInfo: CampaignInfo =
+			await campaignContract.get_campaign_info()
+		return campaignInfo
+	} else {
+		throw Error('Campaign contract is not initialized!')
+	}
 }
 
 export const donateAsync = async(campaignContract: CampaignContract, donationAmount: BN) => {
@@ -73,5 +73,5 @@ export const withdrawAsync = async(campaignContract: CampaignContract) => {
         return
     }
 
-    throw Error("Campaign contract is not initialized!")
+	throw Error('Campaign contract is not initialized!')
 }
