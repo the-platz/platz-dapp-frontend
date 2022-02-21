@@ -6,7 +6,7 @@
 
 console.log(process.env)
 
-export const APP_URL = process.env.NODE_ENV === 'production' ? 
+export const APP_URL = process.env.REACT_APP_ENV === 'production' ? 
     ( process.env.REACT_APP_URL || "https://theplatz.io") : 
     ( process.env.REACT_APP_DEPLOY_URL || 'http://localhost:3000')
 export const NETWORK_ID = process.env.REACT_APP_NETWORK_ID || 'testnet'
