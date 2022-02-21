@@ -27,6 +27,7 @@ import { selectWalletConnection } from '../../app/slices/walletSlice'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import * as env from '../../env'
 import { signOut as walletSliceSignOut } from '../../app/slices/walletSlice'
+const host = window.location.origin
 // const Links = [{ name: 'About', link: '/about' }];
 
 const Header = () => {
@@ -53,8 +54,8 @@ const Header = () => {
 			walletConnection.requestSignIn(
 				env.CAMPAIGN_CONTRACT_FACTORY, // contract requesting access
 				'The Platz', // optional
-				env.APP_URL, // optional
-				env.APP_URL // optional
+				host, // optional
+				host // optional
 			)
 		} else {
 			toast({

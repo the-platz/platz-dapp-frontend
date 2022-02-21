@@ -33,6 +33,7 @@ const CreateCampaign = () => {
 	const [campaignContractFactory, setCampaignContractFactory] =
 		useState<CampaignFactoryContract>()
 
+	const [campaignId, setCampaignId] = useState('')
 	const [targetAmount, setTargetAmount] = React.useState<number>(20)
 	const [minimumDonationAmount, setMinimumDonationAmount] =
 		React.useState<number>(1)
@@ -76,6 +77,7 @@ const CreateCampaign = () => {
 					campaign_beneficiary: userAccountId,
 					target_amount: toYochtoNear(targetAmount),
 					minimum_donation_amount: toYochtoNear(minimumDonationAmount),
+					campaign_id: campaignId,
 					campaign_metadata: {
 						name: campaignName,
 						description: campaignDescription,
@@ -153,6 +155,13 @@ const CreateCampaign = () => {
 				Metadata:
 			</Text>
 
+			<Text mt={2}>Id</Text>
+			<Input
+				type="text"
+				placeholder="Enter campaign id"
+				value={campaignId}
+				onChange={(e) => setCampaignId(e.target.value)}
+			/>
 			<Text mt={2}>Name</Text>
 			<Input
 				type="text"
