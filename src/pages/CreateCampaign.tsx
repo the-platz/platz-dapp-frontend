@@ -81,8 +81,8 @@ const CreateCampaign = () => {
 					campaign_metadata: {
 						name: campaignName,
 						description: campaignDescription,
-						start_epoch: dateToEpoch(startDate),
-						end_epoch: dateToEpoch(endDate),
+						start_epoch: dateToEpoch(startDate).toString(),
+						end_epoch: dateToEpoch(endDate).toString(),
 						version: 'v1',
 						live_schedule: {
 							live_platform: 'none',

@@ -143,9 +143,9 @@ const Campaign = () => {
 			{!!campaignInfo && (
 				<Flex maxWidth="984" mx="auto" mb={4} mt={12}>
 					<ProgressBar
-						current={getCampaignTotalDonatedAmount(campaignInfo.donor_amounts)}
+						current={getCampaignTotalDonatedAmount(campaignInfo?.donor_amounts)}
 						total={parseInt(
-							utils.format.formatNearAmount(campaignInfo.target_amount, 0)
+							utils.format.formatNearAmount(campaignInfo?.target_amount, 0)
 						)}
 					/>
 				</Flex>
@@ -180,7 +180,7 @@ const Campaign = () => {
 					<Text fontSize={['lg', 'xl']}>Mục tiêu</Text>
 					{campaignInfo?.target_amount && (
 						<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
-							{utils.format.formatNearAmount(campaignInfo.target_amount, 2)}{' '}
+							{utils.format.formatNearAmount(campaignInfo?.target_amount, 2)}{' '}
 							NEAR
 						</Text>
 					)}
@@ -552,7 +552,7 @@ const Campaign = () => {
 								</Text>
 							</Flex>
 						</Flex>
-						{topDonors.map((donor: TopDonorsResponse) => (
+						{topDonors?.map((donor: TopDonorsResponse) => (
 							<Flex
 								key={donor.signer_account_id}
 								justifyContent="space-between"

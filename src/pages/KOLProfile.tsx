@@ -24,7 +24,7 @@ const KOLProfile = () => {
 		{
 			name: 'Niche huite',
 			imageUrl:
-				'https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxhcjI4ZmhjczczdWE1NHYwL2ZlYXR1cmVkX2ltYWdlX2FydHdvcmtfYzd0bGFyMjhmaGNzNzN1YTU0djBfMTY0Mzg2MTM1Ni5qcGVnIiwiZWRpdHMiOnsianBlZyI6eyJxdWFsaXR5Ijo4MH0sInJvdGF0ZSI6bnVsbCwicmVzaXplIjp7IndpZHRoIjozMDAwLCJoZWlnaHQiOjMwMDAsImZpdCI6Imluc2lkZSJ9fX0=',
+				'https://a.1stdibscdn.com/wonner-paul-paintings-untitled-for-sale/22569652/a_96016121643784750158/Wonner4_master.jpg?disable=upscale&auto=webp&quality=60&width=1318',
 		},
 		{
 			name: 'Nee stand',

@@ -47,7 +47,7 @@ export const getCampaignTotalDonatedAmount = (donors: DonorAmounts): number => {
 
 	if (Object.values(donors).length <= 0) return totalDonatedAmount
 
-	for (let donor in donors) {
+	for (let donor in Object.values(donors)) {
 		totalDonatedAmount += parseInt(near_utils.format.formatNearAmount(donor))
 	}
 	return totalDonatedAmount
