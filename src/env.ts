@@ -4,6 +4,8 @@
 // export const ADDRESS_RECEIVER = process.env.REACT_APP_ADDRESS_RECEIVER || '0xE31Cc7E1DAa1fE565eBF8D58629034611C57FC03';
 // export const NETWORK_CHAIN_IDS = process.env.REACT_APP_NETWORK_CHAIN_IDS || '0x61';
 
+console.log(process.env)
+
 export const APP_URL = process.env.NODE_ENV === 'production' ? 
     ( process.env.REACT_APP_URL || "https://theplatz.io") : 
     ( process.env.REACT_APP_DEPLOY_URL || 'http://localhost:3000')
