@@ -2,32 +2,24 @@ import { Button, Flex, Image, useToast } from '@chakra-ui/react'
 import { useAppSelector } from '../../app/hooks'
 import { selectListKOL } from '../../app/slices/campaignFactorySlice'
 
-<<<<<<< HEAD
 import { Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { selectWalletConnection } from '../../app/slices/walletSlice'
 import * as env from '../../env'
-=======
-import { Text } from "@chakra-ui/react"
-import { Link } from "react-router-dom"
-import { selectWalletConnection } from "../../app/slices/walletSlice"
-import * as env from "../../env"
 const host = window.location.origin
->>>>>>> 5cd180a72712a081ebd4fb2d2ee1770f2e8e2a63
 
 const KOLList = () => {
 	const listKOL = useAppSelector(selectListKOL)
 	const walletConnection = useAppSelector(selectWalletConnection)
 	const toast = useToast()
 
-<<<<<<< HEAD
 	const signIn = () => {
 		if (walletConnection) {
 			walletConnection.requestSignIn(
 				env.CAMPAIGN_CONTRACT_FACTORY, // contract requesting access
 				'The Platz', // optional
-				env.APP_URL, // optional
-				env.APP_URL // optional
+				host, // optional
+				host // optional
 			)
 		} else {
 			toast({
@@ -39,26 +31,6 @@ const KOLList = () => {
 			})
 		}
 	}
-=======
-    const signIn = () => {
-      if (walletConnection) {
-        walletConnection.requestSignIn(
-          env.CAMPAIGN_CONTRACT_FACTORY, // contract requesting access
-          "The Platz", // optional
-          host, // optional
-          host // optional
-        )
-      } else {
-          toast({
-            title: 'Wallet connection error',
-            description: "Wallet connection is not initialized!",
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-        })
-      }
-    }
->>>>>>> 5cd180a72712a081ebd4fb2d2ee1770f2e8e2a63
 
 	// useEffect(() => {
 	//     if (listKOL) {
