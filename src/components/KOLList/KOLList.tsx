@@ -6,7 +6,6 @@ import { Text } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
 import { selectWalletConnection } from "../../app/slices/walletSlice"
 import * as env from "../../env"
-const host = window.location.origin
 
 const KOLList = () => {
     const listKOL = useAppSelector(selectListKOL)
@@ -18,8 +17,8 @@ const KOLList = () => {
         walletConnection.requestSignIn(
           env.CAMPAIGN_CONTRACT_FACTORY, // contract requesting access
           "The Platz", // optional
-          host, // optional
-          host // optional
+          env.APP_URL, // optional
+          env.APP_URL // optional
         )
       } else {
           toast({
