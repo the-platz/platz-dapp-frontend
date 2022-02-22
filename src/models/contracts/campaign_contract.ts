@@ -44,8 +44,6 @@ export const getCampaignContractInfoAsync = async (
 }
 
 export const donateAsync = async(campaignContract: CampaignContract, donationAmount: BN) => {
-    console.log(campaignContract);
-    
     if (campaignContract.donate) {
         const changeMethodOptions: ChangeMethodOptions = {
             meta: `You made the transaction to donate the campaign "${campaignContract.contractId}".`,
