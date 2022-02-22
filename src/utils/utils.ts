@@ -1,3 +1,4 @@
+import BN from 'bn.js'
 import * as nearAPI from 'near-api-js'
 import { ConnectConfig } from 'near-api-js'
 import * as env from '../env'
@@ -42,15 +43,16 @@ export const getTxDonationResultAsync = async (
 	return txDonationResult
 }
 
-export const getCampaignTotalDonatedAmount = (donors: DonorAmounts): number => {
-	let totalDonatedAmount = 0
+export const getCampaignTotalDonatedAmount = (donors: DonorAmounts): string => {
+	let totalDonatedAmount = new BN('0')
 
-	if (Object.values(donors).length <= 0) return totalDonatedAmount
+	if (Object.values(donors).length <= 0) return totalDonatedAmount.toString()
 
-	for (let donor in Object.values(donors)) {
-		totalDonatedAmount += parseInt(near_utils.format.formatNearAmount(donor))
+	for (let amount in Object.values(donors)) {
+		totalDonatedAmount = totalDonatedAmount.add(new BN(amount))
 	}
-	return totalDonatedAmount
+
+	return totalDonatedAmount.toString()
 }
 
 export const dateToEpoch = (date: string | Date): number =>

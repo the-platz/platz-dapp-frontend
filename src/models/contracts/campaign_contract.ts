@@ -1,9 +1,9 @@
 import BN from 'bn.js'
-import { Contract, WalletConnection } from 'near-api-js'
-import { ContractMethods } from 'near-api-js/lib/contract'
-import { IChangeMethodFn, ChangeMethodOptions } from './interfaces'
+import { Contract, WalletConnection } from "near-api-js"
+import { ContractMethods } from "near-api-js/lib/contract"
+import { IChangeMethodFn, ChangeMethodOptions } from "./interfaces"
+import * as env from "../../env"
 import { CampaignInfo } from '../types'
-const host = window.location.origin
 
 export const CampaignContractOptions: ContractMethods = {
 	viewMethods: ['get_campaign_info'],
@@ -43,39 +43,35 @@ export const getCampaignContractInfoAsync = async (
 	}
 }
 
-export const donateAsync = async (
-	campaignContract: CampaignContract,
-	donationAmount: BN
-) => {
-	console.log(campaignContract)
-
-	if (campaignContract.donate) {
-		const changeMethodOptions: ChangeMethodOptions = {
-			meta: `You made the transaction to donate the campaign "${campaignContract.contractId}".`,
-			// callbackUrl: `${env.APP_URL}/txCallback/campaign/${campaignContract.contractId}/donate`,
-			callbackUrl: `${host}/campaigns/${campaignContract.contractId}`,
-			args: {},
-			amount: donationAmount,
-			// gas auto fill
-		}
-		await campaignContract.donate(changeMethodOptions)
-		return
-	}
-	throw Error('Campaign contract is not initialized!')
+export const donateAsync = async(campaignContract: CampaignContract, donationAmount: BN) => {
+    console.log(campaignContract);
+    
+    if (campaignContract.donate) {
+        const changeMethodOptions: ChangeMethodOptions = {
+            meta: `You made the transaction to donate the campaign "${campaignContract.contractId}".`,
+            callbackUrl: `${env.APP_URL}/txCallback/campaign/${campaignContract.contractId}/donate`,
+            args: {},
+            amount: donationAmount,
+            // gas auto fill
+        }
+        await campaignContract.donate(changeMethodOptions)
+        return
+    }
+    throw Error("Campaign contract is not initialized!")
 }
 
-export const withdrawAsync = async (campaignContract: CampaignContract) => {
-	if (campaignContract.withdraw) {
-		const changeMethodOptions: ChangeMethodOptions = {
-			meta: `You made the transaction to claim the campaign "${campaignContract.contractId}".`,
-			callbackUrl: `${host}/txCallback/campaign/${campaignContract.contractId}/withdraw`,
-			args: {},
-			// no deposit
-			// gas auto fill
-		}
-		await campaignContract.withdraw(changeMethodOptions)
-		return
-	}
+export const withdrawAsync = async(campaignContract: CampaignContract) => {
+    if (campaignContract.withdraw) {
+        const changeMethodOptions: ChangeMethodOptions = {
+            meta: `You made the transaction to claim the campaign "${campaignContract.contractId}".`,
+            callbackUrl: `${env.APP_URL}/txCallback/campaign/${campaignContract.contractId}/withdraw`,
+            args: {},
+            // no deposit
+            // gas auto fill
+        }
+        await campaignContract.withdraw(changeMethodOptions)
+        return
+    }
 
 	throw Error('Campaign contract is not initialized!')
 }

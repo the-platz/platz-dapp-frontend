@@ -32,7 +32,6 @@ import {
 } from './app/slices/campaignFactorySlice'
 import { getAllCampaignsAsync } from './models/contracts/campaign_factory_contract'
 import TxCampaignCallback from './components/Transactions/TxCampaignCallback'
-import { getAllCampaignsOfAccountIdAsync } from './services/campaigns'
 
 const { connect } = nearAPI
 
@@ -72,9 +71,7 @@ export const App = () => {
 					}
 				})
 				dispatch(setListKOL(listKOL))
-				const myCampaigns = await getAllCampaignsOfAccountIdAsync(
-					walletConnection.account().accountId
-				)
+				const myCampaigns = campaigns.filter(x => x.campaign_beneficiary === walletConnection.account().accountId)
 				dispatch(setMyCampaigns(myCampaigns))
 			}
 		}

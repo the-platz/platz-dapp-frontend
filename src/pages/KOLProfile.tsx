@@ -10,10 +10,7 @@ import {
 } from '../app/slices/campaignFactorySlice'
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import CampaignCard from '../components/Campaigns/CampaignCard'
-import {
-	getAllCampaignsInfo,
-	getAllCampaignsOfAccountIdAsync,
-} from '../services/campaigns'
+import { getAllCampaignsOfAccountIdAsync } from '../models/contracts/campaign_factory_contract'
 
 const KOLProfile = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)
@@ -60,15 +57,14 @@ const KOLProfile = () => {
 	useEffect(() => {
 		const loadCampaigns = async () => {
 			if (walletConnection && kolId) {
-				const myCampaigns = await getAllCampaignsOfAccountIdAsync(kolId)
-				const myCampaignInfos = await getAllCampaignsInfo(
+				const kolCampaignInfos = await getAllCampaignsOfAccountIdAsync(
 					walletConnection,
-					myCampaigns
+					kolId
 				)
 				dispatch(
 					setCampaigns({
 						kolId,
-						campaigns: myCampaignInfos,
+						campaigns: kolCampaignInfos,
 					})
 				)
 			}
@@ -164,7 +160,7 @@ const KOLProfile = () => {
 				<Flex flexDirection="column">
 					<Text fontSize={['lg', 'xl']}>Campaigns</Text>
 					<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
-						10
+						{currentCampaigns?.length ?? 0}
 					</Text>
 				</Flex>
 			</Flex>
