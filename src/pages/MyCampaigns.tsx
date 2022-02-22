@@ -1,14 +1,41 @@
 import { Flex, Grid, GridItem, Text } from '@chakra-ui/react'
-import { useAppSelector } from '../app/hooks'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import CampaignCard from '../components/Campaigns/CampaignCard'
 import {
-	selectCampaigns,
-	selectMyCampaigns,
+	setMyCampaigns,
 } from '../app/slices/campaignFactorySlice'
+import { selectWalletConnection } from '../app/slices/walletSlice'
+import { useCallback, useEffect, useState } from 'react'
+import { getAllCampaignsOfAccountIdAsync } from '../models/contracts/campaign_factory_contract'
+import { CampaignProps } from '../models/types'
+import { WalletConnection } from 'near-api-js'
 
 const MyCampaigns = () => {
-	const myCampaigns = useAppSelector(selectMyCampaigns)
-	const campaigns = useAppSelector(selectCampaigns())
+	const walletConnection = useAppSelector(selectWalletConnection)
+	const dispatch = useAppDispatch()
+	const [campaigns, setCampaigns] = useState<CampaignProps[]>([])
+
+	const getMyCampaigns = useCallback(async (walletConnection: WalletConnection, accountId: string) => {
+		const myCampaignInfos = await getAllCampaignsOfAccountIdAsync(
+			walletConnection,
+			walletConnection.account().accountId
+		)
+		dispatch(
+			setMyCampaigns({
+				payload: walletConnection.account().accountId,
+				campaigns: myCampaignInfos,
+			})
+		)
+
+		setCampaigns(myCampaignInfos)
+
+	}, [walletConnection])
+
+	useEffect(() => {
+		if (walletConnection && walletConnection.isSignedIn()) {
+			getMyCampaigns(walletConnection, walletConnection.account().accountId)
+		}
+	}, [dispatch, walletConnection, getMyCampaigns])
 
 	return (
 		<Flex
@@ -33,24 +60,16 @@ const MyCampaigns = () => {
 				width="100%"
 			>
 				{campaigns &&
-					myCampaigns?.map((campaign) => {
-						const myCampaignInfo = campaigns.find(
-							(el) => el.campaign_beneficiary === campaign.campaign_beneficiary
-						)
-						if (myCampaignInfo) {
-							return (
-								<GridItem>
-									<CampaignCard
-										key={campaign.campaign_account_id}
-										campaignInfo={myCampaignInfo}
-										campaignAccountId={campaign.campaign_account_id}
-										isOwner
-									/>
-								</GridItem>
-							)
-						}
-						return null
-					})}
+					campaigns?.map((campaign) =>
+						<GridItem>
+							<CampaignCard
+								key={campaign.campaign_metadata.name}
+								campaignInfo={campaign}
+								campaignAccountId={campaign.name}
+								isOwner
+							/>
+						</GridItem>
+					)}
 			</Grid>
 		</Flex>
 	)
