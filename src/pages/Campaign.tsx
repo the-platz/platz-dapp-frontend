@@ -143,7 +143,11 @@ const Campaign = () => {
 			{!!campaignInfo && (
 				<Flex maxWidth="984" mx="auto" mb={4} mt={12}>
 					<ProgressBar
-						current={getCampaignTotalDonatedAmount(campaignInfo.donor_amounts)}
+						current={parseInt(
+							utils.format.formatNearAmount(
+								getCampaignTotalDonatedAmount(campaignInfo.donor_amounts),
+								0))
+						}
 						total={parseInt(
 							utils.format.formatNearAmount(campaignInfo.target_amount, 0)
 						)}
@@ -172,7 +176,9 @@ const Campaign = () => {
 					<Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
 					{!!campaignInfo?.donor_amounts && (
 						<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
-							{getCampaignTotalDonatedAmount(campaignInfo?.donor_amounts)} NEAR
+							{utils.format.formatNearAmount(
+								getCampaignTotalDonatedAmount(campaignInfo.donor_amounts),
+								0)} NEAR
 						</Text>
 					)}
 				</Flex>
