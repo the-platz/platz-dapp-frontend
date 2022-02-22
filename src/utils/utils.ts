@@ -48,9 +48,11 @@ export const getCampaignTotalDonatedAmount = (donors: DonorAmounts): string => {
 
 	if (Object.values(donors).length <= 0) return totalDonatedAmount.toString()
 
-	for (let amount in Object.values(donors)) {
-		totalDonatedAmount = totalDonatedAmount.add(new BN(amount))
+	for (let donor in donors) {
+		totalDonatedAmount = totalDonatedAmount.add(new BN(donors[donor]))
 	}
+
+	console.log(totalDonatedAmount)
 
 	return totalDonatedAmount.toString()
 }
