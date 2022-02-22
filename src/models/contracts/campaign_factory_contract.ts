@@ -1,8 +1,10 @@
+import BN from 'bn.js'
 import { Contract, WalletConnection } from 'near-api-js'
 import { ContractMethods } from 'near-api-js/lib/contract'
 import * as env from '../../env'
 import { CampaignProps } from '../types'
 import { CampaignContract, getCampaignContract } from './campaign_contract'
+import { ChangeMethodOptions, IChangeMethodFn } from './interfaces'
 
 export type CampaignFactoryInfo = {
 	account_campaigns: string[]
@@ -16,7 +18,7 @@ const CampaignContractOptions: ContractMethods = {
 }
 
 export type CampaignFactoryContract = Contract & {
-	create_campaign?: (args: any, gas: string, deposit: string) => void
+	create_campaign?: IChangeMethodFn
 	get_campaign_factory_info?: () => CampaignFactoryInfo
 }
 
@@ -104,4 +106,19 @@ export const getAllCampaignsOfAccountIdAsync = async (
 	}
 
 	return campaigns.filter(x => x.campaign_beneficiary === accountId)
+}
+
+export const createCampaignAsync = async(campaignFactoryContract: CampaignFactoryContract, encoded_args: string) : Promise<void> => {
+	if (campaignFactoryContract.create_campaign) {
+		const changeMethodOptions: ChangeMethodOptions = {
+			meta: `You made the transaction to create new campaign`,
+			callbackUrl: `${env.APP_URL}/mycampaigns`,
+			args: { args: encoded_args },
+			amount: new BN(env.CREATE_CAMPAIGN_DEPOSIT),
+			gas: new BN(env.CREATE_CAMPAIGN_GAS_FEE)
+		}
+		await campaignFactoryContract.create_campaign(changeMethodOptions)
+		return
+	}
+	throw Error('Campaign factory contract is not initialized!')
 }

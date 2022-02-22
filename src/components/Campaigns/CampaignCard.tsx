@@ -44,18 +44,15 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({
 	return (
 		<Flex
 			flexDirection="column"
-			width="250px"
 			minWidth="250px"
-			height="250px"
 			minHeight="250px"
 			borderRadius="md"
 			border="1px solid"
 			borderColor="lightgray"
 		>
 			<Box
-				bg="#d5ccc0"
+				bg="orange.200"
 				width="100%"
-				height="150px"
 				minHeight="150px"
 				borderTopRadius="md"
 			></Box>
@@ -66,7 +63,9 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({
 				Donated:{' '}
 				{campaignInfo
 					? near_utils.format.formatNearAmount(
-						getCampaignTotalDonatedAmount(campaignInfo.donor_amounts), 2)
+							getCampaignTotalDonatedAmount(campaignInfo.donor_amounts),
+							2
+					  )
 					: '...'}{' '}
 				NEAR
 			</Text>
@@ -78,7 +77,13 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({
 				NEAR
 			</Text>
 			{isOwner && (
-				<Button mt={4} type="button" onClick={() => withdraw()}>
+				<Button
+					mt={4}
+					type="button"
+					onClick={() => withdraw()}
+					flex="1 1 auto"
+					colorScheme={'orange'}
+				>
 					Withdraw
 				</Button>
 			)}

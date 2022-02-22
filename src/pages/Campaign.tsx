@@ -146,10 +146,11 @@ const Campaign = () => {
 						current={parseInt(
 							utils.format.formatNearAmount(
 								getCampaignTotalDonatedAmount(campaignInfo.donor_amounts),
-								0))
-						}
+								0
+							)
+						)}
 						total={parseInt(
-							utils.format.formatNearAmount(campaignInfo.target_amount, 0)
+							utils.format.formatNearAmount(campaignInfo?.target_amount, 0)
 						)}
 					/>
 				</Flex>
@@ -161,32 +162,34 @@ const Campaign = () => {
 				overflow="auto"
 			>
 				<Flex flexDirection="column">
-					<Text fontSize={['lg', 'xl']}>Bắt đầu</Text>
+					<Text fontSize={['lg', 'xl']}>Start</Text>
 					<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
 						15/01/2022
 					</Text>
 				</Flex>
 				<Flex flexDirection="column">
-					<Text fontSize={['lg', 'xl']}>Kết thúc</Text>
+					<Text fontSize={['lg', 'xl']}>End</Text>
 					<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
 						15/02/2022
 					</Text>
 				</Flex>
 				<Flex flexDirection="column">
-					<Text fontSize={['lg', 'xl']}>Tổng quyên góp</Text>
+					<Text fontSize={['lg', 'xl']}>Total donation</Text>
 					{!!campaignInfo?.donor_amounts && (
 						<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
 							{utils.format.formatNearAmount(
 								getCampaignTotalDonatedAmount(campaignInfo.donor_amounts),
-								0)} NEAR
+								0
+							)}{' '}
+							NEAR
 						</Text>
 					)}
 				</Flex>
 				<Flex flexDirection="column">
-					<Text fontSize={['lg', 'xl']}>Mục tiêu</Text>
+					<Text fontSize={['lg', 'xl']}>Target</Text>
 					{campaignInfo?.target_amount && (
 						<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
-							{utils.format.formatNearAmount(campaignInfo.target_amount, 2)}{' '}
+							{utils.format.formatNearAmount(campaignInfo?.target_amount, 2)}{' '}
 							NEAR
 						</Text>
 					)}
@@ -558,7 +561,7 @@ const Campaign = () => {
 								</Text>
 							</Flex>
 						</Flex>
-						{topDonors.map((donor: TopDonorsResponse) => (
+						{topDonors?.map((donor: TopDonorsResponse) => (
 							<Flex
 								key={donor.signer_account_id}
 								justifyContent="space-between"

@@ -19,6 +19,11 @@ const KOLProfile = () => {
 	const currentCampaigns = useAppSelector(selectCampaigns(kolId))
 	const sellingItems = [
 		{
+			name: 'Niche huite',
+			imageUrl:
+				'https://a.1stdibscdn.com/wonner-paul-paintings-untitled-for-sale/22569652/a_96016121643784750158/Wonner4_master.jpg?disable=upscale&auto=webp&quality=60&width=1318',
+		},
+		{
 			name: 'Nee stand',
 			imageUrl:
 				'https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxqNzI4ZmhjczczdWE1NTIwL2ZlYXR1cmVkX2ltYWdlX2FydHdvcmtfYzd0bGo3MjhmaGNzNzN1YTU1MjBfMTY0Mzg2MjQyOC5qcGVnIiwiZWRpdHMiOnsianBlZyI6eyJxdWFsaXR5Ijo4MH0sInJvdGF0ZSI6bnVsbCwicmVzaXplIjp7IndpZHRoIjozMDAwLCJoZWlnaHQiOjMwMDAsImZpdCI6Imluc2lkZSJ9fX0=',
@@ -52,7 +57,10 @@ const KOLProfile = () => {
 	useEffect(() => {
 		const loadCampaigns = async () => {
 			if (walletConnection && kolId) {
-				const kolCampaignInfos = await getAllCampaignsOfAccountIdAsync(walletConnection, kolId)
+				const kolCampaignInfos = await getAllCampaignsOfAccountIdAsync(
+					walletConnection,
+					kolId
+				)
 				dispatch(
 					setCampaigns({
 						kolId,
@@ -152,7 +160,7 @@ const KOLProfile = () => {
 				<Flex flexDirection="column">
 					<Text fontSize={['lg', 'xl']}>Campaigns</Text>
 					<Text fontSize={['xl', '2xl']} color="black" fontWeight="semibold">
-						10
+						{currentCampaigns?.length ?? 0}
 					</Text>
 				</Flex>
 			</Flex>
