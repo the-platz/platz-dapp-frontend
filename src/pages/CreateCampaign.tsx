@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react'
 import React from 'react'
 import {
 	CampaignFactoryContract,
+	createCampaignAsync,
 	getCampaignFactoryContract,
 } from '../models/contracts/campaign_factory_contract'
 import { selectWalletConnection } from '../app/slices/walletSlice'
@@ -93,11 +94,7 @@ const CreateCampaign = () => {
 				}
 				const encoded_base64_campaign_args = btoa(JSON.stringify(campaign_args))
 
-				await campaignContractFactory.create_campaign(
-					{ args: encoded_base64_campaign_args },
-					env.CREATE_CAMPAIGN_GAS_FEE,
-					env.CREATE_CAMPAIGN_DEPOSIT
-				)
+				await createCampaignAsync(campaignContractFactory, encoded_base64_campaign_args)
 			}
 		}
 	}

@@ -52,8 +52,6 @@ export const getCampaignTotalDonatedAmount = (donors: DonorAmounts): string => {
 		totalDonatedAmount = totalDonatedAmount.add(new BN(donors[donor]))
 	}
 
-	console.log(totalDonatedAmount)
-
 	return totalDonatedAmount.toString()
 }
 
