@@ -15,7 +15,7 @@ const MyCampaigns = () => {
 	const dispatch = useAppDispatch()
 	const [campaigns, setCampaigns] = useState<CampaignProps[]>([])
 
-	const getMyCampaigns = useCallback(async (walletConnection: WalletConnection, accountId: string) => {
+	const getMyCampaigns = useCallback(async (walletConnection: WalletConnection) => {
 		const myCampaignInfos = await getAllCampaignsOfAccountIdAsync(
 			walletConnection,
 			walletConnection.account().accountId
@@ -29,11 +29,11 @@ const MyCampaigns = () => {
 
 		setCampaigns(myCampaignInfos)
 
-	}, [walletConnection])
+	}, [dispatch])
 
 	useEffect(() => {
 		if (walletConnection && walletConnection.isSignedIn()) {
-			getMyCampaigns(walletConnection, walletConnection.account().accountId)
+			getMyCampaigns(walletConnection)
 		}
 	}, [dispatch, walletConnection, getMyCampaigns])
 
