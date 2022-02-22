@@ -2,6 +2,7 @@ import axios from "axios";
 import { WalletConnection } from "near-api-js";
 import * as env from "../env"
 import { CampaignContract, getCampaignContract } from "../models/contracts/campaign_contract";
+import { getCampaignFactoryInfoAsync } from "../models/contracts/campaign_factory_contract";
 import { CampaignProps } from "../models/types";
 
 export type MyCampaignResponse = {
@@ -14,9 +15,9 @@ export type TopDonorsResponse = {
   total_donation_amount: string,
 }
 
-export const getAllCampaignsOfAccountIdAsync = async (accountId: string) => {
-    const res = await axios.get(`${env.IKO_BACKEND_ADDR}/campaigns/account/${accountId}`)
-    return res.data.data as MyCampaignResponse[]
+export const getAllCampaignsOfAccountIdAsync = async (walletConnection: WalletConnection, accountId: string) => {
+    const campaignContractInfo = await getCampaignFactoryInfoAsync(walletConnection)
+    return campaignContractInfo.account_campaigns.filter(x => x === accountId)
 }
 
 export const getTopDonorsAsync = async (campaignId: string) => {
