@@ -71,12 +71,8 @@ export const App = () => {
 					}
 				})
 				dispatch(setListKOL(listKOL))
-				console.log(campaigns);
-				
 				const myCampaigns = campaigns.filter(x => x.campaign_beneficiary === walletConnection.account().accountId)
 				dispatch(setMyCampaigns(myCampaigns))
-				console.log(myCampaigns);
-				
 			}
 		}
 

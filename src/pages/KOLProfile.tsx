@@ -10,10 +10,7 @@ import {
 } from '../app/slices/campaignFactorySlice'
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import CampaignCard from '../components/Campaigns/CampaignCard'
-import {
-	getAllCampaignsInfo,
-	getAllCampaignsOfAccountIdAsync,
-} from '../services/campaigns'
+import { getAllCampaignsOfAccountIdAsync } from '../models/contracts/campaign_factory_contract'
 
 const KOLProfile = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)
@@ -21,11 +18,6 @@ const KOLProfile = () => {
 	const { id: kolId } = useParams()
 	const currentCampaigns = useAppSelector(selectCampaigns(kolId))
 	const sellingItems = [
-		{
-			name: 'Niche huite',
-			imageUrl:
-				'https://image-cdn.artland.com/eyJidWNrZXQiOiJhcnRsYW5kLXVwbG9hZHMiLCJrZXkiOiJnYWxsZXJpZXMvY2tjM29uZXNhNTYxdjA3OTE3bmd3eDBmai9hcnR3b3Jrcy9hcnR3b3JrX2M3dGxhcjI4ZmhjczczdWE1NHYwL2ZlYXR1cmVkX2ltYWdlX2FydHdvcmtfYzd0bGFyMjhmaGNzNzN1YTU0djBfMTY0Mzg2MTM1Ni5qcGVnIiwiZWRpdHMiOnsianBlZyI6eyJxdWFsaXR5Ijo4MH0sInJvdGF0ZSI6bnVsbCwicmVzaXplIjp7IndpZHRoIjozMDAwLCJoZWlnaHQiOjMwMDAsImZpdCI6Imluc2lkZSJ9fX0=',
-		},
 		{
 			name: 'Nee stand',
 			imageUrl:
@@ -60,15 +52,11 @@ const KOLProfile = () => {
 	useEffect(() => {
 		const loadCampaigns = async () => {
 			if (walletConnection && kolId) {
-				const myCampaigns = await getAllCampaignsOfAccountIdAsync(kolId)
-				const myCampaignInfos = await getAllCampaignsInfo(
-					walletConnection,
-					myCampaigns
-				)
+				const kolCampaignInfos = await getAllCampaignsOfAccountIdAsync(walletConnection, kolId)
 				dispatch(
 					setCampaigns({
 						kolId,
-						campaigns: myCampaignInfos,
+						campaigns: kolCampaignInfos,
 					})
 				)
 			}

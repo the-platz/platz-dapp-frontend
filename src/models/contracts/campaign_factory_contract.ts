@@ -74,3 +74,34 @@ export const getAllCampaignsAsync = async (
 
 	return campaigns
 }
+
+export const getAllCampaignsOfAccountIdAsync = async (
+	walletConnection: WalletConnection, 
+	accountId: string
+): Promise<CampaignProps[]> => {
+	let campaigns: CampaignProps[] = []
+
+	const campaignFactoryInfo = await getCampaignFactoryInfoAsync(
+		walletConnection
+	)
+
+	for (let campaign_account_id of campaignFactoryInfo.account_campaigns) {
+		const contract: CampaignContract = getCampaignContract(
+			walletConnection,
+			campaign_account_id
+		)
+		if (contract.get_campaign_info) {
+			const campaign_info = await contract.get_campaign_info()
+
+			const campaign: CampaignProps = {
+				name: campaign_account_id,
+				...campaign_info,
+				donate: contract?.donate,
+			}
+
+			campaigns.push(campaign)
+		}
+	}
+
+	return campaigns.filter(x => x.campaign_beneficiary === accountId)
+}
