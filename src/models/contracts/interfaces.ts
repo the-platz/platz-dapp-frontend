@@ -2,15 +2,16 @@ import BN from 'bn.js'
 
 export interface IContractArgs {}
 
-export interface ChangeMethodOptions {
+// TODO: deprecated
+export interface ChangeMethodOptions<T = object> {
 	meta: string
 	callbackUrl: string
-	args: object
+	args: T
 	gas?: BN
 	amount?: BN
 }
 
-export type IChangeMethodFn = (changeMethodOptions: ChangeMethodOptions) => void
+export type IChangeMethodFn<T = object> = (changeMethodOptions: ChangeMethodOptions<T>) => void
 
 export type IContractCall = (
 	args?: IContractArgs,

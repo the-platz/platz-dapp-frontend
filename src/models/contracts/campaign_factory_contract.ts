@@ -14,12 +14,17 @@ export type CampaignFactoryInfo = {
 
 const CampaignContractOptions: ContractMethods = {
 	viewMethods: ['get_campaign_factory_info'],
-	changeMethods: ['create_campaign'],
+	changeMethods: [
+		'create_campaign',
+		'update_kol_metadata',
+	],
 }
 
 export type CampaignFactoryContract = Contract & {
 	create_campaign?: IChangeMethodFn
+	update_kol_metadata?: IChangeMethodFn
 	get_campaign_factory_info?: () => CampaignFactoryInfo
+	get_kol_metadata?: (kol_account_id: string) => string
 }
 
 export const getCampaignFactoryContract = (
@@ -121,4 +126,38 @@ export const createCampaignAsync = async(campaignFactoryContract: CampaignFactor
 		return
 	}
 	throw Error('Campaign factory contract is not initialized!')
+}
+
+export const updateKOLMetadataAsync = async(
+	walletConnection: WalletConnection, 
+	KOLAccountId: string, 
+	metadataURL: string,
+	callbackUrl?: string) => {
+	const campaignFactoryContract = getCampaignFactoryContract(walletConnection)
+
+	if (campaignFactoryContract.update_kol_metadata) {
+		const changeMethodOptions: ChangeMethodOptions = {
+			meta: `You made the transaction to update KOL metadata`,
+			callbackUrl: callbackUrl || `${env.APP_URL}`,
+			args: {
+				kol_account_id: KOLAccountId,
+				metadata: metadataURL
+			}
+		}
+
+		await campaignFactoryContract.update_kol_metadata(changeMethodOptions)
+	}
+}
+
+export const getKOLMetadataAsync = async(
+	walletConnection: WalletConnection, 
+	KOLAccountId: string) : Promise<string> => {
+	const campaignFactoryContract = getCampaignFactoryContract(walletConnection)
+	
+	if (campaignFactoryContract.get_kol_metadata) {
+		const KOLMetadata = await campaignFactoryContract.get_kol_metadata(KOLAccountId)
+		return KOLMetadata
+	}
+
+	return ""
 }
