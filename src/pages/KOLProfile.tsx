@@ -1,5 +1,6 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import { WalletConnection } from 'near-api-js'
+import { useCallback, useEffect, useState } from 'react'
 import { BiGlobe } from 'react-icons/bi'
 import { FaFacebook, FaTwitter } from 'react-icons/fa'
 import { Link, useParams } from 'react-router-dom'
@@ -10,13 +11,16 @@ import {
 } from '../app/slices/campaignFactorySlice'
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import CampaignCard from '../components/Campaigns/CampaignCard'
-import { getAllCampaignsOfAccountIdAsync } from '../models/contracts/campaign_factory_contract'
+import { getAllCampaignsOfAccountIdAsync, getKOLMetadataAsync } from '../models/contracts/campaign_factory_contract'
 
 const KOLProfile = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)
 	const dispatch = useAppDispatch()
 	const { id: kolId } = useParams()
 	const currentCampaigns = useAppSelector(selectCampaigns(kolId))
+
+	const [KOLMetadata, setKOLMetadata] = useState<any>()
+
 	const sellingItems = [
 		{
 			name: 'Niche huite',
@@ -54,24 +58,32 @@ const KOLProfile = () => {
 		window.scrollTo(0, 0)
 	}, [])
 
-	useEffect(() => {
-		const loadCampaigns = async () => {
-			if (walletConnection && kolId) {
-				const kolCampaignInfos = await getAllCampaignsOfAccountIdAsync(
-					walletConnection,
-					kolId
-				)
-				dispatch(
-					setCampaigns({
-						kolId,
-						campaigns: kolCampaignInfos,
-					})
-				)
-			}
-		}
+	const loadKOLMetadata = useCallback(async (walletConnection: WalletConnection, kolId: string) => {
+		const metadata = await getKOLMetadataAsync(walletConnection, kolId)
+		setKOLMetadata(metadata)
+		console.log(metadata);
+		
+	}, [])
 
-		loadCampaigns()
-	}, [dispatch, walletConnection, kolId])
+	const loadCampaigns = useCallback(async(walletConnection: WalletConnection, kolId: string) => {
+		const kolCampaignInfos = await getAllCampaignsOfAccountIdAsync(
+			walletConnection,
+			kolId
+		)
+		dispatch(
+			setCampaigns({
+				kolId,
+				campaigns: kolCampaignInfos,
+			})
+		)
+	}, [dispatch])
+
+	useEffect(() => {
+		if (walletConnection && kolId) {
+			loadKOLMetadata(walletConnection, kolId)
+			loadCampaigns(walletConnection, kolId)
+		}
+	}, [dispatch, walletConnection, kolId, loadCampaigns, loadKOLMetadata])
 
 	return (
 		<Box>

@@ -4,7 +4,7 @@ import { ContractMethods } from 'near-api-js/lib/contract'
 import * as env from '../../env'
 import { CampaignProps } from '../types'
 import { CampaignContract, getCampaignContract } from './campaign_contract'
-import { ChangeMethodOptions, IChangeMethodFn } from './interfaces'
+import { ChangeMethodOptions, IChangeMethodFn, IViewMethodFn } from './interfaces'
 
 export type CampaignFactoryInfo = {
 	account_campaigns: string[]
@@ -13,7 +13,10 @@ export type CampaignFactoryInfo = {
 }
 
 const CampaignContractOptions: ContractMethods = {
-	viewMethods: ['get_campaign_factory_info'],
+	viewMethods: [
+		'get_campaign_factory_info',
+		'get_kol_metadata',
+	],
 	changeMethods: [
 		'create_campaign',
 		'update_kol_metadata',
@@ -24,8 +27,20 @@ export type CampaignFactoryContract = Contract & {
 	create_campaign?: IChangeMethodFn
 	update_kol_metadata?: IChangeMethodFn
 	get_campaign_factory_info?: () => CampaignFactoryInfo
-	get_kol_metadata?: (kol_account_id: string) => string
+	get_kol_metadata?: IViewMethodFn<GetKOLMetadataArgs, string>
 }
+
+/**
+ * CONTRACT CALL ARGS
+ */
+
+type GetKOLMetadataArgs = {
+	kol_account_id: string
+}
+
+/**
+ * CONTRACT METHODS
+ */
 
 export const getCampaignFactoryContract = (
 	walletConnection: WalletConnection
@@ -153,10 +168,13 @@ export const getKOLMetadataAsync = async(
 	walletConnection: WalletConnection, 
 	KOLAccountId: string) : Promise<string> => {
 	const campaignFactoryContract = getCampaignFactoryContract(walletConnection)
-	
+
 	if (campaignFactoryContract.get_kol_metadata) {
-		const KOLMetadata = await campaignFactoryContract.get_kol_metadata(KOLAccountId)
-		return KOLMetadata
+		const args: GetKOLMetadataArgs = {
+			kol_account_id: KOLAccountId
+		}
+
+		return await campaignFactoryContract.get_kol_metadata(args)
 	}
 
 	return ""

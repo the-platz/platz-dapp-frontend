@@ -13,6 +13,8 @@ export interface ChangeMethodOptions<T = object> {
 
 export type IChangeMethodFn<T = object> = (changeMethodOptions: ChangeMethodOptions<T>) => void
 
+export type IViewMethodFn<I, O> = (x: I) => O
+
 export type IContractCall = (
 	args?: IContractArgs,
 	gas?: string,
