@@ -216,7 +216,7 @@ const Campaign = () => {
 					borderRadius="50%"
 				></Box>
 				<Link to={`/kols/${campaignInfo?.campaign_beneficiary}`}>
-					<Text Text fontSize={['xl', '2xl']}>
+					<Text fontSize={['xl', '2xl']}>
 						{campaignInfo?.campaign_beneficiary}
 					</Text>
 				</Link>

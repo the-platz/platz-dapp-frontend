@@ -167,12 +167,11 @@ const CreateCampaign = () => {
 				onChange={(e) => setCampaignName(e.target.value)}
 			/>
 			<Text mt={2}>Description</Text>
-			<Textarea
+			<Input
 				type="text"
 				placeholder="Enter description"
 				value={campaignDescription}
 				onChange={(e) => setCampaignDescription(e.target.value)}
-				width="100%"
 			/>
 
 			<Text mt={2}>Start date </Text>
