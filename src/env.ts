@@ -4,9 +4,24 @@
 // export const ADDRESS_RECEIVER = process.env.REACT_APP_ADDRESS_RECEIVER || '0xE31Cc7E1DAa1fE565eBF8D58629034611C57FC03';
 // export const NETWORK_CHAIN_IDS = process.env.REACT_APP_NETWORK_CHAIN_IDS || '0x61';
 
-export const APP_URL = process.env.REACT_APP_ENV === 'production' ? 
-    ( process.env.REACT_APP_URL || "https://theplatz.io") : 
-    ( process.env.REACT_APP_DEPLOY_URL || 'http://localhost:3000')
+let appUrl = ""
+switch (process.env.REACT_APP_CONTEXT!) {
+    case "production":
+        appUrl = process.env.REACT_APP_URL!
+        break;
+    case "deploy-preview":
+        appUrl = process.env.REACT_APP_DEPLOY_URL!
+        break;
+    case "branch-deploy":
+        appUrl = process.env.DEPLOY_PRIME_URL!
+        break;
+    default:
+        appUrl = 'http://localhost:3000'
+}
+console.log(appUrl);
+
+
+export const APP_URL = appUrl
 export const NETWORK_ID = process.env.REACT_APP_NETWORK_ID || 'testnet'
 export const ARCHIVAL_RPC_URL = NETWORK_ID === 'testnet' ? "https://archival-rpc.testnet.near.org" : "https://archival-rpc.mainnet.near.org"
 export const CAMPAIGN_CONTRACT_FACTORY = process.env.REACT_APP_CAMPAIGN_CONTRACT_FACTORY || 'iko.theplatz.testnet'
