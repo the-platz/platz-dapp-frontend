@@ -24,7 +24,7 @@ import {
 	selectIsSignedIn,
 } from './app/slices/walletSlice'
 import Campaign from './pages/Campaign'
-import { connectConfig } from './utils/utils'
+import { connectConfig } from './utils'
 import {
 	IKOL,
 	setListKOL,

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import * as nearAPI from 'near-api-js'
 import { useAppSelector } from '../app/hooks'
 import { selectCampaigns } from '../app/slices/campaignFactorySlice'
-import { getCampaignTotalDonatedAmount } from '../utils/utils'
+import { getCampaignTotalDonatedAmount } from '../utils'
 
 const Donation = (kolName: string) => {
 	const campaigns = useAppSelector(selectCampaigns(kolName))

@@ -8,7 +8,6 @@ import {
 	NumberInputStepper,
 	Flex,
 	Input,
-	Textarea,
 } from '@chakra-ui/react'
 import { useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
@@ -21,7 +20,7 @@ import {
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import { useAppSelector } from '../app/hooks'
 import * as env from '../env'
-import { dateToEpoch } from '../utils/utils'
+import { dateToEpoch } from '../utils'
 
 const TODAY = new Date()
 const NEXT_WEEK = new Date(TODAY.getTime() + 7 * 24 * 60 * 60 * 1000)

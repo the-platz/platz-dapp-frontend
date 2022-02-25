@@ -33,7 +33,7 @@ import { FaFacebook, FaTwitter, FaYoutube } from 'react-icons/fa'
 import {
 	getCampaignTotalDonatedAmount,
 	getTxDonationResultAsync,
-} from '../utils/utils'
+} from '../utils'
 
 const Campaign = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)

@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { useAppSelector } from '../../app/hooks';
 import { selectWalletConnection } from '../../app/slices/walletSlice';
 import { useQueries } from '../../hooks/useQueries';
-import { getTxDonationResultAsync } from '../../utils/utils';
+import { getTxDonationResultAsync } from '../../utils';
 
 const TxCampaignCallback = () => {
     const walletConnection = useAppSelector(selectWalletConnection)

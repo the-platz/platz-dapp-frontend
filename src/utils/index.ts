@@ -2,7 +2,7 @@ import BN from 'bn.js'
 import * as nearAPI from 'near-api-js'
 import { ConnectConfig } from 'near-api-js'
 import * as env from '../env'
-import { DonorAmounts, TxDonationResult } from '../models/types'
+import { CampaignProps, DonorAmounts, TxDonationResult } from '../models/types'
 import * as consts from './consts'
 const { providers } = require('near-api-js')
 
@@ -55,5 +55,17 @@ export const getCampaignTotalDonatedAmount = (donors: DonorAmounts): string => {
 	return totalDonatedAmount.toString()
 }
 
+export const getTotalDonationAmountOfCampaigns = (campaigns: CampaignProps[]): string => {
+	return campaigns
+		.map(c => getCampaignTotalDonatedAmount(c.donor_amounts))
+		.map(amt => new BN(amt))
+		.reduce((prev, curr) => prev.add(curr), new BN("0"))
+		.toString()
+}
+
 export const dateToEpoch = (date: string | Date): number =>
 	Date.parse(date.toString())
+
+// near utils
+export const formatNearAmount = near_utils.format.formatNearAmount
+export const parseNearAmount = near_utils.format.parseNearAmount

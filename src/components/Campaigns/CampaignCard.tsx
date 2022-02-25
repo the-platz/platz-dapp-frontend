@@ -6,7 +6,7 @@ import {
 	withdrawAsync,
 } from '../../models/contracts/campaign_contract'
 import { CampaignProps } from '../../models/types'
-import { getCampaignTotalDonatedAmount, near_utils } from '../../utils/utils'
+import { getCampaignTotalDonatedAmount, near_utils } from '../../utils'
 import * as consts from '../../utils/consts'
 
 type ICampaignCardProps = {
