@@ -27,12 +27,6 @@ const KOLProfileCampaigns: FC<IKOLProfileCampaignsProps> = ({ campaigns }) => {
                         isOwner={signedInAccountId === campaign.campaign_beneficiary}>
                     </CampaignCardV1>)
                 }
-                {/* <Box bg='tomato' height='80px'></Box>
-            <Box bg='tomato' height='80px'></Box>
-            <Box bg='tomato' height='80px'></Box>
-            <Box bg='tomato' height='80px'></Box>
-            <Box bg='tomato' height='80px'></Box>
-            <Box bg='tomato' height='80px'></Box> */}
             </SimpleGrid>
         </Skeleton>
     )
