@@ -230,6 +230,13 @@ const Header = () => {
 								</MenuItem>
 								<MenuItem
 									onClick={() => {
+										navigate('/kol-studio', { replace: true })
+									}}
+								>
+									KOL Studio
+								</MenuItem>
+								<MenuItem
+									onClick={() => {
 										navigate('/mycampaigns', { replace: true })
 									}}
 								>
