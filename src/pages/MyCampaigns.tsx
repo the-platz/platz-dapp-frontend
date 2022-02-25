@@ -65,7 +65,7 @@ const MyCampaigns = () => {
 							<CampaignCard
 								key={campaign.campaign_metadata.name}
 								campaignInfo={campaign}
-								campaignAccountId={campaign.name}
+								campaignAccountId={campaign.campaign_account_id}
 								isOwner
 							/>
 						</GridItem>

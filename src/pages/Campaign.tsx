@@ -33,7 +33,7 @@ import { FaFacebook, FaTwitter, FaYoutube } from 'react-icons/fa'
 import {
 	getCampaignTotalDonatedAmount,
 	getTxDonationResultAsync,
-} from '../utils/utils'
+} from '../utils'
 
 const Campaign = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)
@@ -216,7 +216,7 @@ const Campaign = () => {
 					borderRadius="50%"
 				></Box>
 				<Link to={`/kols/${campaignInfo?.campaign_beneficiary}`}>
-					<Text Text fontSize={['xl', '2xl']}>
+					<Text fontSize={['xl', '2xl']}>
 						{campaignInfo?.campaign_beneficiary}
 					</Text>
 				</Link>

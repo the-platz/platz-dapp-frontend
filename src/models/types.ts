@@ -35,7 +35,7 @@ export type CampaignInfo = {
 }
 
 export type CampaignProps = {
-	name: string
+	campaign_account_id: string
 	donate?: donateFn
 } & CampaignInfo
 
