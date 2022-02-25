@@ -1,4 +1,3 @@
-import { Skeleton } from '@chakra-ui/react'
 import { WalletConnection } from 'near-api-js'
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -7,10 +6,9 @@ import { selectKOLs, setCampaigns } from '../app/slices/campaignFactorySlice'
 import { selectWalletConnection } from '../app/slices/walletSlice'
 import NotFound from '../components/Errors/NotFound'
 import KOLProfileContent from '../components/KOLProfile/KOLProfileContent'
-import KOLTopCover from '../components/KOLProfile/KOLTopCover'
+import KOLTopCover from '../components/KOLProfile/KOLProfileCover'
 import LoadingWrapper from '../components/Layout/LoadingWrapper'
 import { getAllCampaignsOfAccountIdAsync, getKOLMetadataUriAsync } from '../models/contracts/campaign_factory_contract'
-import { CampaignProps } from '../models/types'
 import { KOLMetadataV1 } from '../models/types/kol_metadata_v1'
 import { getKOLMetadataFromIPFSAsync } from '../services/kol_metadata_service'
 
@@ -21,7 +19,6 @@ const KOLProfile = () => {
 	const KOLs = useAppSelector(selectKOLs)
 	const walletConnection = useAppSelector(selectWalletConnection)
 
-	const [KOLCampaigns, setKOLCampaigns] = useState<CampaignProps[]>()
 	const [KOLMetadata, setKOLMetadata] = useState<KOLMetadataV1>()
 
 	useEffect(() => {
@@ -46,8 +43,6 @@ const KOLProfile = () => {
 			kolId
 		)
 
-		setKOLCampaigns(kolCampaignInfos)
-
 		dispatch(
 			setCampaigns({
 				kolId,
@@ -68,7 +63,7 @@ const KOLProfile = () => {
 			{
 				(KOLs?.includes(kolId!) ?
 					<>
-						<KOLTopCover kolId={kolId!} />
+						<KOLTopCover kolId={kolId!} metadata={KOLMetadata}/>
 						<KOLProfileContent kolId={kolId!} metadata={KOLMetadata} />
 					</>
 					:

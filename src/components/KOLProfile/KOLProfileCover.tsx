@@ -2,21 +2,21 @@ import { Box, Flex, Image, Skeleton, Text } from '@chakra-ui/react'
 import { FC, useEffect } from 'react'
 import { BiGlobe } from 'react-icons/bi'
 import { FaFacebook, FaTwitter } from 'react-icons/fa'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppSelector } from '../../app/hooks'
 import { selectCampaigns } from '../../app/slices/campaignFactorySlice'
+import { KOLMetadataV1 } from '../../models/types/kol_metadata_v1'
 import { formatNearAmount, getTotalDonationAmountOfCampaigns } from '../../utils'
 
 type IKOLTopCoverProps = {
-    kolId: string
+    kolId: string,
+    metadata?: KOLMetadataV1,
 }
 
-const KOLTopCover: FC<IKOLTopCoverProps> = ({ kolId }) => {
+const KOLTopCover: FC<IKOLTopCoverProps> = ({ kolId, metadata }) => {
     const currentCampaigns = useAppSelector(selectCampaigns(kolId))
     
     useEffect(() => {
-        console.log(kolId)
-        console.log(currentCampaigns);
-    }, [])
+    }, [currentCampaigns])
 
     return (
         <Skeleton isLoaded={kolId !== undefined}>
@@ -62,7 +62,7 @@ const KOLTopCover: FC<IKOLTopCoverProps> = ({ kolId }) => {
                         mt="-40px"
                     ></Box>
                     <Skeleton isLoaded={kolId !== undefined}>
-                        <Text fontSize={['2xl', '4xl']}>{kolId}</Text>
+                        <Text fontSize={['2xl', '4xl']}>{metadata?.kol_name || kolId}</Text>
                     </Skeleton>
                 </Flex>
             </Flex>

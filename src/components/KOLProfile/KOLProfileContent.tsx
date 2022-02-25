@@ -2,7 +2,6 @@ import { Flex, Skeleton, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra
 import { FC, useEffect, useState } from "react"
 import { useAppSelector } from "../../app/hooks"
 import { selectCampaigns } from "../../app/slices/campaignFactorySlice"
-import { CampaignProps } from "../../models/types"
 import { KOLMetadataV1 } from "../../models/types/kol_metadata_v1"
 import KOLProfileAbout from "./KOLProfileAbout"
 
@@ -36,7 +35,7 @@ const KOLProfileContent: FC<IKOLProfileContentProps> = ({ kolId, metadata }) => 
 
         setTabs(tabs);
         setTabPanels(tabPanels);
-    }, [])
+    }, [currentCampaigns])
 
     return (
         <Skeleton isLoaded={kolId !== undefined}>
