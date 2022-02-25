@@ -10,8 +10,6 @@ switch (process.env.REACT_APP_CONTEXT!) {
         appUrl = process.env.REACT_APP_URL!
         break;
     case "deploy-preview":
-        appUrl = process.env.REACT_APP_DEPLOY_URL!
-        break;
     case "branch-deploy":
         appUrl = process.env.DEPLOY_PRIME_URL!
         break;
