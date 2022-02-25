@@ -27,10 +27,11 @@ import Campaign from './pages/Campaign'
 import { connectConfig } from './utils'
 import {
 	IKOL,
+	setKOLs,
 	setListKOL,
 	setMyCampaigns,
 } from './app/slices/campaignFactorySlice'
-import { getAllCampaignsAsync } from './models/contracts/campaign_factory_contract'
+import { CampaignFactoryInfo, getAllCampaignsAsync, getCampaignFactoryInfoAsync } from './models/contracts/campaign_factory_contract'
 import TxCampaignCallback from './components/Transactions/TxCampaignCallback'
 import KOLStudio from './pages/KOLStudio'
 
@@ -55,8 +56,10 @@ export const App = () => {
 	useEffect(() => {
 		const loadCampaigns = async () => {
 			if (isSignedIn && walletConnection) {
+				const campaignFactoryInfo: CampaignFactoryInfo = await getCampaignFactoryInfoAsync(walletConnection)
+				dispatch(setKOLs(campaignFactoryInfo.kols))
 				const campaigns = await getAllCampaignsAsync(walletConnection)
-				const listKOL: IKOL[] = []
+				let listKOL: IKOL[] = []
 				campaigns.forEach((element) => {
 					let kol = listKOL.find(
 						(el) => el.name === element.campaign_beneficiary
@@ -87,9 +90,9 @@ export const App = () => {
 					<Route path="/" element={<BaseLayout />}>
 						<Route index element={<HomePage />} />
 						<Route path="kols" element={<Outlet />}>
-							<Route path=":id" element={<KOLProfile />} />
+							<Route path=":kolId" element={<KOLProfile />} />
 						</Route>
-						<Route path="kol-studio" element={<KOLStudio/>}/>
+						<Route path="kol-studio" element={<KOLStudio />} />
 						<Route path="campaigns" element={<Outlet />}>
 							<Route path=":campaignAccountId" element={<Campaign />} />
 						</Route>

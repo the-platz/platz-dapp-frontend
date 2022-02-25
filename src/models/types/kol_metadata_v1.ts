@@ -1,17 +1,13 @@
-type KOLMetadataV1 = {
+export type KOLMetadataV1 = {
     version: string
     kol_name: string
-    works: KOLWorkV1[]
+    works: KOLWork[]
 }
 
-type KOLWorkV1 = {
+export type KOLWork = {
     version: string
     title: string
     published_on: number
     type: string
     uri: string
-}
-
-export type {
-    KOLMetadataV1
 }
