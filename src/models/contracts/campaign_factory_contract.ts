@@ -7,9 +7,11 @@ import { CampaignContract, getCampaignContract } from './campaign_contract'
 import { ChangeMethodOptions, IChangeMethodFn, IViewMethodFn } from './interfaces'
 
 export type CampaignFactoryInfo = {
-	account_campaigns: string[]
-	contract_owner: string
 	punkt_contract_account_id: string
+	contract_owner: string
+	kols: string[],
+	account_campaigns: string[],
+	campaign_contract_version: string,
 }
 
 const CampaignContractOptions: ContractMethods = {
