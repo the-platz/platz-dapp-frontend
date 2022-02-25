@@ -35,7 +35,7 @@ const KOLProfileContent: FC<IKOLProfileContentProps> = ({ kolId, metadata }) => 
 
         setTabs(tabs);
         setTabPanels(tabPanels);
-    }, [currentCampaigns])
+    }, [currentCampaigns, metadata])
 
     return (
         <Skeleton isLoaded={kolId !== undefined}>

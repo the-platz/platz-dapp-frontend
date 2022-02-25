@@ -1,5 +1,5 @@
 import { Button, Input } from '@chakra-ui/react'
-import { Box, Flex, Image, Text } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../app/hooks'
