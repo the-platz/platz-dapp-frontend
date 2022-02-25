@@ -164,7 +164,7 @@ export const updateKOLMetadataAsync = async(
 	}
 }
 
-export const getKOLMetadataAsync = async(
+export const getKOLMetadataUriAsync = async(
 	walletConnection: WalletConnection, 
 	KOLAccountId: string) : Promise<string> => {
 	const campaignFactoryContract = getCampaignFactoryContract(walletConnection)
