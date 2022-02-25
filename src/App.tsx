@@ -55,7 +55,7 @@ export const App = () => {
 
 	useEffect(() => {
 		const loadCampaigns = async () => {
-			if (isSignedIn && walletConnection) {
+			if (walletConnection) {
 				const campaignFactoryInfo: CampaignFactoryInfo = await getCampaignFactoryInfoAsync(walletConnection)
 				dispatch(setKOLs(campaignFactoryInfo.kols))
 				const campaigns = await getAllCampaignsAsync(walletConnection)
