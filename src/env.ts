@@ -18,8 +18,6 @@ switch (process.env.REACT_APP_CONTEXT!) {
     default:
         appUrl = 'http://localhost:3000'
 }
-console.log(appUrl);
-
 
 export const APP_URL = appUrl
 export const NETWORK_ID = process.env.REACT_APP_NETWORK_ID || 'testnet'
