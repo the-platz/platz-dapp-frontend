@@ -12,24 +12,24 @@ const KOLList = () => {
 	const walletConnection = useAppSelector(selectWalletConnection)
 	const toast = useToast()
 
-    const signIn = () => {
-      if (walletConnection) {
-        walletConnection.requestSignIn(
-          env.CAMPAIGN_CONTRACT_FACTORY, // contract requesting access
-          "The Platz", // optional
-          env.APP_URL, // optional
-          env.APP_URL // optional
-        )
-      } else {
-          toast({
-            title: 'Wallet connection error',
-            description: "Wallet connection is not initialized!",
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-        })
-      }
-    }
+	const signIn = () => {
+		if (walletConnection) {
+			walletConnection.requestSignIn(
+				env.CAMPAIGN_CONTRACT_FACTORY, // contract requesting access
+				"The Platz", // optional
+				env.APP_URL, // optional
+				env.APP_URL // optional
+			)
+		} else {
+			toast({
+				title: 'Wallet connection error',
+				description: "Wallet connection is not initialized!",
+				status: 'error',
+				duration: 5000,
+				isClosable: true,
+			})
+		}
+	}
 
 	// useEffect(() => {
 	//     if (listKOL) {
@@ -42,49 +42,37 @@ const KOLList = () => {
 			<Text fontSize={['2xl', '3xl']} fontWeight="bold">
 				Top Influencers
 			</Text>
-			{walletConnection?.isSignedIn() ? (
-				<Flex
-					sx={{
-						overflowX: 'auto',
-						'& > *:not(:first-of-type)': { ml: [4, 8] },
-					}}
-					my={2}
-				>
-					{listKOL?.map((kol) => (
-						<Link to={`/kols/${kol.name}`} key={kol.name}>
-							<Flex
-								height="320px"
-								width="250px"
-								borderRadius="md"
-								flexDirection="column"
-								overflow="hidden"
-								border="1px solid gray"
-								p={2}
-							>
-								<Image
-									src="/images/default_home_5.jpg"
-									objectFit="cover"
-									boxSize="250"
-								/>
-								<Flex flexDirection="column" p={2}>
-									<Text fontWeight="semibold">{kol.name}</Text>
-									{/* <Text fontWeight="medium" fontSize="sm">300 NEAR</Text> */}
-								</Flex>
+			<Flex
+				sx={{
+					overflowX: 'auto',
+					'& > *:not(:first-of-type)': { ml: [4, 8] },
+				}}
+				my={2}
+			>
+				{listKOL?.map((kol) => (
+					<Link to={`/kols/${kol.name}`} key={kol.name}>
+						<Flex
+							height="320px"
+							width="250px"
+							borderRadius="md"
+							flexDirection="column"
+							overflow="hidden"
+							border="1px solid gray"
+							p={2}
+						>
+							<Image
+								src="/images/default_home_5.jpg"
+								objectFit="cover"
+								boxSize="250"
+							/>
+							<Flex flexDirection="column" p={2}>
+								<Text fontWeight="semibold">{kol.name}</Text>
+								{/* <Text fontWeight="medium" fontSize="sm">300 NEAR</Text> */}
 							</Flex>
-						</Link>
-					))}
-				</Flex>
-			) : (
-				<Button
-					type="button"
-					my={2}
-					onClick={() => signIn()}
-					colorScheme="orange"
-					maxWidth="200px"
-				>
-					Connect wallet now!
-				</Button>
-			)}
+						</Flex>
+					</Link>
+				))}
+			</Flex>
 		</Flex>
 	)
 }
