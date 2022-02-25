@@ -4,6 +4,7 @@ import { useAppSelector } from "../../app/hooks"
 import { selectCampaigns } from "../../app/slices/campaignFactorySlice"
 import { KOLMetadataV1 } from "../../models/types/kol_metadata_v1"
 import KOLProfileAbout from "./KOLProfileAbout"
+import KOLProfileCampaigns from "./KOLProfileCampaigns"
 
 type IKOLProfileContentProps = {
     kolId: string,
@@ -24,12 +25,24 @@ const KOLProfileContent: FC<IKOLProfileContentProps> = ({ kolId, metadata }) => 
                 ...tabs,
                 <Tab key="campaigns">Campaigns</Tab>
             ]
+            tabPanels = [
+                ...tabPanels,
+                <TabPanel key="campaigns">
+                    <KOLProfileCampaigns campaigns={currentCampaigns}/>
+                </TabPanel>
+            ]
         }
 
         if (metadata?.works && (metadata?.works?.length > 0)) {
             tabs = [
                 ...tabs,
                 <Tab key="works">Works</Tab>
+            ]
+            tabPanels = [
+                ...tabPanels,
+                <TabPanel key="works">
+                    TODO: Works
+                </TabPanel>
             ]
         }
 
@@ -53,7 +66,7 @@ const KOLProfileContent: FC<IKOLProfileContentProps> = ({ kolId, metadata }) => 
                         {tabs}
                     </TabList>
                     <TabPanels>
-                        <TabPanel>
+                        <TabPanel key="about">
                             <KOLProfileAbout key="about" displayName={metadata?.kol_name || kolId} />
                         </TabPanel>
                         {tabPanels}

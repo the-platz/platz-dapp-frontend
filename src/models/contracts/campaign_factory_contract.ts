@@ -3,7 +3,7 @@ import { Contract, WalletConnection } from 'near-api-js'
 import { ContractMethods } from 'near-api-js/lib/contract'
 import * as env from '../../env'
 import { CampaignProps } from '../types'
-import { CampaignContract, getCampaignContract } from './campaign_contract'
+import { CampaignContract, getCampaignContract, getCampaignContractInfoAsync } from './campaign_contract'
 import { ChangeMethodOptions, IChangeMethodFn, IViewMethodFn } from './interfaces'
 
 export type CampaignFactoryInfo = {
@@ -87,7 +87,7 @@ export const getAllCampaignsAsync = async (
 			const campaign_info = await contract.get_campaign_info()
 
 			const campaign: CampaignProps = {
-				name: campaign_account_id,
+				campaign_account_id: campaign_account_id,
 				...campaign_info,
 				donate: contract?.donate,
 			}
@@ -100,7 +100,7 @@ export const getAllCampaignsAsync = async (
 }
 
 export const getAllCampaignsOfAccountIdAsync = async (
-	walletConnection: WalletConnection, 
+	walletConnection: WalletConnection,
 	accountId: string
 ): Promise<CampaignProps[]> => {
 	let campaigns: CampaignProps[] = []
@@ -110,27 +110,26 @@ export const getAllCampaignsOfAccountIdAsync = async (
 	)
 
 	for (let campaign_account_id of campaignFactoryInfo.account_campaigns) {
+
 		const contract: CampaignContract = getCampaignContract(
 			walletConnection,
-			campaign_account_id
+			campaign_account_id,
 		)
-		if (contract.get_campaign_info) {
-			const campaign_info = await contract.get_campaign_info()
 
-			const campaign: CampaignProps = {
-				name: campaign_account_id,
-				...campaign_info,
-				donate: contract?.donate,
-			}
+		const campaignInfo = await getCampaignContractInfoAsync(contract)
 
-			campaigns.push(campaign)
+		const campaign: CampaignProps = {
+			campaign_account_id: campaign_account_id,
+			...campaignInfo,
+			donate: contract?.donate,
 		}
+		campaigns.push(campaign)
 	}
 
 	return campaigns.filter(x => x.campaign_beneficiary === accountId)
 }
 
-export const createCampaignAsync = async(campaignFactoryContract: CampaignFactoryContract, encoded_args: string) : Promise<void> => {
+export const createCampaignAsync = async (campaignFactoryContract: CampaignFactoryContract, encoded_args: string): Promise<void> => {
 	if (campaignFactoryContract.create_campaign) {
 		const changeMethodOptions: ChangeMethodOptions = {
 			meta: `You made the transaction to create new campaign`,
@@ -145,9 +144,9 @@ export const createCampaignAsync = async(campaignFactoryContract: CampaignFactor
 	throw Error('Campaign factory contract is not initialized!')
 }
 
-export const updateKOLMetadataAsync = async(
-	walletConnection: WalletConnection, 
-	KOLAccountId: string, 
+export const updateKOLMetadataAsync = async (
+	walletConnection: WalletConnection,
+	KOLAccountId: string,
 	metadataURL: string,
 	callbackUrl?: string) => {
 	const campaignFactoryContract = getCampaignFactoryContract(walletConnection)
@@ -166,9 +165,9 @@ export const updateKOLMetadataAsync = async(
 	}
 }
 
-export const getKOLMetadataUriAsync = async(
-	walletConnection: WalletConnection, 
-	KOLAccountId: string) : Promise<string> => {
+export const getKOLMetadataUriAsync = async (
+	walletConnection: WalletConnection,
+	KOLAccountId: string): Promise<string> => {
 	const campaignFactoryContract = getCampaignFactoryContract(walletConnection)
 
 	if (campaignFactoryContract.get_kol_metadata) {

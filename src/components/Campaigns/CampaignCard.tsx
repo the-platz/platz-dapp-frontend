@@ -57,7 +57,7 @@ const CampaignCard: React.FC<ICampaignCardProps> = ({
 				borderTopRadius="md"
 			></Box>
 			<Text fontWeight="medium" p={3}>
-				{campaignInfo.name}
+				{campaignInfo.campaign_account_id}
 			</Text>
 			<Text fontSize="sm" fontWeight="normal" px={3}>
 				Donated:{' '}

@@ -35,9 +35,7 @@ export const getCampaignContractInfoAsync = async (
 	campaignContract: CampaignContract
 ) => {
 	if (campaignContract.get_campaign_info) {
-		const campaignInfo: CampaignInfo =
-			await campaignContract.get_campaign_info()
-		return campaignInfo
+		return await campaignContract.get_campaign_info()
 	} else {
 		throw Error('Campaign contract is not initialized!')
 	}

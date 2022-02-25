@@ -76,7 +76,7 @@ const Donation = (kolName: string) => {
 					<Flex
 						flexDirection="column"
 						p={3}
-						key={`${index}-${campaign.name}`}
+						key={`${index}-${campaign.campaign_account_id}`}
 						bg="teal"
 						color="white"
 						mt={2}
@@ -84,7 +84,7 @@ const Donation = (kolName: string) => {
 						mr={3}
 					>
 						<Text fontSize="md" fontWeight="bold">
-							{campaign.name}
+							{campaign.campaign_account_id}
 						</Text>
 						<Text fontSize="sm" fontWeight="normal">
 							Donated amount:{' '}

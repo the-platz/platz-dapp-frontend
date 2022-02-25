@@ -58,7 +58,7 @@ const campaignFactorySlice = createSlice({
             if (state.listKOL) {
                 const kol = state.listKOL.find(el => el.name === payload.campaign_beneficiary)
                 if (kol) {
-                    let campaign = kol.campaigns.find(el => el.name === payload.name);
+                    let campaign = kol.campaigns.find(el => el.campaign_account_id === payload.name);
                     if (campaign) {
                         campaign = payload;
                     } else {

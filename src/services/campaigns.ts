@@ -31,7 +31,7 @@ export const getAllCampaignsInfo = async (walletConnection: WalletConnection, ca
         if (contract.get_campaign_info) {
             const campaign_info = await contract.get_campaign_info()
             const campaignData: CampaignProps = {
-                name: campaign.campaign_account_id,
+                campaign_account_id: campaign.campaign_account_id,
                 ...campaign_info,
                 donate: contract?.donate
             }
