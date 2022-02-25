@@ -5,6 +5,7 @@ import { selectCampaigns } from "../../app/slices/campaignFactorySlice"
 import { KOLMetadataV1 } from "../../models/types/kol_metadata_v1"
 import KOLProfileAbout from "./KOLProfileAbout"
 import KOLProfileCampaigns from "./KOLProfileCampaigns"
+import KOLProfileWorks from "./KOLProfileWorks"
 
 type IKOLProfileContentProps = {
     kolId: string,
@@ -41,7 +42,7 @@ const KOLProfileContent: FC<IKOLProfileContentProps> = ({ kolId, metadata }) => 
             tabPanels = [
                 ...tabPanels,
                 <TabPanel key="works">
-                    TODO: Works
+                    <KOLProfileWorks KOLWorks={metadata?.works} />
                 </TabPanel>
             ]
         }
